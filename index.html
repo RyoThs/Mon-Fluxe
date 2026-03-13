@@ -319,18 +319,34 @@
         }
 
         function generateWorkout() {
-            if(selectedMuscles.length === 0) return alert("Choisis au moins un muscle !");
-            currentWorkout = [];
-            selectedMuscles.forEach(m => {
-                const pool = exerciseLibrary[m][levelKey];
-                const picked = pool.sort(() => 0.5 - Math.random()).slice(0, isExpress ? 1 : 2);
-                currentWorkout.push(...picked);
-            });
-            currentStepIndex = 0;
-            saveProgress();
-            updateStep();
-            document.getElementById('workout-screen').classList.remove('hidden');
-        }
+    if(selectedMuscles.length === 0) return alert("Choisis au moins un muscle !");
+    
+    currentWorkout = [];
+    
+    // Pour chaque muscle sélectionné, on pioche 3 exercices
+    selectedMuscles.forEach(m => {
+        const pool = [...exerciseLibrary[m][levelKey]]; // On copie la liste pour pouvoir mélanger
+        
+        // Mélange aléatoire (Fisher-Yates simple)
+        const picked = pool.sort(() => 0.5 - Math.random()).slice(0, 3);
+        
+        currentWorkout.push(...picked);
+    });
+
+    // Si le mode Express est activé, on réduit la séance de moitié (arrondi au supérieur)
+    if(isExpress) {
+        const expressCount = Math.ceil(currentWorkout.length / 2);
+        currentWorkout = currentWorkout.sort(() => 0.5 - Math.random()).slice(0, expressCount);
+    }
+    
+    // Mélange final pour ne pas faire tous les exercices du même muscle à la suite
+    currentWorkout = currentWorkout.sort(() => 0.5 - Math.random());
+    
+    currentStepIndex = 0;
+    saveProgress(); // Sauvegarde automatique pour le bouton "Reprendre"
+    updateStep();
+    document.getElementById('workout-screen').classList.remove('hidden');
+}
 
         function updateStep() {
             const ex = currentWorkout[currentStepIndex];
