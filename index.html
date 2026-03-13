@@ -128,34 +128,142 @@
 
         const exerciseLibrary = {
             'Pectoraux': {
-                beginner: [{n:'Pompes Genoux', r:12, d:'Genoux posés', h:'• Posez les genoux loin derrière.\n• Inspirez à la descente.'}, {n:'Pompes Inclinées', r:15, d:'Mains surélevées', h:'• Support stable (canapé/chaise).'}],
-                intermediate: [{n:'Pompes Classiques', r:15, d:'Standard', h:'• Corps en planche droite.'}, {n:'Pompes Diamant', r:12, d:'Mains serrées', h:'• Index et pouces se touchent.'}],
-                advanced: [{n:'Pompes Archer', r:10, d:'Bras tendu latéral', h:'• Alternez gauche/droite.'}, {n:'Pompes Explosives', r:12, d:'Décollage', h:'• Poussez pour décoller les mains.'}]
+                beginner: [
+                    {n:'Pompes Genoux', r:12, d:'Genoux posés', h:'• Posez les genoux loin derrière.\n• Inspirez à la descente.'},
+                    {n:'Pompes Inclinées', r:15, d:'Mains surélevées', h:'• Support stable (canapé/chaise).\n• Touchez le support avec la poitrine.'},
+                    {n:'Pompes au Mur', r:20, d:'Debout face au mur', h:'• Plus les pieds sont loin, plus c\'est dur.\n• Gardez le corps droit.'},
+                    {n:'Dips au sol', r:12, d:'Assis, mains derrière', h:'• Soulevez les fesses et pliez les bras.\n• Travaille le bas des pec.'},
+                    {n:'Pompes Larges', r:10, d:'Mains écartées', h:'• Focus sur l\'étirement des pectoraux.'}
+                ],
+                intermediate: [
+                    {n:'Pompes Classiques', r:15, d:'Standard', h:'• Corps en planche droite.\n• Poitrine au ras du sol.'},
+                    {n:'Pompes Diamant', r:12, d:'Mains serrées', h:'• Index et pouces se touchent.\n• Intense pour les triceps.'},
+                    {n:'Pompes Déclinées', r:12, d:'Pieds surélevés', h:'• Pieds sur une chaise.\n• Cible le haut des pectoraux.'},
+                    {n:'Pompes Spiderman', r:10, d:'Genou vers coude', h:'• Ramenez un genou sur le côté en descendant.'},
+                    {n:'Pompes Décalées', r:12, d:'Mains asymétriques', h:'• Une main plus haute que l\'autre.\n• Alternez chaque série.'}
+                ],
+                advanced: [
+                    {n:'Pompes Archer', r:10, d:'Bras tendu latéral', h:'• Descendez d\'un seul côté.\n• Le bras opposé reste tendu.'},
+                    {n:'Pompes Explosives', r:12, d:'Décollage', h:'• Poussez pour décoller les mains du sol.'},
+                    {n:'Pompes 1 Bras', r:5, d:'Force pure', h:'• Écartez les pieds pour l\'équilibre.\n• Main opposée dans le dos.'},
+                    {n:'Pompes Claquées', r:8, d:'Saut avec clap', h:'• Tapez dans vos mains en l\'air.'},
+                    {n:'Pseudo Planche', r:8, d:'Épaules en avant', h:'• Penchez le buste loin devant les mains.'}
+                ]
             },
             'Dos': {
-                beginner: [{n:'Superman', r:20, d:'Ventre au sol', h:'• Levez simultanément bras et jambes.'}, {n:'Bird Dog', r:12, d:'Équilibre', h:'• Bras droit et jambe gauche.'}],
-                intermediate: [{n:'Nageur', r:40, d:'Battements', h:'• Petits mouvements rapides.'}, {n:'Tirage Porte', r:15, d:'Cadre de porte', h:'• Tirez votre buste vers le cadre.'}],
-                advanced: [{n:'Wall Walk', r:5, d:'Marche murale', h:'• Montez au mur avec les pieds.'}]
+                beginner: [
+                    {n:'Superman', r:20, d:'Ventre au sol', h:'• Levez simultanément bras et jambes.'},
+                    {n:'Bird Dog', r:12, d:'Équilibre 4 pattes', h:'• Bras droit et jambe gauche simultanés.'},
+                    {n:'Anges au sol', r:15, d:'Mouvement bras', h:'• Ventre au sol, décrivez des arcs de cercle.'},
+                    {n:'Wall Slide', r:12, d:'Dos au mur', h:'• Faites glisser vos bras contre le mur.'},
+                    {n:'Tirage Serviette', r:15, d:'Assis, traction', h:'• Tirez sur une serviette devant vous.'}
+                ],
+                intermediate: [
+                    {n:'Nageur', r:40, d:'Battements rapides', h:'• Ventre au sol, petits mouvements alternés.'},
+                    {n:'Tirage Porte', r:15, d:'Cadre de porte', h:'• Tirez votre buste vers le cadre.'},
+                    {n:'Pompes Australiennes', r:12, d:'Sous une table', h:'• Traction horizontale sous une table stable.'},
+                    {n:'Superman Iso', r:30, d:'Maintien haut', h:'• Gardez la position haute du Superman.'},
+                    {n:'Good Morning', r:20, d:'Flexion buste', h:'• Mains derrière la tête, penchez-vous dos droit.'}
+                ],
+                advanced: [
+                    {n:'Wall Walk', r:5, d:'Marche murale', h:'• Montez au mur avec les pieds vers l\'équilibre.'},
+                    {n:'Hollow Rock', r:30, d:'Bascule banane', h:'• Gainage dynamique sur le bas du dos.'},
+                    {n:'Tirage 1 bras table', r:8, d:'Unilatéral', h:'• Traction sous table avec une seule main.'},
+                    {n:'Back Bridge', r:15, d:'Le pont', h:'• Arquez le corps en appui mains/pieds.'},
+                    {n:'Superman Arqué', r:20, d:'Amplitude max', h:'• Levez le buste le plus haut possible.'}
+                ]
             },
             'Jambes': {
-                beginner: [{n:'Squat Classique', r:20, d:'Standard', h:'• Pieds largeur épaules.'}, {n:'Glute Bridge', r:20, d:'Pont fessier', h:'• Serrez les fessiers en haut.'}],
-                intermediate: [{n:'Squat Jumps', r:15, d:'Explosif', h:'• Amortissez bien la réception.'}, {n:'Fentes Bulgares', r:12, d:'Pied surélevé', h:'• Pied arrière sur une chaise.'}],
-                advanced: [{n:'Pistol Squat', r:8, d:'1 jambe', h:'• Équilibre sur un seul pied.'}]
+                beginner: [
+                    {n:'Squat Classique', r:20, d:'Standard', h:'• Talons au sol, fesses en arrière.'},
+                    {n:'Glute Bridge', r:20, d:'Pont fessier', h:'• Serrez les fessiers en haut du mouvement.'},
+                    {n:'Fentes Arrière', r:12, d:'Pas en arrière', h:'• Gardez le buste bien droit.'},
+                    {n:'Chaise Murale', r:30, d:'Isométrie', h:'• Dos au mur, jambes à 90 degrés.'},
+                    {n:'Montée Mollets', r:25, d:'Sur les pointes', h:'• Montez le plus haut possible.'}
+                ],
+                intermediate: [
+                    {n:'Squat Jumps', r:15, d:'Explosif', h:'• Sautez haut et amortissez doucement.'},
+                    {n:'Fentes Bulgares', r:12, d:'Pied surélevé', h:'• Pied arrière posé sur une chaise.'},
+                    {n:'Fentes Latérales', r:16, d:'Pas sur le côté', h:'• Gardez une jambe tendue.'},
+                    {n:'Pont 1 jambe', r:12, d:'Glute bridge 1J', h:'• Levez une jambe vers le plafond.'},
+                    {n:'Squat Sumo', r:20, d:'Pieds larges', h:'• Pointes de pieds vers l\'extérieur.'}
+                ],
+                advanced: [
+                    {n:'Pistol Squat', r:8, d:'Squat 1 jambe', h:'• Descendez sur une seule jambe.'},
+                    {n:'Nordic Curl Sol', r:8, d:'Ischios', h:'• Genoux au sol, retenez la descente en avant.'},
+                    {n:'Sauts Groupés', r:12, d:'Genoux poitrine', h:'• Sautez en ramenant les genoux en haut.'},
+                    {n:'Fentes Sautant', r:20, d:'Switch explosif', h:'• Changez de jambe en sautant.'},
+                    {n:'Cossack Squats', r:16, d:'Amplitude latérale', h:'• Descendez très bas sur un côté.'}
+                ]
             },
             'Abdos': {
-                beginner: [{n:'Planche', r:30, d:'Gainage', h:'• Appui sur les coudes.'}, {n:'Crunch', r:20, d:'Abdos', h:'• Décollez juste les épaules.'}],
-                intermediate: [{n:'V-Ups', r:15, d:'Regroupement', h:'• Touchez vos orteils.'}, {n:'Russian Twists', r:30, d:'Rotations', h:'• Touchez le sol de chaque côté.'}],
-                advanced: [{n:'L-Sit', r:20, d:'Équerre', h:'• Soulevez le corps avec les bras.'}]
+                beginner: [
+                    {n:'Planche', r:30, d:'Gainage coudes', h:'• Alignez épaules, hanches, chevilles.'},
+                    {n:'Crunch', r:20, d:'Enroulement', h:'• Décollez juste les omoplates.'},
+                    {n:'Dead Bug', r:16, d:'Anti-rotation', h:'• Dos plaqué, bras/jambes opposés bougent.'},
+                    {n:'Toucher Chevilles', r:30, d:'Obliques', h:'• Sur le dos, allez chercher vos talons.'},
+                    {n:'Mountain Climber lent', r:20, d:'Contrôlé', h:'• Ramenez les genoux sans sauter.'}
+                ],
+                intermediate: [
+                    {n:'V-Ups', r:15, d:'Regroupement', h:'• Touchez vos orteils en formant un V.'},
+                    {n:'Russian Twists', r:30, d:'Rotations', h:'• Pivotez le buste de gauche à droite.'},
+                    {n:'Planche Latérale', r:30, d:'Gainage côté', h:'• Alignement parfait sur un bras.'},
+                    {n:'Flutter Kicks', r:40, d:'Battements', h:'• Jambes tendues, petits battements bas.'},
+                    {n:'Légère Rotation Planche', r:20, d:'Pivot bassin', h:'• En planche, pivotez les hanches.'}
+                ],
+                advanced: [
+                    {n:'L-Sit', r:20, d:'Équerre au sol', h:'• Soulevez tout le corps avec les mains.'},
+                    {n:'Hollow Rock', r:30, d:'Bascule', h:'• Gainage en banane dynamique.'},
+                    {n:'Essuie-glaces', r:12, d:'Rotations jambes', h:'• Sur le dos, jambes à 90° pivotent.'},
+                    {n:'Dragon Flag', r:8, d:'Levier corps', h:'• Levez le corps en ligne droite (difficile).'},
+                    {n:'Planche Commando', r:20, d:'Coudes-Mains', h:'• Passez de la planche coudes à mains.'}
+                ]
             },
             'Épaules': {
-                beginner: [{n:'Cercles Bras', r:45, d:'Rotations', h:'• Petits cercles constants.'}],
-                intermediate: [{n:'Pike Pushups', r:10, d:'Pompes V', h:'• Fesses en l\'air.'}],
-                advanced: [{n:'Handstand', r:30, d:'Équilibre', h:'• Contre le mur.'}]
+                beginner: [
+                    {n:'Cercles Bras', r:45, d:'Rotations', h:'• Petits cercles, bras bien tendus.'},
+                    {n:'I-Y-T Mouvement', r:15, d:'Lettres bras', h:'• Formez ces lettres avec vos bras.'},
+                    {n:'Tap Épaules', r:20, d:'Planche dynamique', h:'• En planche, touchez l\'épaule opposée.'},
+                    {n:'Pompes Hautes', r:12, d:'Poussée verticale', h:'• Mains loin devant la ligne des épaules.'},
+                    {n:'Shrugs', r:20, d:'Haussements', h:'• Contractez les trapèzes.'}
+                ],
+                intermediate: [
+                    {n:'Pike Pushups', r:10, d:'Pompes V', h:'• Fesses en l\'air, tête vers le sol.'},
+                    {n:'Maintien Pike', r:30, d:'Isométrie V', h:'• Poussez fort dans le sol avec les mains.'},
+                    {n:'Dips Épaules', r:15, d:'Mouvement court', h:'• Bras tendus, haussez/abaissez le buste.'},
+                    {n:'Planche Lean', r:20, d:'Bascule avant', h:'• En planche, penchez-vous vers l\'avant.'},
+                    {n:'Pike Walk', r:8, d:'Marche de l\'ours', h:'• Déplacez-vous les fesses en haut.'}
+                ],
+                advanced: [
+                    {n:'HSPU au Mur', r:5, d:'Handstand Pushup', h:'• Pompes en équilibre contre un mur.'},
+                    {n:'Handstand Hold', r:30, d:'Équilibre statique', h:'• Tenez l\'équilibre sur les mains.'},
+                    {n:'Pike Pushups Elevé', r:10, d:'Pieds sur chaise', h:'• Pieds surélevés pour plus de poids.'},
+                    {n:'90 Degree Hold', r:10, d:'Planchoire', h:'• Maintenez le corps incliné au max.'},
+                    {n:'Marche Mains', r:5, d:'Équilibre mobile', h:'• Faites quelques pas sur les mains.'}
+                ]
             },
             'Bras': {
-                beginner: [{n:'Dips Chaise', r:12, d:'Triceps', h:'• Mains sur bord de chaise.'}],
-                intermediate: [{n:'Pompes Diamant', r:12, d:'Serré', h:'• Mains collées.'}],
-                advanced: [{n:'Extension 1 bras', r:8, d:'Unilatéral', h:'• Force maximale.'}]
+                beginner: [
+                    {n:'Dips Chaise', r:12, d:'Triceps focus', h:'• Mains sur bord de chaise, dos droit.'},
+                    {n:'Pompes Cobra', r:15, d:'Extension bras', h:'• Allongé, poussez pour lever le buste.'},
+                    {n:'Triceps au Mur', r:15, d:'Poussée murale', h:'• Mains au mur, pliez uniquement les coudes.'},
+                    {n:'Curl Bouteilles', r:20, d:'Biceps', h:'• Utilisez des poids ou bouteilles d\'eau.'},
+                    {n:'Crab Walk', r:30, d:'Marche crabe', h:'• Déplacez-vous sur mains et pieds.'}
+                ],
+                intermediate: [
+                    {n:'Pompes Diamant', r:12, d:'Triceps intenses', h:'• Mains serrées sous la poitrine.'},
+                    {n:'Extension Triceps Sol', r:10, d:'Skullcrusher', h:'• En planche coudes, poussez pour tendre.'},
+                    {n:'Biceps Serviette', r:15, d:'Contraction', h:'• Tirez sur une serviette sous votre pied.'},
+                    {n:'Dips Banc', r:15, d:'Jambes tendues', h:'• Augmentez la charge sur les triceps.'},
+                    {n:'Pompes Sphinx', r:10, d:'Extension coudes', h:'• Depuis les avant-bras vers les mains.'}
+                ],
+                advanced: [
+                    {n:'Extension 1 bras', r:8, d:'Unilatéral mur/sol', h:'• Poussée sur une seule main.'},
+                    {n:'Dips Profonds', r:12, d:'Amplitude max', h:'• Descendez le plus bas possible.'},
+                    {n:'Mains Inversées', r:10, d:'Pompes biceps', h:'• Doigts pointés vers les pieds.'},
+                    {n:'Dips Explosifs', r:8, d:'Saut mains', h:'• Poussez assez fort pour décoller.'},
+                    {n:'Pompes Triceps Pure', r:10, d:'Coudes serrés', h:'• Mains très basses vers le bassin.'}
+                ]
             }
         };
 
