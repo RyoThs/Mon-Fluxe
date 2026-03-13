@@ -407,12 +407,48 @@
         function closeInfo() { document.getElementById('info-modal').classList.add('hidden'); }
 
         function renderLogbook() {
-            document.getElementById('log-list').innerHTML = userData.logs.slice().reverse().map(l => `
-                <div class="card p-4 flex justify-between items-center">
-                    <div><p class="text-[10px] font-black opacity-40">${new Date(l.date).toLocaleDateString()}</p><p class="font-bold text-xs uppercase">${l.count} Exercices</p></div>
-                    <span class="text-2xl">${l.mood}</span>
-                </div>`).join('');
+    const logList = document.getElementById('log-list');
+    const chartContainer = document.getElementById('activity-chart');
+    
+    // 1. Rendu de la liste textuelle
+    logList.innerHTML = userData.logs.slice().reverse().map(l => `
+        <div class="card p-4 flex justify-between items-center mb-3">
+            <div>
+                <p class="text-[10px] font-black opacity-40">${new Date(l.date).toLocaleDateString()}</p>
+                <p class="font-bold text-xs uppercase">${l.count} Exercices</p>
+            </div>
+            <span class="text-2xl">${l.mood}</span>
+        </div>`).join('');
+
+    // 2. Logique du graphique (7 derniers jours)
+    const stats = new Array(7).fill(0);
+    const today = new Date();
+    let totalEx = 0;
+
+    userData.logs.forEach(log => {
+        const logDate = new Date(log.date);
+        const diffTime = Math.abs(today - logDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 7) {
+            // On récupère l'index du jour (0 = Dimanche, 1 = Lundi...)
+            // On ajuste pour que l'index 0 soit Lundi
+            let dayIdx = logDate.getDay() - 1;
+            if (dayIdx === -1) dayIdx = 6; 
+            stats[dayIdx] += log.count;
+            totalEx += log.count;
         }
+    });
+
+    const maxEx = Math.max(...stats, 10); // Minimum 10 pour l'échelle
+    document.getElementById('total-week-ex').innerText = `${totalEx} exos cette semaine`;
+
+    chartContainer.innerHTML = stats.map((val, i) => {
+        const height = (val / maxEx) * 100;
+        const opacity = val > 0 ? 1 : 0.2;
+        return `<div class="chart-bar" style="height: ${height}%; opacity: ${opacity}"></div>`;
+    }).join('');
+}
 
         updateUI();
         checkBackup();
