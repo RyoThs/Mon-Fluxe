@@ -21,6 +21,15 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
 
 function lire(f) { return fs.readFileSync(path.join(RACINE, f), 'utf8'); }
 
+/* Liste FICHIERS de sw.js (les fichiers gardés hors ligne).
+   Les commentaires sont retirés avant de lire les noms entre apostrophes. */
+function listeFichiersSW(texte = lire('sw.js')) {
+  const bloc = (texte.match(/const FICHIERS = \[([\s\S]*?)\];/) || [])[1];
+  if (bloc === undefined) throw new Error('liste FICHIERS introuvable dans sw.js');
+  const sansCommentaires = bloc.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+  return (sansCommentaires.match(/'([^']+)'/g) || []).map(t => t.slice(1, -1));
+}
+
 /* Serveur web minimal : sert les fichiers d'un dossier (le projet par défaut) sur un port libre */
 function serveur(racine = RACINE) {
   return new Promise(ok => {
@@ -45,31 +54,42 @@ function reponseVide(route) {
 
 /* Démarre serveur + navigateur. Renvoie de quoi ouvrir des pages et tout fermer.
    options.racine : dossier à servir (le projet par défaut).
-   options.remplacerCdnTailwind : texte JavaScript renvoyé à la place de cdn.tailwindcss.com (captures « avant »). */
+   options.remplacements : réponses à renvoyer à la place de certains sites (captures « avant »),
+     sous la forme { 'https://debut-de-l-adresse': { contentType, body } }. */
 async function demarrer(options = {}) {
   const srv = await serveur(options.racine);
   const nav = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
   return {
     url: srv.url,
-    /* Ouvre une page neuve (stockage vide). Les erreurs JavaScript sont relevées dans p.erreurs.
-       opts : options du navigateur (ex. { colorScheme: 'dark' }). */
-    async page(opts = {}) {
+    /* Ouvre une page neuve (stockage vide). Relevés automatiques :
+       - p.erreurs : erreurs JavaScript (et blocages de sécurité affichés dans la console),
+       - p.exterieurs : adresses d'autres sites que l'app a essayé de joindre,
+       - window.__violationsCSP (dans la page) : blocages de la politique de sécurité (CSP).
+       opts : options du navigateur (ex. { colorScheme: 'dark' }).
+       chemin : fichier ouvert en premier (l'app par défaut). */
+    async page(opts = {}, chemin = '') {
       const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block', ...opts });
+      const exterieurs = [];
+      await ctx.addInitScript(() => {
+        window.__violationsCSP = [];
+        document.addEventListener('securitypolicyviolation', e => window.__violationsCSP.push(`${e.violatedDirective} ${e.blockedURI}`));
+      });
       await ctx.route(url => !url.href.startsWith(srv.url), route => {
         const url = route.request().url();
-        if (options.remplacerCdnTailwind && url.startsWith('https://cdn.tailwindcss.com')) {
-          return route.fulfill({ status: 200, contentType: 'text/javascript', body: options.remplacerCdnTailwind });
-        }
+        if (!url.startsWith('data:')) exterieurs.push(url);
+        const debut = Object.keys(options.remplacements || {}).find(d => url.startsWith(d));
+        if (debut) return route.fulfill({ status: 200, ...options.remplacements[debut] });
         return reponseVide(route);
       });
       const p = await ctx.newPage();
       p.erreurs = [];
+      p.exterieurs = exterieurs;
       p.on('pageerror', e => p.erreurs.push(e.message));
       p.on('console', m => { if (m.type() === 'error') p.erreurs.push(m.text()); });
       /* Réponses aux fenêtres alert/confirm : elles sont acceptées et leur texte gardé dans p.messages */
       p.messages = [];
       p.on('dialog', async d => { p.messages.push(d.message()); await d.accept(); });
-      await p.goto(srv.url);
+      await p.goto(srv.url + chemin);
       return p;
     },
     async fermer() { await nav.close(); srv.fermer(); },
@@ -106,4 +126,4 @@ async function finirSeance(p, humeur = '🔥') {
   return total;
 }
 
-module.exports = { demarrer, serveur, donner, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
+module.exports = { demarrer, serveur, listeFichiersSW, donner, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };

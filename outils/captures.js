@@ -6,8 +6,9 @@
 
    - « avant » = index.html de la version de référence (commit c0f045c), avec une copie
      locale de Tailwind 3.4 générée ici (le site cdn.tailwindcss.com n'est pas joignable
-     et ne doit plus être utilisé) ;
-   - « après » = index.html actuel du dossier, avec css/app.css.
+     et ne doit plus être utilisé), et les polices que Google Fonts envoyait (mêmes familles
+     et mêmes graisses, prises dans les paquets @fontsource) ;
+   - « après » = index.html actuel du dossier, avec css/app.css et les polices de fonts/.
    Pour chaque écran, en thème clair et sombre, le script compare les images pixel par pixel
    et écrit le pourcentage de pixels différents (et une image des différences en rouge). */
 const fs = require('node:fs');
@@ -31,7 +32,25 @@ function preparerAvant() {
   fs.writeFileSync(config, `module.exports = { content: [${JSON.stringify(path.join(dossier, 'index.html'))}], darkMode: 'media' };\n`);
   const css = path.join(dossier, 'reference.css');
   execFileSync(path.join(RACINE, 'node_modules', '.bin', 'tailwindcss'), ['-c', config, '-o', css], { cwd: dossier, stdio: 'ignore' });
-  return { dossier, css: fs.readFileSync(css, 'utf8') };
+  return { dossier, css: fs.readFileSync(css, 'utf8'), polices: preparerGoogleFonts() };
+}
+
+/* Ce que Google Fonts envoyait à l'ancienne version (adresse dans son index.html) :
+   Inter 300, 400, 600, 800, 900 (droit) et Barlow Condensed 700 et 900 (italique).
+   Renvoie la feuille de style et les fichiers, servis comme s'ils venaient de Google. */
+const GOOGLE = 'https://fonts.googleapis.com';
+function preparerGoogleFonts() {
+  const faces = [
+    ...[300, 400, 600, 800, 900].map(g => ['Inter', 'normal', g, `inter/files/inter-latin-${g}-normal.woff2`]),
+    ...[700, 900].map(g => ['Barlow Condensed', 'italic', g, `barlow-condensed/files/barlow-condensed-latin-${g}-italic.woff2`]),
+  ];
+  const fichiers = {};
+  const css = faces.map(([famille, style, graisse, fichier]) => {
+    const adresse = `${GOOGLE}/fichiers/${path.basename(fichier)}`;
+    fichiers[adresse] = { contentType: 'font/woff2', headers: { 'Access-Control-Allow-Origin': '*' }, body: fs.readFileSync(path.join(RACINE, 'node_modules', '@fontsource', fichier)) };
+    return `@font-face { font-family: '${famille}'; font-style: ${style}; font-weight: ${graisse}; font-display: swap; src: url(${adresse}) format('woff2'); }`;
+  }).join('\n');
+  return { css, fichiers };
 }
 
 /* Le Tailwind en ligne ajoutait sa feuille de style à la fin de <head>, une fois la page lue :
@@ -86,6 +105,7 @@ async function photographier(app, nomVersion) {
       await p.reload();
       await p.waitForLoadState('load');
       await preparer(p);
+      await p.evaluate(() => document.fonts.ready);
       await p.waitForTimeout(150);
       const f = path.join(SORTIE, `${ecran}-${theme === 'light' ? 'clair' : 'sombre'}-${nomVersion}.png`);
       await p.screenshot({ path: f, fullPage: true, animations: 'disabled' });
@@ -100,9 +120,10 @@ async function photographier(app, nomVersion) {
 /* Compare deux images dans le navigateur (canvas) : renvoie le % de pixels différents
    et écrit une image où les différences sont en rouge. */
 async function comparer(app, a, b, sortieDiff) {
-  const p = await app.page();
+  // Page neutre (l'icône) : la politique de sécurité de l'app interdit les images « data: »
+  const p = await app.page({}, 'icon.png');
   const res = await p.evaluate(async ([da, db]) => {
-    const charger = src => new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.src = src; });
+    const charger = src => new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ko(new Error('image illisible')); i.src = src; });
     const [ia, ib] = await Promise.all([charger(da), charger(db)]);
     const w = Math.max(ia.width, ib.width), h = Math.max(ia.height, ib.height);
     const lirePixels = img => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#ff00ff'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0); return x.getImageData(0, 0, w, h).data; };
@@ -126,7 +147,11 @@ async function comparer(app, a, b, sortieDiff) {
 (async () => {
   fs.mkdirSync(SORTIE, { recursive: true });
   const avant = preparerAvant();
-  const appAvant = await demarrer({ racine: avant.dossier, remplacerCdnTailwind: injecteur(avant.css) });
+  const appAvant = await demarrer({ racine: avant.dossier, remplacements: {
+    'https://cdn.tailwindcss.com': { contentType: 'text/javascript', body: injecteur(avant.css) },
+    ...avant.polices.fichiers, // les fichiers de police d'abord (adresses plus précises)
+    [GOOGLE]: { contentType: 'text/css', body: avant.polices.css },
+  } });
   const imagesAvant = await photographier(appAvant, 'avant');
   await appAvant.fermer();
 

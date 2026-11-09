@@ -12,6 +12,42 @@
    ===================================================================== */
 
 
+/* ---------- 0. Polices (fichiers dans fonts/, licence OFL : voir fonts/OFL-*.txt) ----------
+   Seules les variantes vraiment affichées par l'app sont fournies (alphabet latin) :
+   - Inter 400, 800 et 900. Le texte en « gras 700 » utilise le fichier 800 et l'italique
+     est dessiné par le navigateur : c'est exactement ce que faisait Google Fonts avant.
+   - Barlow Condensed 900 italique (titres et gros chiffres).
+   font-display: swap = le texte s'affiche tout de suite, la police arrive juste après. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/inter-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('../fonts/inter-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url('../fonts/barlow-condensed-900-italic.woff2') format('woff2');
+}
+
+
 /* ---------- 1. Couleurs ---------- */
 :root {
   --fond: #FAF8F2;            /* fond de la page */
