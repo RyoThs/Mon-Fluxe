@@ -123,22 +123,31 @@
 
         /* ===== Progression de l'utilisateur (clé fluxe_user_v1) : lecture et vérification ===== */
         const profilParDefaut = () => ({ lvl: 1, xp: 0, logs: [], streak: 0 });
-        const estEntier = (v, min) => Number.isInteger(v) && v >= min;
+        // Nombre entier entre min et max (les bornes écartent seulement les valeurs absurdes, ex. 1e300)
+        const estEntier = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
         // Une ligne du journal : { date (texte de date), mood (humeur), count (nombre d'exercices) }
         const estSeanceValide = l => !!l && typeof l === 'object' && !Array.isArray(l)
-            && typeof l.date === 'string' && !Number.isNaN(Date.parse(l.date))
+            && typeof l.date === 'string' && l.date.length <= 64 && !Number.isNaN(Date.parse(l.date))
             && typeof l.mood === 'string' && l.mood.length > 0 && l.mood.length <= 16
-            && estEntier(l.count, 0);
-        // Règle de chaque champ de la progression
+            && estEntier(l.count, 0, 1000);
+        // Règle de chaque champ de la progression. Pas de règle « xp < niveau × 100 » :
+        // on refuse seulement l'absurde, pour qu'un export fait par l'app soit toujours réimportable.
         const reglesProfil = {
-            lvl: v => estEntier(v, 1),
-            xp: v => estEntier(v, 0),
-            streak: v => estEntier(v, 0),
+            lvl: v => estEntier(v, 1, 1000),
+            xp: v => estEntier(v, 0, 1000000),
+            streak: v => estEntier(v, 0, 100000),
             logs: v => Array.isArray(v) && v.every(estSeanceValide)
         };
+        const MAX_SEANCES_IMPORT = 5000;
+        const TAILLE_MAX_IMPORT = 1024 * 1024; // 1 Mo
+        // Ne garde que les champs utilisés par l'app (progression et chaque séance du journal)
+        const champsUtiles = p => ({
+            lvl: p.lvl, xp: p.xp, streak: p.streak,
+            logs: p.logs.map(l => ({ date: l.date, mood: l.mood, count: l.count }))
+        });
         const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v);
         // Vérification stricte (fichier importé) : tous les champs présents et du bon type
-        const estProfilValide = p => estObjet(p) && Object.keys(reglesProfil).every(k => reglesProfil[k](p[k]));
+        const estProfilValide = p => estObjet(p) && Object.keys(reglesProfil).every(k => reglesProfil[k](p[k])) && p.logs.length <= MAX_SEANCES_IMPORT;
 
         /* Lit la progression enregistrée sans jamais rien perdre :
            - illisible (texte abîmé) : le texte brut est copié dans fluxe_user_v1_illisible
@@ -171,7 +180,7 @@
             const exerciceValide = ex => estObjet(ex) && typeof ex.n === 'string' && typeof ex.d === 'string'
                 && typeof ex.h === 'string' && (typeof ex.r === 'number' || typeof ex.r === 'string');
             const valide = estObjet(b) && Array.isArray(b.workout) && b.workout.length > 0 && b.workout.every(exerciceValide)
-                && estEntier(b.index, 0) && b.index < b.workout.length
+                && estEntier(b.index, 0, b.workout.length - 1)
                 && ['beginner', 'intermediate', 'advanced'].includes(b.lvl);
             return valide ? b : null;
         }
@@ -506,7 +515,7 @@
         /* Export : sur iPhone, ouvre le menu de partage (Fichiers, AirDrop, mail...) ;
            sinon, téléchargement classique du fichier. */
         async function exporterProgression() {
-            const contenu = JSON.stringify({ app: 'fluxe-app', format: 1, exporte_le: new Date().toISOString(), data: { fluxe_user_v1: userData } }, null, 1);
+            const contenu = JSON.stringify({ app: 'fluxe-app', format: 1, exporte_le: new Date().toISOString(), data: { fluxe_user_v1: champsUtiles(userData) } }, null, 1);
             const nom = `fluxe-progression-${dateDuJour()}.json`;
             const fichier = new File([contenu], nom, { type: 'application/json' });
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [fichier] })) {
@@ -527,6 +536,7 @@
             const fichier = champ.files && champ.files[0];
             champ.value = ''; // permet de rechoisir le même fichier plus tard
             if (!fichier) return;
+            if (fichier.size > TAILLE_MAX_IMPORT) return alert("Ce fichier est trop gros pour être une sauvegarde Fluxe (plus de 1 Mo). Rien n'a été modifié.");
             const lecteur = new FileReader();
             lecteur.onload = () => appliquerImport(String(lecteur.result));
             lecteur.onerror = () => alert("Impossible de lire ce fichier. Rien n'a été modifié.");
@@ -544,13 +554,17 @@
             if (!estObjet(contenu) || contenu.app !== 'fluxe-app' || contenu.format !== 1 || !estObjet(contenu.data) || !estProfilValide(contenu.data.fluxe_user_v1)) {
                 return alert("Ce fichier n'est pas une sauvegarde Fluxe valide. Rien n'a été modifié.");
             }
-            const nouveau = contenu.data.fluxe_user_v1;
+            const nouveau = champsUtiles(contenu.data.fluxe_user_v1);
             const resume = p => `niveau ${p.lvl}, ${p.xp} XP, ${p.logs.length} séance(s)`;
             if (!confirm(`Importer cette sauvegarde ?\n\nTa progression actuelle (${resume(userData)}) sera remplacée par celle du fichier (${resume(nouveau)}).\n\nUne copie de sécurité de ta progression actuelle est gardée sur ce téléphone.`)) return;
             try {
-                // Copie de sécurité juste avant de remplacer (texte exact enregistré, ou progression affichée)
+                /* Copies de sécurité (texte exact enregistré, ou progression affichée) :
+                   - fluxe_user_v1_avant_import : la progression d'origine, avant le TOUT PREMIER import (jamais écrasée) ;
+                   - fluxe_user_v1_avant_dernier_import : la progression juste avant l'import le plus récent. */
                 const actuel = localStorage.getItem('fluxe_user_v1');
-                localStorage.setItem('fluxe_user_v1_avant_import', actuel !== null ? actuel : JSON.stringify(userData));
+                const copie = actuel !== null ? actuel : JSON.stringify(userData);
+                if (localStorage.getItem('fluxe_user_v1_avant_import') === null) localStorage.setItem('fluxe_user_v1_avant_import', copie);
+                localStorage.setItem('fluxe_user_v1_avant_dernier_import', copie);
                 Storage.set('fluxe_user_v1', nouveau);
             } catch (e) {
                 return alert("Impossible d'enregistrer sur ce téléphone (mémoire pleine ?). Rien n'a été modifié.");

@@ -170,3 +170,84 @@ test('le contenu d’un fichier importé n’est jamais interprété comme du co
   assert.equal(await p.textContent('#log-list .carte-seance-humeur'), piege);
   assert.deepEqual(await violations(p), []);
 });
+
+/* ===== Réserves du testeur (lot D) : champs connus seulement, bornes, taille, copies ===== */
+const AVANT_DERNIER = 'fluxe_user_v1_avant_dernier_import';
+
+const absurdes = {
+  'XP 1e300': { ...P, xp: 1e300 },
+  'niveau 1001': { ...P, lvl: 1001 },
+  'série 100 001': { ...P, streak: 100001 },
+  'XP 1 000 001': { ...P, xp: 1000001 },
+  'séance de 1001 exercices': { ...P, logs: [{ date: '2026-11-01T10:00:00.000Z', mood: '🔥', count: 1001 }] },
+  '5001 séances': { ...P, logs: Array.from({ length: 5001 }, () => ({ date: '2026-11-01T10:00:00.000Z', mood: '🔥', count: 3 })) },
+};
+for (const [nom, profil] of Object.entries(absurdes)) {
+  test(`valeur absurde refusée (${nom})`, async () => {
+    const p = await ouvrir(Q);
+    const avant = await toutLeStockage(p);
+    await importer(p, JSON.stringify(sauvegarde(profil)));
+    assert.equal(p.messages.length, 1);
+    assert.match(p.messages[0], /pas une sauvegarde Fluxe valide/);
+    assert.deepEqual(await toutLeStockage(p), avant);
+  });
+}
+
+test('limites hautes acceptées (niveau 1000, XP 1 000 000, 5000 séances) ; XP au-delà de niveau × 100 acceptée', async () => {
+  const p = await ouvrir(Q);
+  const grand = { lvl: 1000, xp: 1000000, streak: 100000, logs: Array.from({ length: 5000 }, () => ({ date: '2026-11-01T10:00:00.000Z', mood: '🔥', count: 18 })) };
+  await importer(p, JSON.stringify(sauvegarde(grand)));
+  await attendre(() => p.messages.length >= 2);
+  assert.deepEqual(await lireCle(p, CLE_UTILISATEUR), grand);
+  const q = await ouvrir(Q);
+  await importer(q, JSON.stringify(sauvegarde({ lvl: 1, xp: 150, streak: 1, logs: [] })));
+  await attendre(() => q.messages.length >= 2);
+  assert.equal((await lireCle(q, CLE_UTILISATEUR)).xp, 150);
+});
+
+test('fichier de plus de 1 Mo refusé avant lecture, rien n’est modifié', async () => {
+  const p = await ouvrir(Q);
+  const avant = await toutLeStockage(p);
+  const enorme = JSON.stringify({ ...sauvegarde(P), bourrage: 'x'.repeat(1024 * 1024) });
+  await importer(p, enorme);
+  assert.equal(p.messages.length, 1);
+  assert.match(p.messages[0], /trop gros/);
+  assert.match(p.messages[0], /Rien n'a été modifié/);
+  assert.deepEqual(await toutLeStockage(p), avant);
+});
+
+test('champs inconnus retirés à l’import (progression et séances)', async () => {
+  const p = await ouvrir(Q);
+  const avecExtras = { ...P, pirate: '<script>', logs: P.logs.map(l => ({ ...l, note: 'en trop', __proto__x: 1 })) };
+  await importer(p, JSON.stringify(sauvegarde(avecExtras)));
+  await attendre(() => p.messages.length >= 2);
+  assert.deepEqual(await lireCle(p, CLE_UTILISATEUR), P);
+});
+
+test('aller-retour toujours identique, même si la progression contient un ancien champ inconnu', async () => {
+  const a = await ouvrir({ ...P, ancien: 'champ' });
+  const premier = await exporter(a);
+  assert.deepEqual(premier.contenu.data.fluxe_user_v1, P, 'l’export ne contient que les champs utilisés');
+  const b = await ouvrir(Q);
+  await importer(b, JSON.stringify(premier.contenu));
+  await attendre(() => b.messages.length >= 2);
+  const second = await exporter(b);
+  assert.deepEqual(second.contenu.data, premier.contenu.data);
+});
+
+test('deux imports : la progression d’origine est toujours gardée, la plus récente aussi', async () => {
+  const p = await ouvrir(Q);
+  const origine = await lireBrut(p, CLE_UTILISATEUR);
+  await importer(p, JSON.stringify(sauvegarde(P)));
+  await attendre(() => p.messages.length >= 2);
+  assert.equal(await lireBrut(p, AVANT_IMPORT), origine);
+  assert.equal(await lireBrut(p, AVANT_DERNIER), origine);
+  const apresPremier = await lireBrut(p, CLE_UTILISATEUR);
+
+  const R = { lvl: 7, xp: 10, streak: 2, logs: [] };
+  await importer(p, JSON.stringify(sauvegarde(R)));
+  await attendre(() => p.messages.length >= 4);
+  assert.deepEqual(await lireCle(p, CLE_UTILISATEUR), R);
+  assert.equal(await lireBrut(p, AVANT_IMPORT), origine, 'la progression d’origine ne doit jamais être écrasée');
+  assert.equal(await lireBrut(p, AVANT_DERNIER), apresPremier);
+});
