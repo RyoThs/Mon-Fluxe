@@ -487,6 +487,64 @@ body {
 }
 
 
+/* Encadré « Ma progression » : export / import (en bas du journal) */
+.encadre-sauvegarde {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--fond-doux);
+  border: 1px solid var(--vert-100);
+  border-radius: 1rem;
+}
+.encadre-sauvegarde-titre {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+}
+.encadre-sauvegarde-texte {
+  margin-bottom: 0.75rem;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.sauvegarde-boutons {
+  display: flex;
+  gap: 0.5rem;
+}
+/* Bouton discret (contour vert), utilisé pour Exporter / Importer */
+.bouton-secondaire {
+  position: relative;
+  flex: 1 1 0%;
+  display: block;
+  padding: 0.75rem 0;
+  border: 1px solid rgba(45, 155, 124, 0.2);
+  border-radius: 0.75rem;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.bouton-secondaire:active { background: var(--accent); color: #000; }
+/* Contour visible quand on navigue au clavier */
+.bouton-secondaire:focus-visible,
+.bouton-secondaire:has(.champ-fichier:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Le vrai champ « choisir un fichier » est invisible : on touche le bouton « Importer » */
+.champ-fichier {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+
 /* ---------- 6. Séance, fin de séance, fenêtre d'aide ---------- */
 /* Écrans qui recouvrent toute la page */
 .plein-ecran {

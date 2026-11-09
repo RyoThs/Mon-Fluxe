@@ -86,9 +86,14 @@ async function demarrer(options = {}) {
       p.exterieurs = exterieurs;
       p.on('pageerror', e => p.erreurs.push(e.message));
       p.on('console', m => { if (m.type() === 'error') p.erreurs.push(m.text()); });
-      /* Réponses aux fenêtres alert/confirm : elles sont acceptées et leur texte gardé dans p.messages */
+      /* Fenêtres alert/confirm : leur texte est gardé dans p.messages.
+         Elles sont acceptées, sauf si on a mis false dans p.reponses (= « Annuler » au prochain confirm). */
       p.messages = [];
-      p.on('dialog', async d => { p.messages.push(d.message()); await d.accept(); });
+      p.reponses = [];
+      p.on('dialog', async d => {
+        p.messages.push(d.message());
+        if (d.type() === 'confirm' && p.reponses.shift() === false) await d.dismiss(); else await d.accept();
+      });
       await p.goto(srv.url + chemin);
       return p;
     },
@@ -118,6 +123,12 @@ const cles = p => p.evaluate(() => Object.keys(localStorage).sort());
    pour que le test reste juste même si la feuille de style ne se charge pas. */
 const cache = (p, selecteur) => p.$eval(selecteur, el => el.classList.contains('cache') || el.classList.contains('hidden') || getComputedStyle(el).display === 'none');
 
+/* Attend qu'une condition (côté test) devienne vraie, 5 s au plus */
+async function attendre(condition, message = 'condition jamais remplie') {
+  for (let i = 0; i < 100; i++) { if (await condition()) return; await new Promise(ok => setTimeout(ok, 50)); }
+  throw new Error(message);
+}
+
 /* Coche des groupes musculaires puis lance une séance (« Activer le Fluxe ») */
 async function lancerSeance(p, muscles = ['Pectoraux']) {
   for (const m of muscles) await p.click(`#main-screen button:text-is("${m}")`);
@@ -133,4 +144,4 @@ async function finirSeance(p, humeur = '🔥') {
   return total;
 }
 
-module.exports = { demarrer, serveur, listeFichiersSW, donner, donnerBrut, lireBrut, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
+module.exports = { attendre, demarrer, serveur, listeFichiersSW, donner, donnerBrut, lireBrut, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };

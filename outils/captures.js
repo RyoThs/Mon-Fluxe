@@ -10,7 +10,9 @@
      et mêmes graisses, prises dans les paquets @fontsource) ;
    - « après » = index.html actuel du dossier, avec css/app.css et les polices de fonts/.
    Pour chaque écran, en thème clair et sombre, le script compare les images pixel par pixel
-   et écrit le pourcentage de pixels différents (et une image des différences en rouge). */
+   et écrit le pourcentage de pixels différents (et une image des différences en rouge).
+   Les éléments ajoutés depuis (liste NOUVEAUTES) sont rendus invisibles pour la comparaison,
+   puis photographiés à part (« nouveau-… »). */
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -94,23 +96,58 @@ const ECRANS = {
   journal: async p => { await p.click('#nav-log'); },
 };
 
-async function photographier(app, nomVersion) {
-  const fichiers = {};
+/* Éléments ajoutés après la version de référence. Pour comparer les écrans existants,
+   ils sont rendus invisibles (sans changer la mise en page) ; ils sont photographiés à part. */
+const NOUVEAUTES = {
+  sauvegarde: { selecteur: '.encadre-sauvegarde', preparer: async p => { await p.click('#nav-log'); } },
+};
+
+async function nouvellePage(app, theme) {
+  const p = await app.page({ colorScheme: theme });
+  await p.addInitScript(hasardFige);
+  await p.evaluate(([k1, v1, k2, v2]) => { localStorage.setItem(k1, v1); localStorage.setItem(k2, v2); },
+    [CLE_UTILISATEUR, JSON.stringify(profil()), CLE_REPRISE, JSON.stringify({ workout: [{ n: 'Squat', r: 10, d: 'x', h: 'x' }], index: 0, lvl: 'intermediate' })]);
+  await p.reload();
+  await p.waitForLoadState('load');
+  return p;
+}
+const nomTheme = theme => (theme === 'light' ? 'clair' : 'sombre');
+
+/* Photos des nouveaux éléments (version actuelle seulement) : l'élément seul + l'écran entier */
+async function photographierNouveautes(app) {
+  const fichiers = [];
   for (const theme of ['light', 'dark']) {
-    for (const [ecran, preparer] of Object.entries(ECRANS)) {
-      const p = await app.page({ colorScheme: theme });
-      await p.addInitScript(hasardFige);
-      await p.evaluate(([k1, v1, k2, v2]) => { localStorage.setItem(k1, v1); localStorage.setItem(k2, v2); },
-        [CLE_UTILISATEUR, JSON.stringify(profil()), CLE_REPRISE, JSON.stringify({ workout: [{ n: 'Squat', r: 10, d: 'x', h: 'x' }], index: 0, lvl: 'intermediate' })]);
-      await p.reload();
-      await p.waitForLoadState('load');
+    for (const [nom, { selecteur, preparer }] of Object.entries(NOUVEAUTES)) {
+      const p = await nouvellePage(app, theme);
       await preparer(p);
       await p.evaluate(() => document.fonts.ready);
       await p.waitForTimeout(150);
-      const f = path.join(SORTIE, `${ecran}-${theme === 'light' ? 'clair' : 'sombre'}-${nomVersion}.png`);
+      const element = path.join(SORTIE, `nouveau-${nom}-${nomTheme(theme)}.png`);
+      const ecran = path.join(SORTIE, `nouveau-${nom}-${nomTheme(theme)}-ecran.png`);
+      await p.locator(selecteur).screenshot({ path: element, animations: 'disabled' });
+      await p.screenshot({ path: ecran, fullPage: true, animations: 'disabled' });
+      if (p.erreurs.length) console.warn(`  erreurs JS (${nom}, ${theme}) :`, p.erreurs);
+      fichiers.push(element, ecran);
+      await p.context().close();
+    }
+  }
+  return fichiers;
+}
+
+async function photographier(app, nomVersion) {
+  const fichiers = {};
+  const aCacher = nomVersion === 'apres' ? Object.values(NOUVEAUTES).map(n => n.selecteur) : [];
+  for (const theme of ['light', 'dark']) {
+    for (const [ecran, preparer] of Object.entries(ECRANS)) {
+      const p = await nouvellePage(app, theme);
+      await preparer(p);
+      if (aCacher.length) await p.addStyleTag({ content: `${aCacher.join(', ')} { visibility: hidden !important; }` });
+      await p.evaluate(() => document.fonts.ready);
+      await p.waitForTimeout(150);
+      const f = path.join(SORTIE, `${ecran}-${nomTheme(theme)}-${nomVersion}.png`);
       await p.screenshot({ path: f, fullPage: true, animations: 'disabled' });
       if (p.erreurs.length) console.warn(`  erreurs JS (${nomVersion}, ${ecran}, ${theme}) :`, p.erreurs);
-      fichiers[`${ecran}-${theme === 'light' ? 'clair' : 'sombre'}`] = f;
+      fichiers[`${ecran}-${nomTheme(theme)}`] = f;
       await p.context().close();
     }
   }
@@ -162,6 +199,8 @@ async function comparer(app, a, b, sortieDiff) {
     const r = await comparer(appApres, imagesAvant[nom], imagesApres[nom], path.join(SORTIE, `${nom}-differences.png`));
     console.log(`${nom.padEnd(16)} | ${r.pourcent.toFixed(3).padStart(8)} %        | ${r.tailles}`);
   }
+  const nouveautes = await photographierNouveautes(appApres);
+  console.log(`Nouveaux éléments (à regarder, sans comparaison) : ${nouveautes.map(f => path.basename(f)).join(', ')}`);
   await appApres.fermer();
   fs.rmSync(avant.dossier, { recursive: true, force: true });
   console.log(`Images dans : ${path.resolve(SORTIE)}`);

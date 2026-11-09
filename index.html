@@ -71,6 +71,15 @@
             </div>
         </div>
         <div id="log-list" class="liste-seances"></div>
+
+        <div class="encadre-sauvegarde">
+            <span class="encadre-sauvegarde-titre">Ma progression</span>
+            <p class="encadre-sauvegarde-texte">Garde une copie dans un fichier, ou récupère-la sur un autre téléphone</p>
+            <div class="sauvegarde-boutons">
+                <button onclick="exporterProgression()" id="bouton-exporter" class="bouton-secondaire">Exporter</button>
+                <label id="bouton-importer" class="bouton-secondaire">Importer<input type="file" accept="application/json,.json" id="fichier-import" class="champ-fichier" onchange="importerProgression(this)"></label>
+            </div>
+        </div>
     </div>
 
     <div id="workout-screen" class="plein-ecran ecran-seance cache">
@@ -441,15 +450,21 @@
     const logList = document.getElementById('log-list');
     const chartContainer = document.getElementById('activity-chart');
     
-    // 1. Rendu de la liste textuelle
-    logList.innerHTML = userData.logs.slice().reverse().map(l => `
-        <div class="carte carte-seance">
-            <div>
-                <p class="carte-seance-date">${new Date(l.date).toLocaleDateString()}</p>
-                <p class="carte-seance-nombre">${l.count} Exercices</p>
-            </div>
-            <span class="carte-seance-humeur">${l.mood}</span>
-        </div>`).join('');
+    // 1. Rendu de la liste textuelle (construite élément par élément, avec textContent :
+    //    un texte venant d'un fichier importé ne peut jamais être pris pour du code)
+    const element = (balise, classe, texte) => {
+        const el = document.createElement(balise);
+        if (classe) el.className = classe;
+        if (texte !== undefined) el.textContent = texte;
+        return el;
+    };
+    logList.replaceChildren(...userData.logs.slice().reverse().map(l => {
+        const carte = element('div', 'carte carte-seance');
+        const textes = element('div');
+        textes.append(element('p', 'carte-seance-date', new Date(l.date).toLocaleDateString()), element('p', 'carte-seance-nombre', `${l.count} Exercices`));
+        carte.append(textes, element('span', 'carte-seance-humeur', l.mood));
+        return carte;
+    }));
 
     // 2. Logique du graphique (7 derniers jours)
     const stats = new Array(7).fill(0);
@@ -480,6 +495,71 @@
         return `<div class="barre-graphique" style="height: ${height}%; opacity: ${opacity}"></div>`;
     }).join('');
 }
+
+        /* ===== Export / import de la progression (fichier JSON) ===== */
+        // Date du jour au format AAAA-MM-JJ (heure du téléphone), pour le nom du fichier
+        function dateDuJour() {
+            const d = new Date(), deux = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`;
+        }
+
+        /* Export : sur iPhone, ouvre le menu de partage (Fichiers, AirDrop, mail...) ;
+           sinon, téléchargement classique du fichier. */
+        async function exporterProgression() {
+            const contenu = JSON.stringify({ app: 'fluxe-app', format: 1, exporte_le: new Date().toISOString(), data: { fluxe_user_v1: userData } }, null, 1);
+            const nom = `fluxe-progression-${dateDuJour()}.json`;
+            const fichier = new File([contenu], nom, { type: 'application/json' });
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [fichier] })) {
+                try { await navigator.share({ files: [fichier], title: 'Progression Fluxe' }); return; }
+                catch (e) { if (e && e.name === 'AbortError') return; } // partage annulé : rien à faire ; autre souci : téléchargement
+            }
+            const lien = document.createElement('a');
+            lien.href = URL.createObjectURL(fichier);
+            lien.download = nom;
+            document.body.appendChild(lien);
+            lien.click();
+            lien.remove();
+            setTimeout(() => URL.revokeObjectURL(lien.href), 10000);
+        }
+
+        // Import : lit le fichier choisi, puis le vérifie avant de toucher à quoi que ce soit
+        function importerProgression(champ) {
+            const fichier = champ.files && champ.files[0];
+            champ.value = ''; // permet de rechoisir le même fichier plus tard
+            if (!fichier) return;
+            const lecteur = new FileReader();
+            lecteur.onload = () => appliquerImport(String(lecteur.result));
+            lecteur.onerror = () => alert("Impossible de lire ce fichier. Rien n'a été modifié.");
+            lecteur.readAsText(fichier);
+        }
+
+        function appliquerImport(texte) {
+            let contenu;
+            try { contenu = JSON.parse(texte); } catch (e) {
+                return alert("Ce fichier n'est pas une sauvegarde lisible (contenu abîmé). Rien n'a été modifié.");
+            }
+            if (estObjet(contenu) && (contenu.app === 'fluxe-suivi' || (contenu.app === undefined && Array.isArray(contenu.sessions)))) {
+                return alert("Ce fichier vient de Fluxe Suivi (l'autre appli) : il ne contient pas de progression Fluxe. Rien n'a été modifié.");
+            }
+            if (!estObjet(contenu) || contenu.app !== 'fluxe-app' || contenu.format !== 1 || !estObjet(contenu.data) || !estProfilValide(contenu.data.fluxe_user_v1)) {
+                return alert("Ce fichier n'est pas une sauvegarde Fluxe valide. Rien n'a été modifié.");
+            }
+            const nouveau = contenu.data.fluxe_user_v1;
+            const resume = p => `niveau ${p.lvl}, ${p.xp} XP, ${p.logs.length} séance(s)`;
+            if (!confirm(`Importer cette sauvegarde ?\n\nTa progression actuelle (${resume(userData)}) sera remplacée par celle du fichier (${resume(nouveau)}).\n\nUne copie de sécurité de ta progression actuelle est gardée sur ce téléphone.`)) return;
+            try {
+                // Copie de sécurité juste avant de remplacer (texte exact enregistré, ou progression affichée)
+                const actuel = localStorage.getItem('fluxe_user_v1');
+                localStorage.setItem('fluxe_user_v1_avant_import', actuel !== null ? actuel : JSON.stringify(userData));
+                Storage.set('fluxe_user_v1', nouveau);
+            } catch (e) {
+                return alert("Impossible d'enregistrer sur ce téléphone (mémoire pleine ?). Rien n'a été modifié.");
+            }
+            userData = chargerProgression();
+            updateUI();
+            renderLogbook();
+            alert('Progression importée.');
+        }
 
         updateUI();
         checkBackup();
