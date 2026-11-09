@@ -6,6 +6,7 @@
     <title>FLUXE - Fitness App</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2D9B7C">
@@ -425,6 +426,11 @@
 
         updateUI();
         checkBackup();
+
+        // Hors ligne : enregistre le service worker (sw.js), qui garde une copie de l'app
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {}));
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+  "name": "Fluxe",
+  "short_name": "Fluxe",
+  "description": "Séances de musculation au poids du corps, générées en un geste",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF8F2",
+  "theme_color": "#2D9B7C",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
