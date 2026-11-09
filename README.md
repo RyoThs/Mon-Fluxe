@@ -10,7 +10,7 @@ Version actuelle : **1.0.0**
 
 **https://ryoths.github.io/Mon-Fluxe/**
 
-⚠️ Garde exactement cette adresse (majuscules comprises). Sur iPhone, les données de l'appli (niveau, XP, journal) sont rangées par adresse : **changer l'adresse (renommer le dépôt, changer la casse, déplacer l'appli) ferait repartir l'appli de zéro**. Exporte ta progression avant tout changement de ce genre.
+⚠️ Garde exactement cette adresse (majuscules comprises) : c'est celle de l'icône sur ton écran d'accueil et de la copie hors-ligne. Renommer le dépôt ou déplacer l'appli casserait l'icône et le mode hors-ligne (il faudrait réinstaller l'appli). Tes données (niveau, XP, journal) sont rangées par site (`ryoths.github.io`) et non par dossier, mais par prudence **exporte ta progression avant tout changement de ce genre**. À vérifier une fois dans Safari : l'adresse s'ouvre bien avec cette casse.
 
 ## Installer sur iPhone
 
