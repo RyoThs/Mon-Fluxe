@@ -3,159 +3,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLUXE - Fitness App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2D9B7C">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,900&family=Inter:wght@300;400;600;800;900&display=swap');
-        :root { --bg: #FAF8F2; --card: #FFFFFF; --text: #1a1a1a; --accent: #2D9B7C; }
-        @media (prefers-color-scheme: dark) { :root { --bg: #121414; --card: #1C1F1F; --text: #ffffff; --accent: #42BFA0; } }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.4s; overflow-x: hidden; }
-        .barlow { font-family: 'Barlow Condensed', sans-serif; }
-        .screen { transition: 0.5s ease; opacity: 1; }
-        .screen-hidden { display: none; opacity: 0; }
-        .card { background: var(--card); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-left: 8px solid var(--accent); }
-        .muscle-chip { transition: 0.2s; border: 1px solid rgba(45, 155, 124, 0.15); background: rgba(45, 155, 124, 0.05); }
-        .muscle-chip.active { background: var(--accent); color: #000; font-weight: 900; border-color: var(--accent); }
-        .lvl-btn { transition: 0.3s; border: 1px solid rgba(45, 155, 124, 0.2); color: var(--accent); font-weight: 800; opacity: 0.5; }
-        .lvl-btn.active { background: var(--accent); color: #000 !important; opacity: 1; border-color: var(--accent); }
-        .btn-nav { 
-    font-size: 14px; 
-    font-weight: 900; 
-    color: #000; /* Texte noir comme sur le bouton principal */
-    opacity: 0.5; 
-    transition: 0.3s; 
-}
-        .active-nav { 
-    opacity: 1; 
-    transform: scale(1.1);
-}
-        .active-nav span {
-    border-bottom: 2px solid #000;
-}
-        .glass { 
-    background: #2D9B7C; /* Même couleur que le bouton */
-    border-top: none;
-    box-shadow: 0 -10px 30px rgba(45, 155, 124, 0.2);
-}
-        .btn-primary { background-color: var(--accent) !important; color: #000 !important; font-weight: 900 !important; text-transform: uppercase; font-style: italic; }
-        .xp-bar-bg { background: rgba(0,0,0,0.05); border-radius: 10px; height: 10px; width: 100%; overflow: hidden; }
-        .xp-bar-fill { background: var(--accent); height: 100%; width: 0%; transition: 1s ease-out; }
-        .toggle-btn { position: relative; width: 44px; height: 22px; background: #ccc; border-radius: 11px; transition: 0.3s; }
-        .toggle-btn.active { background: var(--accent); }
-        .toggle-dot { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: 0.3s; }
-        .toggle-btn.active .toggle-dot { left: 24px; }
-        .chart-container { 
-    display: flex; 
-    align-items: flex-end; 
-    justify-content: space-between; 
-    height: 80px; 
-    gap: 8px; 
-    padding: 0 5px;
-}
-.chart-bar { 
-    background: var(--accent); 
-    width: 100%; 
-    border-radius: 6px 6px 2px 2px; 
-    min-height: 4px; 
-    transition: height 0.6s ease;
-}
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,900&family=Inter:wght@300;400;600;800;900&display=swap">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="max-w-md mx-auto min-h-screen pb-40">
+<body>
 
-    <nav class="fixed bottom-0 left-0 right-0 glass px-6 py-8 flex justify-around items-center rounded-t-[40px] z-[100] max-w-md mx-auto">
-        <button onclick="showScreen('main-screen')" class="btn-nav active-nav flex flex-col items-center" id="nav-home"><span class="barlow uppercase italic">⚡ Fluxe</span></button>
-        <button onclick="showScreen('logbook-screen'); renderLogbook();" class="btn-nav flex flex-col items-center" id="nav-log"><span class="barlow uppercase italic">📊 Journal</span></button>
+    <nav class="barre-nav">
+        <button onclick="showScreen('main-screen')" class="bouton-nav actif" id="nav-home"><span>⚡ Fluxe</span></button>
+        <button onclick="showScreen('logbook-screen'); renderLogbook();" class="bouton-nav" id="nav-log"><span>📊 Journal</span></button>
     </nav>
 
-    <div id="main-screen" class="screen p-6">
-        <header class="flex justify-between items-center py-6">
+    <div id="main-screen" class="ecran">
+        <header class="entete">
             <div>
-                <h1 class="text-4xl font-[900] italic uppercase text-emerald-700 barlow">FLUXE</h1>
-                <p class="text-[10px] font-black opacity-40 uppercase">Niveau <span id="user-lvl">1</span></p>
+                <h1 class="logo">FLUXE</h1>
+                <p class="niveau">Niveau <span id="user-lvl">1</span></p>
             </div>
-            <div id="streak-counter" class="text-[10px] font-black px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/20 uppercase">🔥 0 SESSIONS</div>
+            <div id="streak-counter" class="badge-serie">🔥 0 SESSIONS</div>
         </header>
 
-        <div class="xp-bar-bg mb-8"><div id="xp-fill" class="xp-bar-fill"></div></div>
+        <div class="barre-xp"><div id="xp-fill" class="barre-xp-remplie"></div></div>
 
-        <div id="resume-card" class="hidden card p-5 mb-6 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 flex justify-between items-center border-l-0 border-r-8">
-            <div><span class="text-[10px] font-black uppercase italic text-emerald-700">En cours</span><p class="text-[8px] font-bold opacity-50">Reprendre le flux ?</p></div>
-            <button onclick="resumeWorkout()" class="px-5 py-2 bg-emerald-600 text-white rounded-full text-[10px] font-black uppercase shadow-lg">Reprendre</button>
+        <div id="resume-card" class="carte-reprise cache">
+            <div><span class="carte-reprise-titre">En cours</span><p class="carte-reprise-texte">Reprendre le flux ?</p></div>
+            <button onclick="resumeWorkout()" class="bouton-reprendre">Reprendre</button>
         </div>
 
-        <div class="flex items-center justify-between mb-6 bg-emerald-50 dark:bg-emerald-950/20 p-4 rounded-2xl border border-emerald-100">
-            <div><span class="text-xs font-black uppercase italic">Mode Express</span><p class="text-[8px] opacity-50 font-bold uppercase">6 exercices max</p></div>
-            <button onclick="toggleExpress()" id="express-toggle" class="toggle-btn"><div class="toggle-dot"></div></button>
+        <div class="encadre-express">
+            <div><span class="encadre-express-titre">Mode Express</span><p class="encadre-express-texte">6 exercices max</p></div>
+            <button onclick="toggleExpress()" id="express-toggle" class="interrupteur"><div class="interrupteur-rond"></div></button>
         </div>
 
-        <div class="flex gap-2 mb-4">
-            <button onclick="setLevel(0.5, this, 'beginner')" class="lvl-btn flex-1 py-3 rounded-xl text-[9px] uppercase">Débutant</button>
-            <button onclick="setLevel(1.0, this, 'intermediate')" class="lvl-btn active flex-1 py-3 rounded-xl text-[9px] uppercase">Intermédiaire</button>
-            <button onclick="setLevel(1.8, this, 'advanced')" class="lvl-btn flex-1 py-3 rounded-xl text-[9px] uppercase">Avancé</button>
+        <div class="choix-niveau">
+            <button onclick="setLevel(0.5, this, 'beginner')" class="bouton-niveau">Débutant</button>
+            <button onclick="setLevel(1.0, this, 'intermediate')" class="bouton-niveau actif">Intermédiaire</button>
+            <button onclick="setLevel(1.8, this, 'advanced')" class="bouton-niveau">Avancé</button>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8">
-            <button onclick="toggleMuscle('Pectoraux', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Pectoraux</button>
-            <button onclick="toggleMuscle('Dos', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Dos</button>
-            <button onclick="toggleMuscle('Jambes', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Jambes</button>
-            <button onclick="toggleMuscle('Abdos', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Abdos</button>
-            <button onclick="toggleMuscle('Épaules', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Épaules</button>
-            <button onclick="toggleMuscle('Bras', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Bras</button>
+        <div class="grille-muscles">
+            <button onclick="toggleMuscle('Pectoraux', this)" class="puce-muscle">Pectoraux</button>
+            <button onclick="toggleMuscle('Dos', this)" class="puce-muscle">Dos</button>
+            <button onclick="toggleMuscle('Jambes', this)" class="puce-muscle">Jambes</button>
+            <button onclick="toggleMuscle('Abdos', this)" class="puce-muscle">Abdos</button>
+            <button onclick="toggleMuscle('Épaules', this)" class="puce-muscle">Épaules</button>
+            <button onclick="toggleMuscle('Bras', this)" class="puce-muscle">Bras</button>
         </div>
 
-        <button onclick="generateWorkout()" class="btn-primary w-full py-6 rounded-[30px] text-xl shadow-xl barlow">Activer le Fluxe</button>
+        <button onclick="generateWorkout()" class="bouton-principal bouton-activer">Activer le Fluxe</button>
     </div>
 
-    <div id="logbook-screen" class="screen screen-hidden p-6">
-        <h2 class="text-3xl font-black mb-6 italic text-emerald-700 uppercase barlow text-center">Journal</h2>
-        <div class="card p-5 mb-8 border-emerald-500/30">
-    <div class="flex justify-between items-end mb-4">
-        <h3 class="text-[10px] font-black uppercase italic text-emerald-600">Activité (7 derniers jours)</h3>
-        <span id="total-week-ex" class="text-[10px] font-bold opacity-50">0 exos</span>
-    </div>
-    <div id="activity-chart" class="chart-container">
-        </div>
-    <div class="flex justify-between mt-2 opacity-30 text-[8px] font-bold uppercase">
-        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-    </div>
-</div>
-        <div id="log-list" class="space-y-4"></div>
-    </div>
-
-    <div id="workout-screen" class="hidden fixed inset-0 bg-[#FAF8F2] dark:bg-[#121414] z-[1000] flex flex-col p-6">
-        <div class="grow flex flex-col justify-center items-center text-center">
-            <div class="flex items-center gap-3 mb-2">
-                <h2 id="ex-name" class="text-3xl font-black italic uppercase barlow">---</h2>
-                <button onclick="showInfo()" class="bg-emerald-500 text-black w-8 h-8 rounded-full font-black">?</button>
+    <div id="logbook-screen" class="ecran ecran-cache">
+        <h2 class="titre-journal">Journal</h2>
+        <div class="carte carte-activite">
+            <div class="carte-activite-entete">
+                <h3 class="carte-activite-titre">Activité (7 derniers jours)</h3>
+                <span id="total-week-ex" class="carte-activite-total">0 exos</span>
             </div>
-            <p id="ex-desc" class="text-[10px] font-bold uppercase opacity-40 mb-6 text-emerald-600">---</p>
-            <div class="flex items-baseline gap-2"><span id="ex-reps" class="text-8xl text-emerald-600 font-black barlow">0</span><span class="text-xl font-black opacity-20 uppercase">Reps</span></div>
-            <p id="step-counter-text" class="mt-8 font-bold opacity-30 uppercase text-emerald-600">Flux 1/X</p>
+            <div id="activity-chart" class="graphique"></div>
+            <div class="jours-semaine">
+                <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+            </div>
         </div>
-        <button onclick="nextStep()" class="btn-primary w-full py-8 rounded-[35px] text-2xl mb-10 barlow">Suivant</button>
+        <div id="log-list" class="liste-seances"></div>
     </div>
 
-    <div id="feedback-screen" class="hidden fixed inset-0 bg-[#FAF8F2] dark:bg-[#121414] z-[2000] flex flex-col p-10 justify-center text-center">
-        <h2 class="text-4xl font-black italic uppercase barlow">Flux Terminé !</h2>
-        <div class="flex justify-around my-12">
-            <button onclick="finishWithFeedback('😃')" class="text-5xl hover:scale-125 transition">😃</button>
-            <button onclick="finishWithFeedback('🔥')" class="text-5xl hover:scale-125 transition">🔥</button>
-            <button onclick="finishWithFeedback('💀')" class="text-5xl hover:scale-125 transition">💀</button>
+    <div id="workout-screen" class="plein-ecran ecran-seance cache">
+        <div class="seance-centre">
+            <div class="seance-ligne-titre">
+                <h2 id="ex-name" class="seance-nom">---</h2>
+                <button onclick="showInfo()" class="bouton-aide">?</button>
+            </div>
+            <p id="ex-desc" class="seance-description">---</p>
+            <div class="seance-repetitions"><span id="ex-reps" class="seance-nombre">0</span><span class="seance-unite">Reps</span></div>
+            <p id="step-counter-text" class="seance-compteur">Flux 1/X</p>
         </div>
-        <p id="xp-gain-text" class="text-emerald-600 font-black italic text-xl barlow">+ 0 XP</p>
+        <button onclick="nextStep()" class="bouton-principal bouton-suivant">Suivant</button>
     </div>
 
-    <div id="info-modal" class="hidden fixed inset-0 z-[3000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#1C1F1F] p-8 rounded-[40px] max-w-sm w-full">
-            <h3 id="modal-title" class="text-xl font-black italic uppercase mb-4 text-emerald-600 barlow">Guide</h3>
-            <div id="modal-text" class="text-sm leading-relaxed mb-8 opacity-70">---</div>
-            <button onclick="closeInfo()" class="w-full py-5 bg-emerald-500 text-black rounded-2xl font-black uppercase text-xs">OK</button>
+    <div id="feedback-screen" class="plein-ecran ecran-fin cache">
+        <h2 class="fin-titre">Flux Terminé !</h2>
+        <div class="choix-humeur">
+            <button onclick="finishWithFeedback('😃')" class="bouton-humeur">😃</button>
+            <button onclick="finishWithFeedback('🔥')" class="bouton-humeur">🔥</button>
+            <button onclick="finishWithFeedback('💀')" class="bouton-humeur">💀</button>
+        </div>
+        <p id="xp-gain-text" class="gain-xp">+ 0 XP</p>
+    </div>
+
+    <div id="info-modal" class="fond-fenetre cache">
+        <div class="fenetre">
+            <h3 id="modal-title" class="fenetre-titre">Guide</h3>
+            <div id="modal-text" class="fenetre-texte">---</div>
+            <button onclick="closeInfo()" class="bouton-ok">OK</button>
         </div>
     </div>
 
@@ -316,7 +260,7 @@
 
         function checkBackup() {
             const backup = Storage.get('fluxe_backup', null);
-            if(backup) document.getElementById('resume-card').classList.remove('hidden');
+            if(backup) document.getElementById('resume-card').classList.remove('cache');
         }
 
         function resumeWorkout() {
@@ -324,38 +268,38 @@
             currentWorkout = backup.workout;
             currentStepIndex = backup.index;
             levelKey = backup.lvl;
-            document.getElementById('resume-card').classList.add('hidden');
-            document.getElementById('workout-screen').classList.remove('hidden');
+            document.getElementById('resume-card').classList.add('cache');
+            document.getElementById('workout-screen').classList.remove('cache');
             updateStep();
         }
 
         function toggleMuscle(m, btn) {
             if(selectedMuscles.includes(m)) {
                 selectedMuscles = selectedMuscles.filter(x => x !== m);
-                btn.classList.remove('active');
+                btn.classList.remove('actif');
             } else {
                 selectedMuscles.push(m);
-                btn.classList.add('active');
+                btn.classList.add('actif');
             }
         }
 
         function setLevel(val, btn, key) {
             levelKey = key;
-            document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.bouton-niveau').forEach(b => b.classList.remove('actif'));
+            btn.classList.add('actif');
         }
 
         function toggleExpress() {
             isExpress = !isExpress;
-            document.getElementById('express-toggle').classList.toggle('active');
+            document.getElementById('express-toggle').classList.toggle('actif');
         }
 
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.add('screen-hidden'));
-            document.getElementById(id).classList.remove('screen-hidden');
-            document.querySelectorAll('.btn-nav').forEach(n => n.classList.remove('active-nav'));
-            if(id === 'main-screen') document.getElementById('nav-home').classList.add('active-nav');
-            if(id === 'logbook-screen') document.getElementById('nav-log').classList.add('active-nav');
+            document.querySelectorAll('.ecran').forEach(s => s.classList.add('ecran-cache'));
+            document.getElementById(id).classList.remove('ecran-cache');
+            document.querySelectorAll('.bouton-nav').forEach(n => n.classList.remove('actif'));
+            if(id === 'main-screen') document.getElementById('nav-home').classList.add('actif');
+            if(id === 'logbook-screen') document.getElementById('nav-log').classList.add('actif');
         }
 
         function generateWorkout() {
@@ -385,7 +329,7 @@
     currentStepIndex = 0;
     saveProgress(); // Sauvegarde automatique pour le bouton "Reprendre"
     updateStep();
-    document.getElementById('workout-screen').classList.remove('hidden');
+    document.getElementById('workout-screen').classList.remove('cache');
 }
 
         function updateStep() {
@@ -403,8 +347,8 @@
                 updateStep();
             } else {
                 Storage.remove('fluxe_backup');
-                document.getElementById('workout-screen').classList.add('hidden');
-                document.getElementById('feedback-screen').classList.remove('hidden');
+                document.getElementById('workout-screen').classList.add('cache');
+                document.getElementById('feedback-screen').classList.remove('cache');
                 document.getElementById('xp-gain-text').innerText = `+ ${currentWorkout.length * 15} XP`;
             }
         }
@@ -415,7 +359,7 @@
             userData.logs.push({ date: new Date().toISOString(), mood: mood, count: currentWorkout.length });
             userData.streak++;
             Storage.set('fluxe_user_v1', userData);
-            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('feedback-screen').classList.add('cache');
             updateUI();
             showScreen('main-screen');
         }
@@ -430,10 +374,10 @@
             const ex = currentWorkout[currentStepIndex];
             document.getElementById('modal-title').innerText = ex.n;
             document.getElementById('modal-text').innerHTML = ex.h.replace(/\n/g, '<br>');
-            document.getElementById('info-modal').classList.remove('hidden');
+            document.getElementById('info-modal').classList.remove('cache');
         }
 
-        function closeInfo() { document.getElementById('info-modal').classList.add('hidden'); }
+        function closeInfo() { document.getElementById('info-modal').classList.add('cache'); }
 
         function renderLogbook() {
     const logList = document.getElementById('log-list');
@@ -441,12 +385,12 @@
     
     // 1. Rendu de la liste textuelle
     logList.innerHTML = userData.logs.slice().reverse().map(l => `
-        <div class="card p-4 flex justify-between items-center mb-3">
+        <div class="carte carte-seance">
             <div>
-                <p class="text-[10px] font-black opacity-40">${new Date(l.date).toLocaleDateString()}</p>
-                <p class="font-bold text-xs uppercase">${l.count} Exercices</p>
+                <p class="carte-seance-date">${new Date(l.date).toLocaleDateString()}</p>
+                <p class="carte-seance-nombre">${l.count} Exercices</p>
             </div>
-            <span class="text-2xl">${l.mood}</span>
+            <span class="carte-seance-humeur">${l.mood}</span>
         </div>`).join('');
 
     // 2. Logique du graphique (7 derniers jours)
@@ -475,7 +419,7 @@
     chartContainer.innerHTML = stats.map((val, i) => {
         const height = (val / maxEx) * 100;
         const opacity = val > 0 ? 1 : 0.2;
-        return `<div class="chart-bar" style="height: ${height}%; opacity: ${opacity}"></div>`;
+        return `<div class="barre-graphique" style="height: ${height}%; opacity: ${opacity}"></div>`;
     }).join('');
 }
 

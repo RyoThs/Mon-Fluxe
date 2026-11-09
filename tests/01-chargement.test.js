@@ -25,6 +25,6 @@ test('le journal s\'ouvre sans erreur', async () => {
   const p = await app.page();
   await p.click('#nav-log');
   assert.ok(await p.isVisible('#logbook-screen'));
-  assert.equal(await p.locator('#activity-chart .chart-bar').count(), 7);
+  assert.equal(await p.locator('#activity-chart > div').count(), 7);
   assert.deepEqual(p.erreurs, []);
 });

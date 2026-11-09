@@ -34,7 +34,7 @@ test('un profil existant est relu tel quel', async () => {
   assert.equal(await p.getAttribute('#xp-fill', 'style'), 'width: 40%;');
   assert.deepEqual(await lireCle(p, CLE_UTILISATEUR), profil);
   await p.click('#nav-log');
-  assert.equal(await p.locator('#log-list .card').count(), 1);
+  assert.equal(await p.locator('#log-list > div').count(), 1);
   assert.match(await p.textContent('#log-list'), /3 Exercices/);
 });
 

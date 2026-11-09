@@ -1,0 +1,623 @@
+/* =====================================================================
+   FLUXE App : feuille de style écrite à la main (remplace Tailwind en ligne).
+   Organisation :
+     1. Couleurs (variables) et thème sombre
+     2. Remise à zéro des styles du navigateur
+     3. Mise en page générale (page, écrans, barre du bas)
+     4. Écran d'accueil
+     5. Journal
+     6. Séance, fin de séance, fenêtre d'aide
+     7. Petits outils (cacher un élément)
+   Le thème sombre suit le réglage du téléphone (prefers-color-scheme).
+   ===================================================================== */
+
+
+/* ---------- 1. Couleurs ---------- */
+:root {
+  --fond: #FAF8F2;            /* fond de la page */
+  --fond-carte: #FFFFFF;      /* fond des cartes et de la fenêtre d'aide */
+  --texte: #1a1a1a;           /* texte principal */
+  --accent: #2D9B7C;          /* vert Fluxe (boutons, barres) */
+
+  /* Nuances de vert (« émeraude ») */
+  --vert-50: #ecfdf5;
+  --vert-100: #d1fae5;
+  --vert-500: #10b981;
+  --vert-600: #059669;
+  --vert-700: #047857;
+  --vert-800: #065f46;
+
+  /* Fonds teintés qui changent avec le thème */
+  --fond-reprise: var(--vert-50);   /* carte « En cours » */
+  --fond-doux: var(--vert-50);      /* encadré « Mode Express » */
+  --fond-badge: var(--vert-100);    /* pastille « 🔥 sessions » */
+
+  /* Ombres */
+  --ombre-carte: 0 10px 30px rgba(0, 0, 0, 0.04);
+  --ombre-moyenne: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --ombre-forte: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* Polices */
+  --police-texte: 'Inter', sans-serif;
+  --police-titre: 'Barlow Condensed', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #121414;
+    --fond-carte: #1C1F1F;
+    --texte: #ffffff;
+    --accent: #42BFA0;
+    --fond-reprise: rgba(6, 78, 59, 0.3);
+    --fond-doux: rgba(2, 44, 34, 0.2);
+    --fond-badge: rgba(2, 44, 34, 0.2);
+  }
+}
+
+
+/* ---------- 2. Remise à zéro ----------
+   Chaque navigateur ajoute ses propres marges et styles de boutons :
+   on les retire pour partir d'une base identique partout. */
+*,
+::before,
+::after {
+  box-sizing: border-box;     /* la largeur inclut les marges intérieures et la bordure */
+  border: 0 solid #e5e7eb;    /* pas de bordure par défaut */
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-tap-highlight-color: transparent;   /* pas de flash gris au toucher sur iPhone */
+}
+
+h1, h2, h3, p {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-transform: none;
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+}
+
+
+/* ---------- 3. Mise en page générale ---------- */
+body {
+  max-width: 28rem;           /* largeur d'un téléphone, centrée sur grand écran */
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-bottom: 10rem;      /* place pour la barre du bas */
+  background-color: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-texte);
+  line-height: inherit;
+  transition: 0.4s;
+  overflow-x: hidden;
+}
+
+/* Un « écran » = une page de l'app (accueil, journal) */
+.ecran {
+  padding: 1.5rem;
+  opacity: 1;
+  transition: 0.5s ease;
+}
+.ecran-cache { display: none; opacity: 0; }
+
+/* Barre de navigation fixée en bas */
+.barre-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #2D9B7C;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  box-shadow: 0 -10px 30px rgba(45, 155, 124, 0.2);
+}
+.bouton-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: #000;
+  opacity: 0.5;
+  transition: 0.3s;
+}
+.bouton-nav span { font-family: var(--police-titre); text-transform: uppercase; font-style: italic; }
+.bouton-nav.actif { opacity: 1; transform: scale(1.1); }
+.bouton-nav.actif span { border-bottom: 2px solid #000; }
+
+/* Carte blanche arrondie avec un liseré vert à gauche */
+.carte {
+  background: var(--fond-carte);
+  border-radius: 30px;
+  box-shadow: var(--ombre-carte);
+  border-left: 8px solid var(--accent);
+}
+
+/* Gros bouton principal vert (« Activer le Fluxe », « Suivant ») */
+.bouton-principal {
+  width: 100%;
+  background-color: var(--accent);
+  color: #000;
+  font-family: var(--police-titre);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+
+/* ---------- 4. Écran d'accueil ---------- */
+.entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+.logo {
+  font-family: var(--police-titre);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  color: var(--vert-700);
+}
+.niveau {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+.badge-serie {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background-color: var(--fond-badge);
+  color: var(--vert-800);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* Barre d'expérience (XP) */
+.barre-xp {
+  width: 100%;
+  height: 10px;
+  margin-bottom: 2rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.barre-xp-remplie {
+  width: 0%;
+  height: 100%;
+  background: var(--accent);
+  transition: 1s ease-out;
+}
+
+/* Carte « En cours / Reprendre » : liseré à droite au lieu de gauche */
+.carte-reprise {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  background: var(--fond-reprise);
+  border-radius: 30px;
+  box-shadow: var(--ombre-carte);
+  border-right: 8px solid var(--vert-500);
+}
+.carte-reprise-titre {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  color: var(--vert-700);
+}
+.carte-reprise-texte {
+  font-size: 8px;
+  font-weight: 700;
+  opacity: 0.5;
+}
+.bouton-reprendre {
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--vert-600);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: var(--ombre-moyenne);
+}
+
+/* Encadré « Mode Express » */
+.encadre-express {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--fond-doux);
+  border: 1px solid var(--vert-100);
+  border-radius: 1rem;
+}
+.encadre-express-titre {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+}
+.encadre-express-texte {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* Interrupteur marche / arrêt */
+.interrupteur {
+  position: relative;
+  width: 44px;
+  height: 22px;
+  background: #ccc;
+  border-radius: 11px;
+  transition: 0.3s;
+}
+.interrupteur.actif { background: var(--accent); }
+.interrupteur-rond {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.interrupteur.actif .interrupteur-rond { left: 24px; }
+
+/* Choix du niveau (Débutant / Intermédiaire / Avancé) */
+.choix-niveau {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.bouton-niveau {
+  flex: 1 1 0%;
+  padding: 0.75rem 0;
+  border: 1px solid rgba(45, 155, 124, 0.2);
+  border-radius: 0.75rem;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  opacity: 0.5;
+  transition: 0.3s;
+}
+.bouton-niveau.actif {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  opacity: 1;
+}
+
+/* Grille des groupes musculaires */
+.grille-muscles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.puce-muscle {
+  padding: 1rem 0;
+  border: 1px solid rgba(45, 155, 124, 0.15);
+  border-radius: 1rem;
+  background: rgba(45, 155, 124, 0.05);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-style: italic;
+  transition: 0.2s;
+}
+.puce-muscle.actif {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 900;
+}
+
+.bouton-activer {
+  padding: 1.5rem 0;
+  border-radius: 30px;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  box-shadow: var(--ombre-forte);
+}
+
+
+/* ---------- 5. Journal ---------- */
+.titre-journal {
+  margin-bottom: 1.5rem;
+  font-family: var(--police-titre);
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--vert-700);
+}
+.carte-activite {
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  border-left-color: rgba(16, 185, 129, 0.3);
+}
+.carte-activite-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+.carte-activite-titre {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  color: var(--vert-600);
+}
+.carte-activite-total {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.5;
+}
+
+/* Graphique : 7 barres, une par jour */
+.graphique {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 80px;
+  gap: 8px;
+  padding: 0 5px;
+}
+.barre-graphique {
+  width: 100%;
+  min-height: 4px;
+  background: var(--accent);
+  border-radius: 6px 6px 2px 2px;
+  transition: height 0.6s ease;
+}
+.jours-semaine {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.3;
+}
+
+/* Liste des séances passées (cartes ajoutées par le JavaScript) */
+.carte-seance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.liste-seances > .carte-seance + .carte-seance {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.carte-seance-date {
+  font-size: 10px;
+  font-weight: 900;
+  opacity: 0.4;
+}
+.carte-seance-nombre {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.carte-seance-humeur {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+
+/* ---------- 6. Séance, fin de séance, fenêtre d'aide ---------- */
+/* Écrans qui recouvrent toute la page */
+.plein-ecran {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fond);
+}
+
+.ecran-seance { z-index: 1000; padding: 1.5rem; }
+.seance-centre {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.seance-ligne-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.seance-nom {
+  font-family: var(--police-titre);
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+}
+.bouton-aide {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: var(--vert-500);
+  color: #000;
+  font-weight: 900;
+}
+.seance-description {
+  margin-bottom: 1.5rem;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--vert-600);
+  opacity: 0.4;
+}
+.seance-repetitions {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.seance-nombre {
+  font-family: var(--police-titre);
+  font-size: 6rem;
+  line-height: 1;
+  font-weight: 900;
+  color: var(--vert-600);
+}
+.seance-unite {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  opacity: 0.2;
+}
+.seance-compteur {
+  margin-top: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--vert-600);
+  opacity: 0.3;
+}
+.bouton-suivant {
+  padding: 2rem 0;
+  margin-bottom: 2.5rem;
+  border-radius: 35px;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+/* Fin de séance : choix de l'humeur */
+.ecran-fin {
+  z-index: 2000;
+  padding: 2.5rem;
+  justify-content: center;
+  text-align: center;
+}
+.fin-titre {
+  font-family: var(--police-titre);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+}
+.choix-humeur {
+  display: flex;
+  justify-content: space-around;
+  margin: 3rem 0;
+}
+.bouton-humeur {
+  font-size: 3rem;
+  line-height: 1;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bouton-humeur:hover { transform: scale(1.25); }
+.gain-xp {
+  font-family: var(--police-titre);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--vert-600);
+}
+
+/* Fenêtre d'aide (bouton « ? ») */
+.fond-fenetre {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.fenetre {
+  width: 100%;
+  max-width: 24rem;
+  padding: 2rem;
+  border-radius: 40px;
+  background-color: var(--fond-carte);
+}
+.fenetre-titre {
+  margin-bottom: 1rem;
+  font-family: var(--police-titre);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  color: var(--vert-600);
+}
+.fenetre-texte {
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  opacity: 0.7;
+}
+.bouton-ok {
+  width: 100%;
+  padding: 1.25rem 0;
+  border-radius: 1rem;
+  background-color: var(--vert-500);
+  color: #000;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+
+/* ---------- 7. Petits outils ---------- */
+/* Cache un élément (utilisé par le JavaScript pour ouvrir/fermer les écrans) */
+.cache { display: none !important; }

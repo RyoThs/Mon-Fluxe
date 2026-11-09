@@ -86,9 +86,10 @@ const lireCle = (p, cle) => p.evaluate(k => JSON.parse(localStorage.getItem(k)),
 /* Liste des clés présentes dans le stockage */
 const cles = p => p.evaluate(() => Object.keys(localStorage).sort());
 
-/* Vrai si l'élément est caché par l'app. L'app cache ses écrans avec la classe « hidden » :
-   on regarde la classe (et pas seulement l'affichage) pour ne pas dépendre de la feuille de style. */
-const cache = (p, selecteur) => p.$eval(selecteur, el => el.classList.contains('hidden') || getComputedStyle(el).display === 'none');
+/* Vrai si l'élément est caché par l'app. L'app cache ses écrans avec la classe « cache »
+   (« hidden » dans l'ancienne version) : on regarde la classe ET l'affichage réel,
+   pour que le test reste juste même si la feuille de style ne se charge pas. */
+const cache = (p, selecteur) => p.$eval(selecteur, el => el.classList.contains('cache') || el.classList.contains('hidden') || getComputedStyle(el).display === 'none');
 
 /* Coche des groupes musculaires puis lance une séance (« Activer le Fluxe ») */
 async function lancerSeance(p, muscles = ['Pectoraux']) {

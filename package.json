@@ -4,7 +4,8 @@
   "description": "Fluxe App : générateur de séances au poids du corps. Ce fichier sert seulement aux tests automatiques et aux outils (l'application n'en a pas besoin).",
   "scripts": {
     "test": "node --test --test-concurrency=1 \"tests/*.test.js\"",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "captures": "node outils/captures.js"
   },
   "devDependencies": {
     "eslint": "10.1.0",
