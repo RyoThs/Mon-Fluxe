@@ -161,3 +161,42 @@ test('mode avion : après une 1re visite, l’app s’ouvre avec style et police
   assert.deepEqual(await p.evaluate(() => window.__violationsCSP), []);
   await p.context().setOffline(false);
 });
+
+test('réseau lent : après 3 s, la copie gardée est servie, puis la réponse tardive met le cache à jour', { timeout: 40000 }, async () => {
+  const p = await avecAttenteSW(await app.page({ serviceWorkers: 'allow' }));
+  await p.evaluate(() => window.__swPret());
+
+  // Le serveur met 6 s à répondre pour la page d'accueil, et sa réponse contient un marqueur
+  const MARQUEUR = '<!-- reponse-tardive-du-reseau -->';
+  await p.context().route(app.url, async route => {
+    await new Promise(ok => setTimeout(ok, 6000));
+    await route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: lire('index.html') + MARQUEUR });
+  });
+
+  const debut = Date.now();
+  await p.reload({ waitUntil: 'domcontentloaded' });
+  const duree = Date.now() - debut;
+  assert.ok(duree >= 2500 && duree < 5500, `la copie aurait dû arriver vers 3 s (reçue en ${duree} ms)`);
+  assert.ok(!(await p.content()).includes('reponse-tardive-du-reseau'), 'la page affichée doit être la copie gardée');
+  await p.waitForSelector('#main-screen');
+
+  // Quand le réseau finit par répondre, la copie gardée est remplacée par la nouvelle version
+  const misAJour = await p.evaluate(async marqueur => {
+    for (let i = 0; i < 100; i++) {
+      const rep = await (await caches.open('fluxe-app-v1')).match('./');
+      if (rep && (await rep.text()).includes(marqueur)) return true;
+      await new Promise(ok => setTimeout(ok, 100));
+    }
+    return false;
+  }, MARQUEUR);
+  assert.equal(misAJour, true, 'la réponse tardive aurait dû mettre le cache à jour');
+  assert.deepEqual(p.erreurs, []);
+});
+
+test('sw.js : écriture en cache protégée (waitUntil + erreurs ignorées) et délai réseau de 3 s', () => {
+  const sw = lire('sw.js');
+  assert.match(sw, /const DELAI_RESEAU = 3000;/);
+  const fetchBloc = sw.match(/addEventListener\('fetch',[\s\S]*?\n\}\);/)[0];
+  assert.match(fetchBloc, /e\.waitUntil\(/);
+  assert.match(fetchBloc, /\.catch\(\(\) => \{\}\)/);
+});

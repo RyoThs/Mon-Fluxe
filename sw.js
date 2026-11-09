@@ -46,14 +46,40 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Délai maximum d'attente du réseau : au-delà, on sert la copie gardée (si elle existe).
+const DELAI_RESEAU = 3000; // millisecondes
+
 // Cherche une réponse uniquement dans le cache de Fluxe App.
 const chercherDansMonCache = async requete => {
   if (!(await caches.has(VERSION))) return undefined;
   return (await caches.open(VERSION)).match(requete);
 };
 
+// Copie locale d'un fichier ; pour une page, à défaut, la copie de index.html.
+const copieLocale = async requete =>
+  (await chercherDansMonCache(requete)) ||
+  (requete.mode === 'navigate' ? await chercherDansMonCache('index.html') : undefined);
+
 // Même requête, mais en demandant toujours au serveur si le fichier a changé.
 const sansVieilleCopie = req => { try { return new Request(req, { cache: 'no-cache' }); } catch (x) { return req; } };
+
+/* Choisit la réponse :
+   1. le réseau, s'il répond en moins de DELAI_RESEAU ;
+   2. sinon (réseau lent ou coupé) la copie locale, si elle existe ;
+   3. sinon on attend quand même le réseau (réseau lent sans copie) ;
+   4. sinon erreur (hors ligne et jamais visité). */
+async function repondre(requete, reseau) {
+  const TROP_LONG = 'trop-long', ECHEC = 'echec';
+  let minuteur;
+  const delai = new Promise(ok => { minuteur = setTimeout(ok, DELAI_RESEAU, TROP_LONG); });
+  const premier = await Promise.race([reseau.catch(() => ECHEC), delai]);
+  clearTimeout(minuteur);
+  if (premier !== TROP_LONG && premier !== ECHEC) return premier;
+  const copie = await copieLocale(requete);
+  if (copie) return copie;
+  if (premier === TROP_LONG) { try { return await reseau; } catch (x) { /* réseau finalement en échec */ } }
+  return Response.error();
+}
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
@@ -61,19 +87,17 @@ self.addEventListener('fetch', e => {
   // Seuls les fichiers de l'app elle-même sont gérés (aucun site extérieur).
   if (url.origin !== location.origin) return;
 
-  e.respondWith(
-    fetch(sansVieilleCopie(e.request))
+  const reseau = fetch(sansVieilleCopie(e.request));
+  // La réponse du réseau met toujours le cache à jour, même si elle arrive après le délai.
+  // Si l'écriture échoue (mémoire du téléphone pleine...), on l'ignore : l'app continue.
+  e.waitUntil(
+    reseau
       .then(rep => {
-        if (rep && rep.ok) {
-          const copie = rep.clone();
-          caches.open(VERSION).then(c => c.put(e.request, copie));
-        }
-        return rep;
+        if (!rep || !rep.ok) return undefined;
+        const copie = rep.clone();
+        return caches.open(VERSION).then(c => c.put(e.request, copie));
       })
-      .catch(async () =>
-        (await chercherDansMonCache(e.request)) ||
-        (e.request.mode === 'navigate' ? await chercherDansMonCache('index.html') : undefined) ||
-        Response.error()
-      )
+      .catch(() => {})
   );
+  e.respondWith(repondre(e.request, reseau));
 });

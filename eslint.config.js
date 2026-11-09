@@ -2,7 +2,7 @@
    Il attrape surtout les variables utilisées sans être déclarées et le code mort. */
 const NODE = ['require', 'module', '__dirname', 'process', 'console', 'Buffer', 'setTimeout', 'clearTimeout', 'URL'];
 const NAVIGATEUR = ['window', 'document', 'localStorage', 'getComputedStyle', 'Image', 'navigator', 'caches', 'Request', 'Response', 'fetch'];
-const SERVICE_WORKER = ['self', 'caches', 'fetch', 'location', 'Request', 'Response', 'URL'];
+const SERVICE_WORKER = ['self', 'caches', 'fetch', 'location', 'Request', 'Response', 'URL', 'setTimeout', 'clearTimeout'];
 const REGLES = {
   'no-undef': 'error',
   'no-redeclare': 'error',
