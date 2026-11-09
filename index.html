@@ -105,11 +105,67 @@
     </div>
 
     <script>
-        const Storage = { 
-            get: (k, f = []) => JSON.parse(localStorage.getItem(k)) || f, 
+        const Storage = {
+            // Lecture sûre : une valeur illisible (fichier abîmé) renvoie la valeur par défaut au lieu de planter
+            get: (k, f = []) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } },
             set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
             remove: (k) => localStorage.removeItem(k)
         };
+
+        /* ===== Progression de l'utilisateur (clé fluxe_user_v1) : lecture et vérification ===== */
+        const profilParDefaut = () => ({ lvl: 1, xp: 0, logs: [], streak: 0 });
+        const estEntier = (v, min) => Number.isInteger(v) && v >= min;
+        // Une ligne du journal : { date (texte de date), mood (humeur), count (nombre d'exercices) }
+        const estSeanceValide = l => !!l && typeof l === 'object' && !Array.isArray(l)
+            && typeof l.date === 'string' && !Number.isNaN(Date.parse(l.date))
+            && typeof l.mood === 'string' && l.mood.length > 0 && l.mood.length <= 16
+            && estEntier(l.count, 0);
+        // Règle de chaque champ de la progression
+        const reglesProfil = {
+            lvl: v => estEntier(v, 1),
+            xp: v => estEntier(v, 0),
+            streak: v => estEntier(v, 0),
+            logs: v => Array.isArray(v) && v.every(estSeanceValide)
+        };
+        const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v);
+        // Vérification stricte (fichier importé) : tous les champs présents et du bon type
+        const estProfilValide = p => estObjet(p) && Object.keys(reglesProfil).every(k => reglesProfil[k](p[k]));
+
+        /* Lit la progression enregistrée sans jamais rien perdre :
+           - illisible (texte abîmé) : le texte brut est copié dans fluxe_user_v1_illisible
+             (sans écraser une copie déjà faite) et l'app repart des valeurs par défaut ;
+           - incomplète : les champs manquants sont complétés, les autres sont gardés ;
+           - champ au mauvais format : il est remplacé (et le texte brut est copié aussi).
+           La clé fluxe_user_v1 elle-même n'est réécrite qu'à la prochaine séance terminée. */
+        function chargerProgression() {
+            const brut = localStorage.getItem('fluxe_user_v1');
+            if (brut === null) return profilParDefaut();
+            let lu = null;
+            try { lu = JSON.parse(brut); } catch (e) { lu = null; }
+            const garderCopie = () => { if (localStorage.getItem('fluxe_user_v1_illisible') === null) localStorage.setItem('fluxe_user_v1_illisible', brut); };
+            if (!estObjet(lu)) { garderCopie(); return profilParDefaut(); }
+            const profil = { ...profilParDefaut(), ...lu };
+            let abime = false;
+            for (const k of Object.keys(reglesProfil)) {
+                if (lu[k] === undefined) continue; // champ manquant : valeur par défaut, rien d'abîmé
+                if (reglesProfil[k](lu[k])) continue;
+                abime = true;
+                profil[k] = k === 'logs' && Array.isArray(lu.logs) ? lu.logs.filter(estSeanceValide) : profilParDefaut()[k];
+            }
+            if (abime) garderCopie();
+            return profil;
+        }
+
+        /* Séance interrompue (clé fluxe_backup) : renvoie null si absente ou mal formée */
+        function lireSauvegardeSeance() {
+            const b = Storage.get('fluxe_backup', null);
+            const exerciceValide = ex => estObjet(ex) && typeof ex.n === 'string' && typeof ex.d === 'string'
+                && typeof ex.h === 'string' && (typeof ex.r === 'number' || typeof ex.r === 'string');
+            const valide = estObjet(b) && Array.isArray(b.workout) && b.workout.length > 0 && b.workout.every(exerciceValide)
+                && estEntier(b.index, 0) && b.index < b.workout.length
+                && ['beginner', 'intermediate', 'advanced'].includes(b.lvl);
+            return valide ? b : null;
+        }
 
         const exerciseLibrary = {
             'Pectoraux': {
@@ -117,7 +173,7 @@
                     {n:'Pompes Genoux', r:12, d:'Genoux posés', h:'• **Placement** : Mains plus larges que les épaules, genoux reculés pour aligner hanches et buste.\n• **Mouvement** : Descendez la poitrine au ras du sol en gardant les coudes à 45° du corps.\n• **Respiration** : Inspirez en descendant, expirez en poussant.'},
                     {n:'Pompes Inclinées', r:15, d:'Mains surélevées', h:'• **Placement** : Mains sur un meuble stable (canapé, table basse).\n• **Mouvement** : Gardez le corps parfaitement droit (gainage).\n• **Astuce** : Plus le support est haut, plus c\'est facile.'},
                     {n:'Pompes au Mur', r:20, d:'Debout face au mur', h:'• **Placement** : Mains à hauteur d\'épaules sur le mur.\n• **Mouvement** : Amenez le nez près du mur en contrôlant le retour.\n• **Focus** : Idéal pour l\'échauffement ou les débutants complets.'},
-                    {n:'Dips au sol', r:12, d:'Triceps & Bas Pecs', h:'• **Placement** : Assis, mains derrière les fanches, doigts vers les pieds.\n• **Mouvement** : Décollez les fesses, pliez les bras pour effleurer le sol, puis tendez vigoureusement.'},
+                    {n:'Dips au sol', r:12, d:'Triceps & Bas Pecs', h:'• **Placement** : Assis, mains derrière les hanches, doigts vers les pieds.\n• **Mouvement** : Décollez les fesses, pliez les bras pour effleurer le sol, puis tendez vigoureusement.'},
                     {n:'Pompes Larges', r:10, d:'Focus Pectoraux', h:'• **Placement** : Mains très écartées (1,5x largeur épaules).\n• **Mouvement** : Descente lente pour sentir l\'étirement du grand pectoral.\n• **Sécurité** : Ne descendez pas trop bas si vous sentez une tension dans l\'épaule.'}
                 ],
                 intermediate: [
@@ -253,19 +309,20 @@
         };
 
         let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, levelKey = 'intermediate', isExpress = false;
-        let userData = Storage.get('fluxe_user_v1', { lvl: 1, xp: 0, logs: [], streak: 0 });
+        let userData = chargerProgression();
 
         function saveProgress() {
             Storage.set('fluxe_backup', { workout: currentWorkout, index: currentStepIndex, lvl: levelKey });
         }
 
         function checkBackup() {
-            const backup = Storage.get('fluxe_backup', null);
+            const backup = lireSauvegardeSeance();
             if(backup) document.getElementById('resume-card').classList.remove('cache');
         }
 
         function resumeWorkout() {
-            const backup = Storage.get('fluxe_backup');
+            const backup = lireSauvegardeSeance();
+            if (!backup) { document.getElementById('resume-card').classList.add('cache'); return; } // sauvegarde absente ou abîmée : ignorée
             currentWorkout = backup.workout;
             currentStepIndex = backup.index;
             levelKey = backup.lvl;

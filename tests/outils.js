@@ -101,6 +101,13 @@ async function donner(p, donnees) {
   await p.evaluate(d => { for (const [k, v] of Object.entries(d)) localStorage.setItem(k, JSON.stringify(v)); }, donnees);
   await p.reload();
 }
+/* Même chose avec du texte brut (pour simuler des données abîmées), puis relance l'app */
+async function donnerBrut(p, textes) {
+  await p.evaluate(d => { for (const [k, v] of Object.entries(d)) localStorage.setItem(k, v); }, textes);
+  await p.reload();
+}
+/* Lit le texte brut d'une clé (null si absente) */
+const lireBrut = (p, cle) => p.evaluate(k => localStorage.getItem(k), cle);
 /* Lit une donnée enregistrée par l'app (null si absente) */
 const lireCle = (p, cle) => p.evaluate(k => JSON.parse(localStorage.getItem(k)), cle);
 /* Liste des clés présentes dans le stockage */
@@ -126,4 +133,4 @@ async function finirSeance(p, humeur = '🔥') {
   return total;
 }
 
-module.exports = { demarrer, serveur, listeFichiersSW, donner, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
+module.exports = { demarrer, serveur, listeFichiersSW, donner, donnerBrut, lireBrut, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
