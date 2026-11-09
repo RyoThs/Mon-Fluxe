@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="app-version" content="1.0.0">
     <title>FLUXE - Fitness App</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -110,6 +111,7 @@
             <h3 id="modal-title" class="fenetre-titre">Guide</h3>
             <div id="modal-text" class="fenetre-texte">---</div>
             <button onclick="closeInfo()" class="bouton-ok">OK</button>
+            <p id="version-app" class="version-app">Fluxe</p>
         </div>
     </div>
 
@@ -574,6 +576,9 @@
             renderLogbook();
             alert('Progression importée.');
         }
+
+        // Version affichée en bas de la fenêtre d'aide (lue dans la balise app-version)
+        document.getElementById('version-app').textContent = `Fluxe v${document.querySelector('meta[name="app-version"]').content}`;
 
         updateUI();
         checkBackup();

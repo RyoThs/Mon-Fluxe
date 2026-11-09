@@ -8,8 +8,9 @@
    par leur préfixe « fluxe-app- ». Il ne touche jamais aux caches des autres applications.
    (Les données de l'app sont dans le localStorage : ce fichier n'y touche jamais.) */
 
+const VERSION = '1.0.0'; // version de l'app : la même dans index.html (app-version) et package.json
 const PREFIXE = 'fluxe-app-';
-const VERSION = PREFIXE + 'v1'; // change ce numéro à chaque mise à jour de l'app
+const CACHE = PREFIXE + 'v' + VERSION; // ex. « fluxe-app-v1.0.0 » : nouveau cache à chaque version
 
 // Fichiers gardés hors ligne dès la première visite (liste exacte, rien d'autre)
 const FICHIERS = [
@@ -31,17 +32,18 @@ self.addEventListener('install', e => {
   // Tout ou rien : si un seul fichier manque, l'installation échoue et l'ancienne version
   // (complète) reste en place. Ainsi le téléphone n'a jamais une copie hors ligne à trous.
   e.waitUntil(
-    caches.open(VERSION)
+    caches.open(CACHE)
       .then(c => c.addAll(FICHIERS))
       .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', e => {
-  // Nettoyage : uniquement les anciennes versions de Fluxe App (préfixe « fluxe-app- »).
+  // Nettoyage : uniquement les anciennes versions de Fluxe App (préfixe « fluxe-app- »,
+  // par exemple l'ancien « fluxe-app-v1 »), jamais le cache de la version actuelle.
   e.waitUntil(
     caches.keys()
-      .then(noms => Promise.all(noms.filter(n => estUnCacheFluxeApp(n) && n !== VERSION).map(n => caches.delete(n))))
+      .then(noms => Promise.all(noms.filter(n => estUnCacheFluxeApp(n) && n !== CACHE).map(n => caches.delete(n))))
       .then(() => self.clients.claim())
   );
 });
@@ -51,8 +53,8 @@ const DELAI_RESEAU = 3000; // millisecondes
 
 // Cherche une réponse uniquement dans le cache de Fluxe App.
 const chercherDansMonCache = async requete => {
-  if (!(await caches.has(VERSION))) return undefined;
-  return (await caches.open(VERSION)).match(requete);
+  if (!(await caches.has(CACHE))) return undefined;
+  return (await caches.open(CACHE)).match(requete);
 };
 
 // Copie locale d'un fichier ; pour une page, à défaut, la copie de index.html.
@@ -95,7 +97,7 @@ self.addEventListener('fetch', e => {
       .then(rep => {
         if (!rep || !rep.ok) return undefined;
         const copie = rep.clone();
-        return caches.open(VERSION).then(c => c.put(e.request, copie));
+        return caches.open(CACHE).then(c => c.put(e.request, copie));
       })
       .catch(() => {})
   );

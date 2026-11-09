@@ -98,8 +98,10 @@ const ECRANS = {
 
 /* Éléments ajoutés après la version de référence. Pour comparer les écrans existants,
    ils sont rendus invisibles (sans changer la mise en page) ; ils sont photographiés à part. */
+// (selecteur = zone photographiée ; cacher = élément à rendre invisible, s'il diffère)
 const NOUVEAUTES = {
   sauvegarde: { selecteur: '.encadre-sauvegarde', preparer: async p => { await p.click('#nav-log'); } },
+  version: { selecteur: '.fenetre', cacher: '#version-app', preparer: p => ECRANS.fiche(p) },
 };
 
 async function nouvellePage(app, theme) {
@@ -136,7 +138,7 @@ async function photographierNouveautes(app) {
 
 async function photographier(app, nomVersion) {
   const fichiers = {};
-  const aCacher = nomVersion === 'apres' ? Object.values(NOUVEAUTES).map(n => n.selecteur) : [];
+  const aCacher = nomVersion === 'apres' ? Object.values(NOUVEAUTES).map(n => n.cacher || n.selecteur) : [];
   for (const theme of ['light', 'dark']) {
     for (const [ecran, preparer] of Object.entries(ECRANS)) {
       const p = await nouvellePage(app, theme);

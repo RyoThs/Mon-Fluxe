@@ -63,14 +63,14 @@ test('sw.js installe la liste d’un seul bloc (cache.addAll), sans « .catch »
   const install = lire('sw.js').match(/addEventListener\('install',[\s\S]*?\n\}\);/)[0];
   assert.match(install, /\.addAll\(FICHIERS\)/);
   assert.doesNotMatch(install, /\.catch\(/);
-  assert.match(lire('sw.js'), /const VERSION = PREFIXE \+ 'v1'/);
+  assert.match(lire('sw.js'), /const CACHE = PREFIXE \+ 'v' \+ VERSION;/);
   assert.match(lire('sw.js'), /const PREFIXE = 'fluxe-app-'/);
 });
 
-test('activation : seuls les anciens caches « fluxe-app-… » sont supprimés', async () => {
-  const sw = chargerSW({ cachesExistants: ['fluxe-suivi-v19', 'muscu-v1', 'fluxe-v10', 'atlas', 'fluxe-app-v0', 'fluxe-app-v1'] });
+test('activation : seuls les anciens caches « fluxe-app-… » sont supprimés (dont l’ancien fluxe-app-v1)', async () => {
+  const sw = chargerSW({ cachesExistants: ['fluxe-suivi-v19', 'muscu-v1', 'fluxe-v10', 'atlas', 'fluxe-app-v0', 'fluxe-app-v1', 'fluxe-app-v1.0.0'] });
   assert.equal(await sw.lancer('activate'), true);
-  assert.deepEqual([...sw.noms].sort(), ['atlas', 'fluxe-app-v1', 'fluxe-suivi-v19', 'fluxe-v10', 'muscu-v1']);
+  assert.deepEqual([...sw.noms].sort(), ['atlas', 'fluxe-app-v1.0.0', 'fluxe-suivi-v19', 'fluxe-v10', 'muscu-v1']);
   assert.equal(sw.etat.claim, true);
 });
 
@@ -112,7 +112,7 @@ test('vrai navigateur : le service worker s’installe, garde tous les fichiers 
   const p = await app.page({ serviceWorkers: 'allow' }, 'icon.png');
   // Faux caches d'autres applications (Fluxe Suivi) et ancienne version de Fluxe App, créés AVANT
   await p.evaluate(async () => {
-    for (const n of ['fluxe-suivi-v19', 'muscu-v1', 'fluxe-app-v0']) await (await caches.open(n)).put('/temoin', new Response('x'));
+    for (const n of ['fluxe-suivi-v19', 'muscu-v1', 'fluxe-app-v0', 'fluxe-app-v1']) await (await caches.open(n)).put('/temoin', new Response('x'));
   });
   await p.goto(app.url); // l'app enregistre son service worker
   await avecAttenteSW(p);
@@ -120,12 +120,12 @@ test('vrai navigateur : le service worker s’installe, garde tous les fichiers 
     await window.__swPret();
     const reg = await navigator.serviceWorker.getRegistration();
     const noms = (await caches.keys()).sort();
-    const gardes = (await (await caches.open('fluxe-app-v1')).keys()).map(q => new URL(q.url).pathname);
+    const gardes = (await (await caches.open('fluxe-app-v1.0.0')).keys()).map(q => new URL(q.url).pathname);
     const suivi = await (await (await caches.open('fluxe-suivi-v19')).match('/temoin')).text();
     return { scope: new URL(reg.scope).pathname, noms, gardes, suivi };
   });
   assert.equal(r.scope, '/');
-  assert.deepEqual(r.noms, ['fluxe-app-v1', 'fluxe-suivi-v19', 'muscu-v1']);
+  assert.deepEqual(r.noms, ['fluxe-app-v1.0.0', 'fluxe-suivi-v19', 'muscu-v1']); // l'ancien « fluxe-app-v1 » est supprimé
   assert.equal(r.suivi, 'x');
   for (const f of FICHIERS) assert.ok(r.gardes.includes('/' + f.replace('./', '')), `${f} absent du cache`);
   assert.deepEqual(p.erreurs, []);
@@ -183,7 +183,7 @@ test('réseau lent : après 3 s, la copie gardée est servie, puis la réponse t
   // Quand le réseau finit par répondre, la copie gardée est remplacée par la nouvelle version
   const misAJour = await p.evaluate(async marqueur => {
     for (let i = 0; i < 100; i++) {
-      const rep = await (await caches.open('fluxe-app-v1')).match('./');
+      const rep = await (await caches.open('fluxe-app-v1.0.0')).match('./');
       if (rep && (await rep.text()).includes(marqueur)) return true;
       await new Promise(ok => setTimeout(ok, 100));
     }

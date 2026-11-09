@@ -1,5 +1,6 @@
 {
   "name": "fluxe-app",
+  "version": "1.0.0",
   "private": true,
   "description": "Fluxe App : générateur de séances au poids du corps. Ce fichier sert seulement aux tests automatiques et aux outils (l'application n'en a pas besoin).",
   "scripts": {

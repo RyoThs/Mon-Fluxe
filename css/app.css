@@ -677,6 +677,7 @@ body {
   backdrop-filter: blur(4px);
 }
 .fenetre {
+  position: relative;
   width: 100%;
   max-width: 24rem;
   padding: 2rem;
@@ -709,6 +710,19 @@ body {
   line-height: 1rem;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+
+/* Version de l'app, discrète, dans la marge du bas de la fenêtre d'aide */
+.version-app {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.625rem;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0.35;
 }
 
 
