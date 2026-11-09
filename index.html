@@ -2,169 +2,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="app-version" content="1.0.0">
     <title>FLUXE - Fitness App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2D9B7C">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,900&family=Inter:wght@300;400;600;800;900&display=swap');
-        :root { --bg: #FAF8F2; --card: #FFFFFF; --text: #1a1a1a; --accent: #2D9B7C; }
-        @media (prefers-color-scheme: dark) { :root { --bg: #121414; --card: #1C1F1F; --text: #ffffff; --accent: #42BFA0; } }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.4s; overflow-x: hidden; }
-        .barlow { font-family: 'Barlow Condensed', sans-serif; }
-        .screen { transition: 0.5s ease; opacity: 1; }
-        .screen-hidden { display: none; opacity: 0; }
-        .card { background: var(--card); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-left: 8px solid var(--accent); }
-        .muscle-chip { transition: 0.2s; border: 1px solid rgba(45, 155, 124, 0.15); background: rgba(45, 155, 124, 0.05); }
-        .muscle-chip.active { background: var(--accent); color: #000; font-weight: 900; border-color: var(--accent); }
-        .lvl-btn { transition: 0.3s; border: 1px solid rgba(45, 155, 124, 0.2); color: var(--accent); font-weight: 800; opacity: 0.5; }
-        .lvl-btn.active { background: var(--accent); color: #000 !important; opacity: 1; border-color: var(--accent); }
-        .btn-nav { 
-    font-size: 14px; 
-    font-weight: 900; 
-    color: #000; /* Texte noir comme sur le bouton principal */
-    opacity: 0.5; 
-    transition: 0.3s; 
-}
-        .active-nav { 
-    opacity: 1; 
-    transform: scale(1.1);
-}
-        .active-nav span {
-    border-bottom: 2px solid #000;
-}
-        .glass { 
-    background: #2D9B7C; /* Même couleur que le bouton */
-    border-top: none;
-    box-shadow: 0 -10px 30px rgba(45, 155, 124, 0.2);
-}
-        .btn-primary { background-color: var(--accent) !important; color: #000 !important; font-weight: 900 !important; text-transform: uppercase; font-style: italic; }
-        .xp-bar-bg { background: rgba(0,0,0,0.05); border-radius: 10px; height: 10px; width: 100%; overflow: hidden; }
-        .xp-bar-fill { background: var(--accent); height: 100%; width: 0%; transition: 1s ease-out; }
-        .toggle-btn { position: relative; width: 44px; height: 22px; background: #ccc; border-radius: 11px; transition: 0.3s; }
-        .toggle-btn.active { background: var(--accent); }
-        .toggle-dot { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: 0.3s; }
-        .toggle-btn.active .toggle-dot { left: 24px; }
-        .chart-container { 
-    display: flex; 
-    align-items: flex-end; 
-    justify-content: space-between; 
-    height: 80px; 
-    gap: 8px; 
-    padding: 0 5px;
-}
-.chart-bar { 
-    background: var(--accent); 
-    width: 100%; 
-    border-radius: 6px 6px 2px 2px; 
-    min-height: 4px; 
-    transition: height 0.6s ease;
-}
-    </style>
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="max-w-md mx-auto min-h-screen pb-40">
+<body>
 
-    <nav class="fixed bottom-0 left-0 right-0 glass px-6 py-8 flex justify-around items-center rounded-t-[40px] z-[100] max-w-md mx-auto">
-        <button onclick="showScreen('main-screen')" class="btn-nav active-nav flex flex-col items-center" id="nav-home"><span class="barlow uppercase italic">⚡ Fluxe</span></button>
-        <button onclick="showScreen('logbook-screen'); renderLogbook();" class="btn-nav flex flex-col items-center" id="nav-log"><span class="barlow uppercase italic">📊 Journal</span></button>
+    <nav class="barre-nav">
+        <button onclick="showScreen('main-screen')" class="bouton-nav actif" id="nav-home"><span>⚡ Fluxe</span></button>
+        <button onclick="showScreen('logbook-screen'); renderLogbook();" class="bouton-nav" id="nav-log"><span>📊 Journal</span></button>
     </nav>
 
-    <div id="main-screen" class="screen p-6">
-        <header class="flex justify-between items-center py-6">
+    <div id="main-screen" class="ecran">
+        <header class="entete">
             <div>
-                <h1 class="text-4xl font-[900] italic uppercase text-emerald-700 barlow">FLUXE</h1>
-                <p class="text-[10px] font-black opacity-40 uppercase">Niveau <span id="user-lvl">1</span></p>
+                <h1 class="logo">FLUXE</h1>
+                <p class="niveau">Niveau <span id="user-lvl">1</span></p>
             </div>
-            <div id="streak-counter" class="text-[10px] font-black px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/20 uppercase">🔥 0 SESSIONS</div>
+            <div id="streak-counter" class="badge-serie">🔥 0 SESSIONS</div>
         </header>
 
-        <div class="xp-bar-bg mb-8"><div id="xp-fill" class="xp-bar-fill"></div></div>
+        <div class="barre-xp"><div id="xp-fill" class="barre-xp-remplie"></div></div>
 
-        <div id="resume-card" class="hidden card p-5 mb-6 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 flex justify-between items-center border-l-0 border-r-8">
-            <div><span class="text-[10px] font-black uppercase italic text-emerald-700">En cours</span><p class="text-[8px] font-bold opacity-50">Reprendre le flux ?</p></div>
-            <button onclick="resumeWorkout()" class="px-5 py-2 bg-emerald-600 text-white rounded-full text-[10px] font-black uppercase shadow-lg">Reprendre</button>
+        <div id="resume-card" class="carte-reprise cache">
+            <div><span class="carte-reprise-titre">En cours</span><p class="carte-reprise-texte">Reprendre le flux ?</p></div>
+            <button onclick="resumeWorkout()" class="bouton-reprendre">Reprendre</button>
         </div>
 
-        <div class="flex items-center justify-between mb-6 bg-emerald-50 dark:bg-emerald-950/20 p-4 rounded-2xl border border-emerald-100">
-            <div><span class="text-xs font-black uppercase italic">Mode Express</span><p class="text-[8px] opacity-50 font-bold uppercase">6 exercices max</p></div>
-            <button onclick="toggleExpress()" id="express-toggle" class="toggle-btn"><div class="toggle-dot"></div></button>
+        <div class="encadre-express">
+            <div><span class="encadre-express-titre">Mode Express</span><p class="encadre-express-texte">6 exercices max</p></div>
+            <button onclick="toggleExpress()" id="express-toggle" class="interrupteur"><div class="interrupteur-rond"></div></button>
         </div>
 
-        <div class="flex gap-2 mb-4">
-            <button onclick="setLevel(0.5, this, 'beginner')" class="lvl-btn flex-1 py-3 rounded-xl text-[9px] uppercase">Débutant</button>
-            <button onclick="setLevel(1.0, this, 'intermediate')" class="lvl-btn active flex-1 py-3 rounded-xl text-[9px] uppercase">Intermédiaire</button>
-            <button onclick="setLevel(1.8, this, 'advanced')" class="lvl-btn flex-1 py-3 rounded-xl text-[9px] uppercase">Avancé</button>
+        <div class="choix-niveau">
+            <button onclick="setLevel(0.5, this, 'beginner')" class="bouton-niveau">Débutant</button>
+            <button onclick="setLevel(1.0, this, 'intermediate')" class="bouton-niveau actif">Intermédiaire</button>
+            <button onclick="setLevel(1.8, this, 'advanced')" class="bouton-niveau">Avancé</button>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8">
-            <button onclick="toggleMuscle('Pectoraux', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Pectoraux</button>
-            <button onclick="toggleMuscle('Dos', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Dos</button>
-            <button onclick="toggleMuscle('Jambes', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Jambes</button>
-            <button onclick="toggleMuscle('Abdos', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Abdos</button>
-            <button onclick="toggleMuscle('Épaules', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Épaules</button>
-            <button onclick="toggleMuscle('Bras', this)" class="muscle-chip py-4 rounded-2xl font-bold text-xs uppercase italic">Bras</button>
+        <div class="grille-muscles">
+            <button onclick="toggleMuscle('Pectoraux', this)" class="puce-muscle">Pectoraux</button>
+            <button onclick="toggleMuscle('Dos', this)" class="puce-muscle">Dos</button>
+            <button onclick="toggleMuscle('Jambes', this)" class="puce-muscle">Jambes</button>
+            <button onclick="toggleMuscle('Abdos', this)" class="puce-muscle">Abdos</button>
+            <button onclick="toggleMuscle('Épaules', this)" class="puce-muscle">Épaules</button>
+            <button onclick="toggleMuscle('Bras', this)" class="puce-muscle">Bras</button>
         </div>
 
-        <button onclick="generateWorkout()" class="btn-primary w-full py-6 rounded-[30px] text-xl shadow-xl barlow">Activer le Fluxe</button>
+        <button onclick="generateWorkout()" class="bouton-principal bouton-activer">Activer le Fluxe</button>
     </div>
 
-    <div id="logbook-screen" class="screen screen-hidden p-6">
-        <h2 class="text-3xl font-black mb-6 italic text-emerald-700 uppercase barlow text-center">Journal</h2>
-        <div class="card p-5 mb-8 border-emerald-500/30">
-    <div class="flex justify-between items-end mb-4">
-        <h3 class="text-[10px] font-black uppercase italic text-emerald-600">Activité (7 derniers jours)</h3>
-        <span id="total-week-ex" class="text-[10px] font-bold opacity-50">0 exos</span>
-    </div>
-    <div id="activity-chart" class="chart-container">
-        </div>
-    <div class="flex justify-between mt-2 opacity-30 text-[8px] font-bold uppercase">
-        <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-    </div>
-</div>
-        <div id="log-list" class="space-y-4"></div>
-    </div>
-
-    <div id="workout-screen" class="hidden fixed inset-0 bg-[#FAF8F2] dark:bg-[#121414] z-[1000] flex flex-col p-6">
-        <div class="grow flex flex-col justify-center items-center text-center">
-            <div class="flex items-center gap-3 mb-2">
-                <h2 id="ex-name" class="text-3xl font-black italic uppercase barlow">---</h2>
-                <button onclick="showInfo()" class="bg-emerald-500 text-black w-8 h-8 rounded-full font-black">?</button>
+    <div id="logbook-screen" class="ecran ecran-cache">
+        <h2 class="titre-journal">Journal</h2>
+        <div class="carte carte-activite">
+            <div class="carte-activite-entete">
+                <h3 class="carte-activite-titre">Activité (7 derniers jours)</h3>
+                <span id="total-week-ex" class="carte-activite-total">0 exos</span>
             </div>
-            <p id="ex-desc" class="text-[10px] font-bold uppercase opacity-40 mb-6 text-emerald-600">---</p>
-            <div class="flex items-baseline gap-2"><span id="ex-reps" class="text-8xl text-emerald-600 font-black barlow">0</span><span class="text-xl font-black opacity-20 uppercase">Reps</span></div>
-            <p id="step-counter-text" class="mt-8 font-bold opacity-30 uppercase text-emerald-600">Flux 1/X</p>
+            <div id="activity-chart" class="graphique"></div>
+            <div class="jours-semaine">
+                <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+            </div>
         </div>
-        <button onclick="nextStep()" class="btn-primary w-full py-8 rounded-[35px] text-2xl mb-10 barlow">Suivant</button>
+        <div id="log-list" class="liste-seances"></div>
+
+        <div class="encadre-sauvegarde">
+            <span class="encadre-sauvegarde-titre">Ma progression</span>
+            <p class="encadre-sauvegarde-texte">Garde une copie dans un fichier, ou récupère-la sur un autre téléphone</p>
+            <div class="sauvegarde-boutons">
+                <button onclick="exporterProgression()" id="bouton-exporter" class="bouton-secondaire">Exporter</button>
+                <label id="bouton-importer" class="bouton-secondaire">Importer<input type="file" accept="application/json,.json" id="fichier-import" class="champ-fichier" onchange="importerProgression(this)"></label>
+            </div>
+        </div>
     </div>
 
-    <div id="feedback-screen" class="hidden fixed inset-0 bg-[#FAF8F2] dark:bg-[#121414] z-[2000] flex flex-col p-10 justify-center text-center">
-        <h2 class="text-4xl font-black italic uppercase barlow">Flux Terminé !</h2>
-        <div class="flex justify-around my-12">
-            <button onclick="finishWithFeedback('😃')" class="text-5xl hover:scale-125 transition">😃</button>
-            <button onclick="finishWithFeedback('🔥')" class="text-5xl hover:scale-125 transition">🔥</button>
-            <button onclick="finishWithFeedback('💀')" class="text-5xl hover:scale-125 transition">💀</button>
+    <div id="workout-screen" class="plein-ecran ecran-seance cache">
+        <div class="seance-centre">
+            <div class="seance-ligne-titre">
+                <h2 id="ex-name" class="seance-nom">---</h2>
+                <button onclick="showInfo()" class="bouton-aide">?</button>
+            </div>
+            <p id="ex-desc" class="seance-description">---</p>
+            <div class="seance-repetitions"><span id="ex-reps" class="seance-nombre">0</span><span class="seance-unite">Reps</span></div>
+            <p id="step-counter-text" class="seance-compteur">Flux 1/X</p>
         </div>
-        <p id="xp-gain-text" class="text-emerald-600 font-black italic text-xl barlow">+ 0 XP</p>
+        <button onclick="nextStep()" class="bouton-principal bouton-suivant">Suivant</button>
     </div>
 
-    <div id="info-modal" class="hidden fixed inset-0 z-[3000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#1C1F1F] p-8 rounded-[40px] max-w-sm w-full">
-            <h3 id="modal-title" class="text-xl font-black italic uppercase mb-4 text-emerald-600 barlow">Guide</h3>
-            <div id="modal-text" class="text-sm leading-relaxed mb-8 opacity-70">---</div>
-            <button onclick="closeInfo()" class="w-full py-5 bg-emerald-500 text-black rounded-2xl font-black uppercase text-xs">OK</button>
+    <div id="feedback-screen" class="plein-ecran ecran-fin cache">
+        <h2 class="fin-titre">Flux Terminé !</h2>
+        <div class="choix-humeur">
+            <button onclick="finishWithFeedback('😃')" class="bouton-humeur">😃</button>
+            <button onclick="finishWithFeedback('🔥')" class="bouton-humeur">🔥</button>
+            <button onclick="finishWithFeedback('💀')" class="bouton-humeur">💀</button>
+        </div>
+        <p id="xp-gain-text" class="gain-xp">+ 0 XP</p>
+    </div>
+
+    <div id="info-modal" class="fond-fenetre cache">
+        <div class="fenetre">
+            <h3 id="modal-title" class="fenetre-titre">Guide</h3>
+            <div id="modal-text" class="fenetre-texte">---</div>
+            <button onclick="closeInfo()" class="bouton-ok">OK</button>
+            <p id="version-app" class="version-app">Fluxe</p>
         </div>
     </div>
 
     <script>
-        const Storage = { 
-            get: (k, f = []) => JSON.parse(localStorage.getItem(k)) || f, 
+        const Storage = {
+            // Lecture sûre : une valeur illisible (fichier abîmé) renvoie la valeur par défaut au lieu de planter
+            get: (k, f = []) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } },
             set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
             remove: (k) => localStorage.removeItem(k)
         };
+
+        /* ===== Progression de l'utilisateur (clé fluxe_user_v1) : lecture et vérification ===== */
+        const profilParDefaut = () => ({ lvl: 1, xp: 0, logs: [], streak: 0 });
+        // Nombre entier entre min et max (les bornes écartent seulement les valeurs absurdes, ex. 1e300)
+        const estEntier = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
+        // Une ligne du journal : { date (texte de date), mood (humeur), count (nombre d'exercices) }
+        const estSeanceValide = l => !!l && typeof l === 'object' && !Array.isArray(l)
+            && typeof l.date === 'string' && l.date.length <= 64 && !Number.isNaN(Date.parse(l.date))
+            && typeof l.mood === 'string' && l.mood.length > 0 && l.mood.length <= 16
+            && estEntier(l.count, 0, 1000);
+        // Règle de chaque champ de la progression. Pas de règle « xp < niveau × 100 » :
+        // on refuse seulement l'absurde, pour qu'un export fait par l'app soit toujours réimportable.
+        const reglesProfil = {
+            lvl: v => estEntier(v, 1, 1000),
+            xp: v => estEntier(v, 0, 1000000),
+            streak: v => estEntier(v, 0, 100000),
+            logs: v => Array.isArray(v) && v.every(estSeanceValide)
+        };
+        const MAX_SEANCES_IMPORT = 5000;
+        const TAILLE_MAX_IMPORT = 1024 * 1024; // 1 Mo
+        // Ne garde que les champs utilisés par l'app (progression et chaque séance du journal)
+        const champsUtiles = p => ({
+            lvl: p.lvl, xp: p.xp, streak: p.streak,
+            logs: p.logs.map(l => ({ date: l.date, mood: l.mood, count: l.count }))
+        });
+        const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v);
+        // Vérification stricte (fichier importé) : tous les champs présents et du bon type
+        const estProfilValide = p => estObjet(p) && Object.keys(reglesProfil).every(k => reglesProfil[k](p[k])) && p.logs.length <= MAX_SEANCES_IMPORT;
+
+        /* Lit la progression enregistrée sans jamais rien perdre :
+           - illisible (texte abîmé) : le texte brut est copié dans fluxe_user_v1_illisible
+             (sans écraser une copie déjà faite) et l'app repart des valeurs par défaut ;
+           - incomplète : les champs manquants sont complétés, les autres sont gardés ;
+           - champ au mauvais format : il est remplacé (et le texte brut est copié aussi).
+           La clé fluxe_user_v1 elle-même n'est réécrite qu'à la prochaine séance terminée. */
+        function chargerProgression() {
+            const brut = localStorage.getItem('fluxe_user_v1');
+            if (brut === null) return profilParDefaut();
+            let lu = null;
+            try { lu = JSON.parse(brut); } catch (e) { lu = null; }
+            const garderCopie = () => { if (localStorage.getItem('fluxe_user_v1_illisible') === null) localStorage.setItem('fluxe_user_v1_illisible', brut); };
+            if (!estObjet(lu)) { garderCopie(); return profilParDefaut(); }
+            const profil = { ...profilParDefaut(), ...lu };
+            let abime = false;
+            for (const k of Object.keys(reglesProfil)) {
+                if (lu[k] === undefined) continue; // champ manquant : valeur par défaut, rien d'abîmé
+                if (reglesProfil[k](lu[k])) continue;
+                abime = true;
+                profil[k] = k === 'logs' && Array.isArray(lu.logs) ? lu.logs.filter(estSeanceValide) : profilParDefaut()[k];
+            }
+            if (abime) garderCopie();
+            return profil;
+        }
+
+        /* Séance interrompue (clé fluxe_backup) : renvoie null si absente ou mal formée */
+        function lireSauvegardeSeance() {
+            const b = Storage.get('fluxe_backup', null);
+            const exerciceValide = ex => estObjet(ex) && typeof ex.n === 'string' && typeof ex.d === 'string'
+                && typeof ex.h === 'string' && (typeof ex.r === 'number' || typeof ex.r === 'string');
+            const valide = estObjet(b) && Array.isArray(b.workout) && b.workout.length > 0 && b.workout.every(exerciceValide)
+                && estEntier(b.index, 0, b.workout.length - 1)
+                && ['beginner', 'intermediate', 'advanced'].includes(b.lvl);
+            return valide ? b : null;
+        }
 
         const exerciseLibrary = {
             'Pectoraux': {
@@ -172,7 +193,7 @@
                     {n:'Pompes Genoux', r:12, d:'Genoux posés', h:'• **Placement** : Mains plus larges que les épaules, genoux reculés pour aligner hanches et buste.\n• **Mouvement** : Descendez la poitrine au ras du sol en gardant les coudes à 45° du corps.\n• **Respiration** : Inspirez en descendant, expirez en poussant.'},
                     {n:'Pompes Inclinées', r:15, d:'Mains surélevées', h:'• **Placement** : Mains sur un meuble stable (canapé, table basse).\n• **Mouvement** : Gardez le corps parfaitement droit (gainage).\n• **Astuce** : Plus le support est haut, plus c\'est facile.'},
                     {n:'Pompes au Mur', r:20, d:'Debout face au mur', h:'• **Placement** : Mains à hauteur d\'épaules sur le mur.\n• **Mouvement** : Amenez le nez près du mur en contrôlant le retour.\n• **Focus** : Idéal pour l\'échauffement ou les débutants complets.'},
-                    {n:'Dips au sol', r:12, d:'Triceps & Bas Pecs', h:'• **Placement** : Assis, mains derrière les fanches, doigts vers les pieds.\n• **Mouvement** : Décollez les fesses, pliez les bras pour effleurer le sol, puis tendez vigoureusement.'},
+                    {n:'Dips au sol', r:12, d:'Triceps & Bas Pecs', h:'• **Placement** : Assis, mains derrière les hanches, doigts vers les pieds.\n• **Mouvement** : Décollez les fesses, pliez les bras pour effleurer le sol, puis tendez vigoureusement.'},
                     {n:'Pompes Larges', r:10, d:'Focus Pectoraux', h:'• **Placement** : Mains très écartées (1,5x largeur épaules).\n• **Mouvement** : Descente lente pour sentir l\'étirement du grand pectoral.\n• **Sécurité** : Ne descendez pas trop bas si vous sentez une tension dans l\'épaule.'}
                 ],
                 intermediate: [
@@ -308,54 +329,55 @@
         };
 
         let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, levelKey = 'intermediate', isExpress = false;
-        let userData = Storage.get('fluxe_user_v1', { lvl: 1, xp: 0, logs: [], streak: 0 });
+        let userData = chargerProgression();
 
         function saveProgress() {
             Storage.set('fluxe_backup', { workout: currentWorkout, index: currentStepIndex, lvl: levelKey });
         }
 
         function checkBackup() {
-            const backup = Storage.get('fluxe_backup', null);
-            if(backup) document.getElementById('resume-card').classList.remove('hidden');
+            const backup = lireSauvegardeSeance();
+            if(backup) document.getElementById('resume-card').classList.remove('cache');
         }
 
         function resumeWorkout() {
-            const backup = Storage.get('fluxe_backup');
+            const backup = lireSauvegardeSeance();
+            if (!backup) { document.getElementById('resume-card').classList.add('cache'); return; } // sauvegarde absente ou abîmée : ignorée
             currentWorkout = backup.workout;
             currentStepIndex = backup.index;
             levelKey = backup.lvl;
-            document.getElementById('resume-card').classList.add('hidden');
-            document.getElementById('workout-screen').classList.remove('hidden');
+            document.getElementById('resume-card').classList.add('cache');
+            document.getElementById('workout-screen').classList.remove('cache');
             updateStep();
         }
 
         function toggleMuscle(m, btn) {
             if(selectedMuscles.includes(m)) {
                 selectedMuscles = selectedMuscles.filter(x => x !== m);
-                btn.classList.remove('active');
+                btn.classList.remove('actif');
             } else {
                 selectedMuscles.push(m);
-                btn.classList.add('active');
+                btn.classList.add('actif');
             }
         }
 
         function setLevel(val, btn, key) {
             levelKey = key;
-            document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.bouton-niveau').forEach(b => b.classList.remove('actif'));
+            btn.classList.add('actif');
         }
 
         function toggleExpress() {
             isExpress = !isExpress;
-            document.getElementById('express-toggle').classList.toggle('active');
+            document.getElementById('express-toggle').classList.toggle('actif');
         }
 
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.add('screen-hidden'));
-            document.getElementById(id).classList.remove('screen-hidden');
-            document.querySelectorAll('.btn-nav').forEach(n => n.classList.remove('active-nav'));
-            if(id === 'main-screen') document.getElementById('nav-home').classList.add('active-nav');
-            if(id === 'logbook-screen') document.getElementById('nav-log').classList.add('active-nav');
+            document.querySelectorAll('.ecran').forEach(s => s.classList.add('ecran-cache'));
+            document.getElementById(id).classList.remove('ecran-cache');
+            document.querySelectorAll('.bouton-nav').forEach(n => n.classList.remove('actif'));
+            if(id === 'main-screen') document.getElementById('nav-home').classList.add('actif');
+            if(id === 'logbook-screen') document.getElementById('nav-log').classList.add('actif');
         }
 
         function generateWorkout() {
@@ -385,7 +407,7 @@
     currentStepIndex = 0;
     saveProgress(); // Sauvegarde automatique pour le bouton "Reprendre"
     updateStep();
-    document.getElementById('workout-screen').classList.remove('hidden');
+    document.getElementById('workout-screen').classList.remove('cache');
 }
 
         function updateStep() {
@@ -403,8 +425,8 @@
                 updateStep();
             } else {
                 Storage.remove('fluxe_backup');
-                document.getElementById('workout-screen').classList.add('hidden');
-                document.getElementById('feedback-screen').classList.remove('hidden');
+                document.getElementById('workout-screen').classList.add('cache');
+                document.getElementById('feedback-screen').classList.remove('cache');
                 document.getElementById('xp-gain-text').innerText = `+ ${currentWorkout.length * 15} XP`;
             }
         }
@@ -415,7 +437,7 @@
             userData.logs.push({ date: new Date().toISOString(), mood: mood, count: currentWorkout.length });
             userData.streak++;
             Storage.set('fluxe_user_v1', userData);
-            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('feedback-screen').classList.add('cache');
             updateUI();
             showScreen('main-screen');
         }
@@ -430,24 +452,30 @@
             const ex = currentWorkout[currentStepIndex];
             document.getElementById('modal-title').innerText = ex.n;
             document.getElementById('modal-text').innerHTML = ex.h.replace(/\n/g, '<br>');
-            document.getElementById('info-modal').classList.remove('hidden');
+            document.getElementById('info-modal').classList.remove('cache');
         }
 
-        function closeInfo() { document.getElementById('info-modal').classList.add('hidden'); }
+        function closeInfo() { document.getElementById('info-modal').classList.add('cache'); }
 
         function renderLogbook() {
     const logList = document.getElementById('log-list');
     const chartContainer = document.getElementById('activity-chart');
     
-    // 1. Rendu de la liste textuelle
-    logList.innerHTML = userData.logs.slice().reverse().map(l => `
-        <div class="card p-4 flex justify-between items-center mb-3">
-            <div>
-                <p class="text-[10px] font-black opacity-40">${new Date(l.date).toLocaleDateString()}</p>
-                <p class="font-bold text-xs uppercase">${l.count} Exercices</p>
-            </div>
-            <span class="text-2xl">${l.mood}</span>
-        </div>`).join('');
+    // 1. Rendu de la liste textuelle (construite élément par élément, avec textContent :
+    //    un texte venant d'un fichier importé ne peut jamais être pris pour du code)
+    const element = (balise, classe, texte) => {
+        const el = document.createElement(balise);
+        if (classe) el.className = classe;
+        if (texte !== undefined) el.textContent = texte;
+        return el;
+    };
+    logList.replaceChildren(...userData.logs.slice().reverse().map(l => {
+        const carte = element('div', 'carte carte-seance');
+        const textes = element('div');
+        textes.append(element('p', 'carte-seance-date', new Date(l.date).toLocaleDateString()), element('p', 'carte-seance-nombre', `${l.count} Exercices`));
+        carte.append(textes, element('span', 'carte-seance-humeur', l.mood));
+        return carte;
+    }));
 
     // 2. Logique du graphique (7 derniers jours)
     const stats = new Array(7).fill(0);
@@ -475,12 +503,90 @@
     chartContainer.innerHTML = stats.map((val, i) => {
         const height = (val / maxEx) * 100;
         const opacity = val > 0 ? 1 : 0.2;
-        return `<div class="chart-bar" style="height: ${height}%; opacity: ${opacity}"></div>`;
+        return `<div class="barre-graphique" style="height: ${height}%; opacity: ${opacity}"></div>`;
     }).join('');
 }
 
+        /* ===== Export / import de la progression (fichier JSON) ===== */
+        // Date du jour au format AAAA-MM-JJ (heure du téléphone), pour le nom du fichier
+        function dateDuJour() {
+            const d = new Date(), deux = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`;
+        }
+
+        /* Export : sur iPhone, ouvre le menu de partage (Fichiers, AirDrop, mail...) ;
+           sinon, téléchargement classique du fichier. */
+        async function exporterProgression() {
+            const contenu = JSON.stringify({ app: 'fluxe-app', format: 1, exporte_le: new Date().toISOString(), data: { fluxe_user_v1: champsUtiles(userData) } }, null, 1);
+            const nom = `fluxe-progression-${dateDuJour()}.json`;
+            const fichier = new File([contenu], nom, { type: 'application/json' });
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [fichier] })) {
+                try { await navigator.share({ files: [fichier], title: 'Progression Fluxe' }); return; }
+                catch (e) { if (e && e.name === 'AbortError') return; } // partage annulé : rien à faire ; autre souci : téléchargement
+            }
+            const lien = document.createElement('a');
+            lien.href = URL.createObjectURL(fichier);
+            lien.download = nom;
+            document.body.appendChild(lien);
+            lien.click();
+            lien.remove();
+            setTimeout(() => URL.revokeObjectURL(lien.href), 10000);
+        }
+
+        // Import : lit le fichier choisi, puis le vérifie avant de toucher à quoi que ce soit
+        function importerProgression(champ) {
+            const fichier = champ.files && champ.files[0];
+            champ.value = ''; // permet de rechoisir le même fichier plus tard
+            if (!fichier) return;
+            if (fichier.size > TAILLE_MAX_IMPORT) return alert("Ce fichier est trop gros pour être une sauvegarde Fluxe (plus de 1 Mo). Rien n'a été modifié.");
+            const lecteur = new FileReader();
+            lecteur.onload = () => appliquerImport(String(lecteur.result));
+            lecteur.onerror = () => alert("Impossible de lire ce fichier. Rien n'a été modifié.");
+            lecteur.readAsText(fichier);
+        }
+
+        function appliquerImport(texte) {
+            let contenu;
+            try { contenu = JSON.parse(texte); } catch (e) {
+                return alert("Ce fichier n'est pas une sauvegarde lisible (contenu abîmé). Rien n'a été modifié.");
+            }
+            if (estObjet(contenu) && (contenu.app === 'fluxe-suivi' || (contenu.app === undefined && Array.isArray(contenu.sessions)))) {
+                return alert("Ce fichier vient de Fluxe Suivi (l'autre appli) : il ne contient pas de progression Fluxe. Rien n'a été modifié.");
+            }
+            if (!estObjet(contenu) || contenu.app !== 'fluxe-app' || contenu.format !== 1 || !estObjet(contenu.data) || !estProfilValide(contenu.data.fluxe_user_v1)) {
+                return alert("Ce fichier n'est pas une sauvegarde Fluxe valide. Rien n'a été modifié.");
+            }
+            const nouveau = champsUtiles(contenu.data.fluxe_user_v1);
+            const resume = p => `niveau ${p.lvl}, ${p.xp} XP, ${p.logs.length} séance(s)`;
+            if (!confirm(`Importer cette sauvegarde ?\n\nTa progression actuelle (${resume(userData)}) sera remplacée par celle du fichier (${resume(nouveau)}).\n\nUne copie de sécurité de ta progression actuelle est gardée sur ce téléphone.`)) return;
+            try {
+                /* Copies de sécurité (texte exact enregistré, ou progression affichée) :
+                   - fluxe_user_v1_avant_import : la progression d'origine, avant le TOUT PREMIER import (jamais écrasée) ;
+                   - fluxe_user_v1_avant_dernier_import : la progression juste avant l'import le plus récent. */
+                const actuel = localStorage.getItem('fluxe_user_v1');
+                const copie = actuel !== null ? actuel : JSON.stringify(userData);
+                if (localStorage.getItem('fluxe_user_v1_avant_import') === null) localStorage.setItem('fluxe_user_v1_avant_import', copie);
+                localStorage.setItem('fluxe_user_v1_avant_dernier_import', copie);
+                Storage.set('fluxe_user_v1', nouveau);
+            } catch (e) {
+                return alert("Impossible d'enregistrer sur ce téléphone (mémoire pleine ?). Rien n'a été modifié.");
+            }
+            userData = chargerProgression();
+            updateUI();
+            renderLogbook();
+            alert('Progression importée.');
+        }
+
+        // Version affichée en bas de la fenêtre d'aide (lue dans la balise app-version)
+        document.getElementById('version-app').textContent = `Fluxe v${document.querySelector('meta[name="app-version"]').content}`;
+
         updateUI();
         checkBackup();
+
+        // Hors ligne : enregistre le service worker (sw.js), qui garde une copie de l'app
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {}));
+        }
     </script>
 </body>
 </html>
