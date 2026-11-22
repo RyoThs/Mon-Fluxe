@@ -103,3 +103,16 @@ test('petit écran (iPhone SE) : barre de progression et bouton « Suivant » vi
   const bas = await p.$eval('#workout-screen button:has-text("Suivant")', el => el.getBoundingClientRect().bottom);
   assert.ok(bas <= 568, `bouton Suivant hors de l'écran (bas à ${bas}px)`);
 });
+
+test('petit écran (iPhone SE) : « Suivant » reste visible même pendant un repos, avec dessin et échauffement', async () => {
+  const p = await app.page({ viewport: { width: 320, height: 568 } });
+  await donner(p, { fluxe_reglages: { echauffement: true } });
+  await lancerSeance(p, ['Abdos']);
+  await p.click('#workout-screen button:has-text("Suivant")'); // repos affiché + exercice tenu (chrono)
+  assert.ok(await p.isVisible('#repos'));
+  const bas = await p.$eval('#workout-screen .bouton-suivant', el => el.getBoundingClientRect().bottom);
+  assert.ok(bas <= 568, `bouton Suivant hors de l'écran (bas à ${bas}px)`);
+  const chrono = await p.$eval('#chrono-bouton', el => el.getBoundingClientRect().bottom);
+  const haut = await p.$eval('#workout-screen .bouton-suivant', el => el.getBoundingClientRect().top);
+  assert.ok(chrono <= haut, `le bouton du chrono est caché sous Suivant (${chrono} > ${haut})`);
+});

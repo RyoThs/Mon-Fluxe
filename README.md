@@ -4,7 +4,7 @@ Fluxe App génère des séances de musculation **au poids du corps** : tu choisi
 
 > Fluxe App est **distincte de Fluxe Suivi** (le carnet de musculation pour la salle, dépôt `RyoThs/Fluxe-Suivi`). Les deux applis sont publiées sur le même site (`ryoths.github.io`) mais ne partagent aucune donnée, et ne touchent jamais aux données de l'autre.
 
-Version actuelle : **1.1.0**
+Version actuelle : **1.2.0**
 
 ## Adresse
 
@@ -70,6 +70,8 @@ Organisation des fichiers :
 ⚠️ Ne renomme jamais les clés de stockage `fluxe_user_v1` et `fluxe_backup` (voir `docs/STOCKAGE.md`).
 
 ## Historique des versions
+
+- **1.2.0** — Mieux guider : chrono pour les exercices tenus (**sans aucun son**), repos de 30 s entre les exercices (+15 s, Passer), option échauffement et étirements, dessins au trait des mouvements, bouton « Trop dur ? Plus facile ». Le surplus d'XP est gardé au passage de niveau, exercices tenus affichés en secondes, petit message à la place de la fenêtre « Choisis au moins un muscle », sécurité renforcée (plus de code en ligne autorisé). Publication automatique du site après chaque fusion aux tests verts.
 
 - **1.1.0** — Nouveau style, identique à Fluxe Suivi (fond clair, dégradé turquoise → violet, cartes à ombre portée, barre du bas en pilule) ; logo inchangé. Code rangé en petits fichiers `js/`. Séance : barre de progression, « À suivre », bouton ✕ (la séance reste à reprendre). Journal : chiffres clés, semaine du lundi au dimanche, dates en français, cloison (« n'a pas pu s'afficher · Réessayer »). Corrections : tirage des exercices équitable, mode Express limité à 6, gras dans le guide.
 - **1.0.0** — Feuille de style écrite à la main, polices et hors ligne dans l'appli, export / import de la progression.

@@ -16,7 +16,7 @@ const CACHE_ACTUEL = 'fluxe-app-v' + (lire('sw.js').match(/const VERSION = '([^'
 
 test('la liste hors ligne est exactement celle prévue', () => {
   assert.deepEqual(FICHIERS, ['./', 'index.html', 'css/app.css',
-    'js/outils.js', 'js/stockage.js', 'js/exercices.js', 'js/ecrans.js', 'js/journal.js', 'js/seance.js', 'js/sauvegarde.js', 'js/actions.js', 'js/main.js',
+    'js/outils.js', 'js/stockage.js', 'js/exercices.js', 'js/ecrans.js', 'js/journal.js', 'js/dessins.js', 'js/echauffement.js', 'js/chrono.js', 'js/seance.js', 'js/sauvegarde.js', 'js/actions.js', 'js/main.js',
     'fonts/barlow-condensed-500.woff2', 'fonts/barlow-condensed-600.woff2', 'fonts/barlow-condensed-700.woff2',
     'fonts/barlow-condensed-800.woff2', 'fonts/barlow-condensed-900-italic.woff2', 'icon.png', 'manifest.json']);
 });

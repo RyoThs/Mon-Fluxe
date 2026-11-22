@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.1.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.2.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.1.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.2.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -24,7 +24,7 @@
 - [ ] Message « Progression importée. » ; niveau, sessions et journal sont identiques à avant.
 - [ ] Importer un autre fichier (par exemple une sauvegarde de Fluxe Suivi) : message clair « … Rien n'a été modifié. », et rien n'a changé.
 
-## 4. Nouveautés v1.1.0 et apparence (thème clair seulement)
+## 4. Nouveautés v1.2.0 et apparence (thème clair seulement)
 
 Même si l'iPhone est en mode sombre, l'appli reste claire (comme Fluxe Suivi) : c'est voulu.
 
@@ -36,5 +36,15 @@ Même si l'iPhone est en mode sombre, l'appli reste claire (comme Fluxe Suivi) :
 - [ ] Bouton **?** : les mots « Placement », « Mouvement »… sont **en gras**, sans étoiles.
 - [ ] Journal : bandeau **Séances / Exercices / XP gagnés**, graphique **Cette semaine** (lundi → dimanche), dates en toutes lettres (« mercredi 18 novembre »).
 - [ ] La barre du bas (pilule flottante Fluxe / Journal) ne cache rien d'important ; l'encoche et la barre du haut de l'iPhone ne recouvrent pas le titre.
+
+## 5. Nouveautés v1.2.0
+
+- [ ] Planche, chaise murale… : « Secondes », bouton **Démarrer le chrono** → le temps descend, **Pause** l'arrête, « Terminé ✓ » à la fin. **Aucun son.**
+- [ ] Après **Suivant** : bandeau **Repos 0:30** (+15 s, Passer), il disparaît tout seul ; Suivant reste utilisable.
+- [ ] Accueil : option **Échauffement et étirements** → 2 mouvements au début (étiquette « Échauffement »), 2 à la fin ; l'option est retenue après fermeture.
+- [ ] Un dessin au trait du mouvement en haut de chaque exercice.
+- [ ] Niveau Intermédiaire ou Avancé : **Trop dur ? Plus facile** remplace l'exercice (message en bas).
+- [ ] Sans groupe choisi, « Activer le Fluxe » affiche un petit message en bas (plus de fenêtre grise).
+- [ ] iPhone SE ou petit écran : le bouton **Suivant** est toujours visible.
 
 Si un point ne va pas : noter l'écran et faire une capture d'écran.

@@ -46,16 +46,18 @@ function toggleExpress() {
 }
 
 function generateWorkout() {
-    if (selectedMuscles.length === 0) return alert("Choisis au moins un muscle !");
+    if (selectedMuscles.length === 0) return afficherMessage('Choisis au moins un groupe musculaire');
     currentWorkout = [];
     // Pour chaque muscle sélectionné, on pioche 3 exercices
     selectedMuscles.forEach(m => {
-        currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3));
+        // m = groupe et niv = niveau : servent au bouton « Plus facile »
+        currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3).map(e => ({ ...e, m, niv: levelKey })));
     });
     // Mélange pour ne pas faire tous les exercices du même muscle à la suite
     currentWorkout = melanger(currentWorkout);
     // Mode Express : moitié de la séance (arrondi au supérieur), 6 exercices au maximum
     if (isExpress) currentWorkout = currentWorkout.slice(0, Math.min(Math.ceil(currentWorkout.length / 2), EXPRESS_MAX));
+    currentWorkout = ajouterEchauffement(currentWorkout);
     currentStepIndex = 0;
     saveProgress();
     updateStep();
@@ -67,6 +69,13 @@ function updateStep() {
     document.getElementById('ex-name').innerText = ex.n;
     document.getElementById('ex-desc').innerText = ex.d;
     document.getElementById('ex-reps').innerText = ex.r;
+    document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
+    preparerChrono(ex);
+    afficherDessin(ex);
+    document.getElementById('plus-facile').classList.toggle('cache', !versionPlusFacile(ex));
+    const etape = document.getElementById('ex-etape');
+    etape.textContent = ex.t === 'echauffement' ? 'Échauffement' : ex.t === 'etirement' ? 'Étirement' : '';
+    etape.classList.toggle('cache', !ex.t);
     document.getElementById('step-counter-text').innerText = `Flux ${currentStepIndex + 1}/${currentWorkout.length}`;
     document.querySelector('#seance-progression i').style.width = `${((currentStepIndex + 1) / currentWorkout.length) * 100}%`;
     afficherASuivre();
@@ -80,15 +89,36 @@ function afficherASuivre() {
     const liste = element('ul');
     liste.append(...suivants.map(ex => {
         const li = element('li');
-        li.append(element('b', '', ex.n), element('span', '', `${ex.r}`));
+        li.append(element('b', '', ex.n), element('span', '', ex.s ? `${ex.r} s` : `${ex.r}`));
         return li;
     }));
     const reste = currentWorkout.length - currentStepIndex - 1 - suivants.length;
     zone.replaceChildren(element('p', 'a-suivre-titre', 'À suivre'), liste, ...(reste > 0 ? [element('p', 'a-suivre-reste', `+ ${reste} autre${reste > 1 ? 's' : ''}`)] : []));
 }
 
+// « Plus facile » : un exercice du même groupe, au niveau du dessous, pas déjà dans la séance
+const NIVEAU_DESSOUS = { intermediate: 'beginner', advanced: 'intermediate' };
+function versionPlusFacile(ex) {
+    const dessous = NIVEAU_DESSOUS[ex.niv];
+    if (ex.t || !dessous || !exerciseLibrary[ex.m]) return null; // échauffement, débutant ou ancienne séance
+    const dejaLa = currentWorkout.map(e => e.n);
+    const choix = exerciseLibrary[ex.m][dessous].filter(e => !dejaLa.includes(e.n));
+    return choix.length ? { ...melanger(choix)[0], m: ex.m, niv: dessous } : null;
+}
+
+function rendrePlusFacile() {
+    const facile = versionPlusFacile(currentWorkout[currentStepIndex]);
+    if (!facile) return;
+    currentWorkout[currentStepIndex] = facile;
+    saveProgress();
+    updateStep();
+    afficherMessage(`Plus facile : ${facile.n}`);
+}
+
 // « Quitter » : ferme la séance sans rien perdre (elle reste à reprendre depuis l'accueil)
 function quitterSeance() {
+    arreterRepos();
+    arreterChrono();
     saveProgress();
     document.getElementById('workout-screen').classList.add('cache');
     checkBackup();
@@ -99,18 +129,23 @@ function nextStep() {
         currentStepIndex++;
         saveProgress();
         updateStep();
+        demarrerRepos();
     } else {
+        arreterRepos();
+        arreterChrono();
         Storage.remove('fluxe_backup');
         document.getElementById('workout-screen').classList.add('cache');
         document.getElementById('feedback-screen').classList.remove('cache');
-        document.getElementById('xp-gain-text').innerText = `+ ${currentWorkout.length * 15} XP`;
+        document.getElementById('xp-gain-text').innerText = `+ ${vraisExercices(currentWorkout) * 15} XP`;
     }
 }
 
 function finishWithFeedback(mood) {
-    userData.xp += currentWorkout.length * 15;
-    if (userData.xp >= userData.lvl * 100) { userData.xp = 0; userData.lvl++; }
-    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: currentWorkout.length });
+    const faits = vraisExercices(currentWorkout); // l'échauffement et les étirements ne comptent pas
+    userData.xp += faits * 15;
+    // Passage de niveau : il faut « niveau × 100 » XP ; le surplus est gardé (plusieurs niveaux d'un coup possibles)
+    while (userData.xp >= userData.lvl * 100) { userData.xp -= userData.lvl * 100; userData.lvl++; }
+    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: faits });
     userData.streak++;
     Storage.set('fluxe_user_v1', userData);
     document.getElementById('feedback-screen').classList.add('cache');
