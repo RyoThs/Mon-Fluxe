@@ -11,7 +11,21 @@ const REGLES = {
   'no-unused-vars': ['error', { args: 'none', caughtErrors: 'none' }],
 };
 
+/* Code de l'app (js/) : scripts classiques chargés dans l'ordre par index.html. Ils se partagent leurs
+   fonctions et variables du haut de fichier : la liste PARTAGES dit lesquelles existent, pour qu'une faute
+   de frappe (nom inconnu) soit quand même attrapée. */
+const APP = [...NAVIGATEUR, 'alert', 'confirm', 'File', 'FileReader', 'URL', 'setTimeout', 'clearTimeout', 'Date'];
+const PARTAGES = require('node:fs').readdirSync(require('node:path').join(__dirname, 'js')).filter(f => f.endsWith('.js'))
+  .flatMap(f => [...require('node:fs').readFileSync(require('node:path').join(__dirname, 'js', f), 'utf8')
+    .matchAll(/^(?:function\s+|async function\s+|const\s+|let\s+)([A-Za-z_$][\w$]*)/gm)].map(m => m[1]))
+  .concat(['selectedMuscles', 'currentWorkout', 'currentStepIndex', 'levelKey', 'isExpress']);
+
 module.exports = [
+  {
+    files: ['js/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'script', globals: Object.fromEntries([...APP, ...PARTAGES].map(g => [g, 'writable'])) },
+    rules: { ...REGLES, 'no-redeclare': ['error', { builtinGlobals: false }], 'no-unused-vars': ['error', { vars: 'local', args: 'none', caughtErrors: 'none' }] },
+  },
   {
     files: ['tests/**/*.js', 'outils/**/*.js', 'eslint.config.js'],
     languageOptions: { ecmaVersion: 2022, sourceType: 'commonjs', globals: Object.fromEntries([...NODE, ...NAVIGATEUR].map(g => [g, 'readonly'])) },

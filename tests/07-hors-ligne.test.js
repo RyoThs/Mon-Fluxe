@@ -13,7 +13,9 @@ after(async () => { await app.fermer(); });
 const FICHIERS = listeFichiersSW();
 
 test('la liste hors ligne est exactement celle prévue', () => {
-  assert.deepEqual(FICHIERS, ['./', 'index.html', 'css/app.css', 'fonts/inter-400.woff2', 'fonts/inter-800.woff2',
+  assert.deepEqual(FICHIERS, ['./', 'index.html', 'css/app.css',
+    'js/stockage.js', 'js/exercices.js', 'js/ecrans.js', 'js/journal.js', 'js/seance.js', 'js/sauvegarde.js', 'js/actions.js', 'js/main.js',
+    'fonts/inter-400.woff2', 'fonts/inter-800.woff2',
     'fonts/inter-900.woff2', 'fonts/barlow-condensed-900-italic.woff2', 'icon.png', 'manifest.json']);
 });
 
