@@ -50,7 +50,8 @@ function generateWorkout() {
     currentWorkout = [];
     // Pour chaque muscle sélectionné, on pioche 3 exercices
     selectedMuscles.forEach(m => {
-        currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3));
+        // m = groupe et niv = niveau : servent au bouton « Plus facile »
+        currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3).map(e => ({ ...e, m, niv: levelKey })));
     });
     // Mélange pour ne pas faire tous les exercices du même muscle à la suite
     currentWorkout = melanger(currentWorkout);
@@ -71,6 +72,7 @@ function updateStep() {
     document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
     preparerChrono(ex);
     afficherDessin(ex);
+    document.getElementById('plus-facile').classList.toggle('cache', !versionPlusFacile(ex));
     const etape = document.getElementById('ex-etape');
     etape.textContent = ex.t === 'echauffement' ? 'Échauffement' : ex.t === 'etirement' ? 'Étirement' : '';
     etape.classList.toggle('cache', !ex.t);
@@ -92,6 +94,25 @@ function afficherASuivre() {
     }));
     const reste = currentWorkout.length - currentStepIndex - 1 - suivants.length;
     zone.replaceChildren(element('p', 'a-suivre-titre', 'À suivre'), liste, ...(reste > 0 ? [element('p', 'a-suivre-reste', `+ ${reste} autre${reste > 1 ? 's' : ''}`)] : []));
+}
+
+// « Plus facile » : un exercice du même groupe, au niveau du dessous, pas déjà dans la séance
+const NIVEAU_DESSOUS = { intermediate: 'beginner', advanced: 'intermediate' };
+function versionPlusFacile(ex) {
+    const dessous = NIVEAU_DESSOUS[ex.niv];
+    if (ex.t || !dessous || !exerciseLibrary[ex.m]) return null; // échauffement, débutant ou ancienne séance
+    const dejaLa = currentWorkout.map(e => e.n);
+    const choix = exerciseLibrary[ex.m][dessous].filter(e => !dejaLa.includes(e.n));
+    return choix.length ? { ...melanger(choix)[0], m: ex.m, niv: dessous } : null;
+}
+
+function rendrePlusFacile() {
+    const facile = versionPlusFacile(currentWorkout[currentStepIndex]);
+    if (!facile) return;
+    currentWorkout[currentStepIndex] = facile;
+    saveProgress();
+    updateStep();
+    afficherMessage(`Plus facile : ${facile.n}`);
 }
 
 // « Quitter » : ferme la séance sans rien perdre (elle reste à reprendre depuis l'accueil)

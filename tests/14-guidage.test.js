@@ -167,4 +167,31 @@ test('dessins : affiché pendant la séance (décoratif), caché pour un exercic
   assert.deepEqual(p.erreurs, []);
 });
 
+test('« Plus facile » : remplace l’exercice par un du niveau en dessous, même groupe, et la séance le retient', async () => {
+  const p = await app.page();
+  await p.click('#main-screen button:has-text("Avancé")');
+  await lancerSeance(p, ['Jambes']);
+  const avant = await p.textContent('#ex-name');
+  assert.ok(await p.isVisible('#plus-facile'));
+  await p.click('#plus-facile');
+  const apres = await p.textContent('#ex-name');
+  const intermediaires = await p.evaluate(() => exerciseLibrary['Jambes'].intermediate.map(e => e.n)); // eslint-disable-line no-undef
+  assert.notEqual(apres, avant);
+  assert.ok(intermediaires.includes(apres), `${apres} n'est pas un exercice Jambes intermédiaire`);
+  assert.match(await p.textContent('#message'), /plus facile/i);
+  assert.equal((await lireCle(p, CLE_REPRISE)).workout[0].n, apres, 'la séance enregistrée a l’exercice remplacé');
+  assert.equal(await p.evaluate(() => currentWorkout.length), 3); // eslint-disable-line no-undef
+});
+
+test('« Plus facile » : absent au niveau Débutant, pour l’échauffement et pour une ancienne séance sans groupe', async () => {
+  const p = await app.page();
+  await p.click('#main-screen button:has-text("Débutant")');
+  await lancerSeance(p, ['Dos']);
+  assert.ok(!(await p.isVisible('#plus-facile')));
+  const q = await app.page();
+  await donner(q, reprise([ex('Pompes Classiques', 15)]));
+  await q.click('#resume-card button:has-text("Reprendre")');
+  assert.ok(!(await q.isVisible('#plus-facile')));
+});
+
 module.exports = { reprise, ex, TENUS };

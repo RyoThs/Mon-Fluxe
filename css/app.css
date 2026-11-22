@@ -352,6 +352,9 @@ body {
 .dessin-support { stroke: var(--discret); stroke-width: 2.5; }
 @media (max-height: 700px) { .dessin { width: 110px; } }
 
+/* Lien discret « Trop dur ? Plus facile » */
+.bouton-lien { display: block; margin: 12px auto 0; padding: 6px 10px; color: var(--accent); font-size: 14px; font-weight: 600; }
+
 /* Étiquette « Échauffement » / « Étirement » au-dessus du nom */
 .etiquette-etape { display: inline-block; margin-bottom: 8px; padding: 4px 12px; border-radius: 999px; background: var(--teinte); color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .encadre-express + .encadre-express { margin-top: 12px; padding-top: 12px; }
@@ -381,6 +384,8 @@ body {
 .a-suivre-reste { margin-top: 4px; color: var(--discret); font-size: 13px; }
 .a-suivre-fin { margin-top: 8px; text-align: center; font-weight: 700; color: var(--accent); }
 .bouton-suivant { padding: 20px; font-size: 20px; margin-top: 14px; }
+/* « Suivant » toujours visible : il reste collé en bas de l'écran même si le contenu dépasse (petits iPhone) */
+.ecran-seance .bouton-suivant { position: sticky; bottom: 0; z-index: 2; }
 
 /* Fin de séance */
 .ecran-fin { z-index: 2000; align-items: center; justify-content: center; text-align: center; }
@@ -457,5 +462,15 @@ body {
   .seance-nombre { font-size: 84px; }
   .barre-progression { margin: 10px 2px 12px; }
   .bouton-suivant { padding: 16px; }
+  .seance-nombre { font-size: 72px; }
+  .repos { padding: 8px 12px; margin-bottom: 10px; }
+  .repos-texte b { font-size: 24px; }
+  .seance-description { margin: 6px 0 2px; }
+  .seance-centre { padding: 14px 14px 12px; }
+  .etiquette-etape { margin-bottom: 4px; }
+  .seance-repetitions { margin-top: 2px; }
+  .bouton-chrono { margin-top: 6px; padding: 8px 16px; }
+  .bouton-lien { margin-top: 4px; }
+  .ecran-seance:has(.repos:not(.cache)) .dessin { display: none; }   /* pendant le repos, le dessin laisse la place */
 }
 @media (prefers-reduced-motion: reduce) { button, .barre-xp-remplie, .barre-progression i { transition: none; } }

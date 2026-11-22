@@ -12,6 +12,7 @@ const gestes = {
     suivant: () => nextStep(),
     quitter: () => quitterSeance(),
     chrono: () => basculerChrono(),
+    plusFacile: () => rendrePlusFacile(),
     echauffement: () => basculerEchauffement(),
     reposPlus: () => ajouterRepos(15),
     reposPasser: () => arreterRepos(),
