@@ -1,0 +1,26 @@
+# Publication du site (GitHub Pages)
+# Après chaque mise à jour de main, quand les tests sont VERTS, on demande à GitHub de republier
+# le site https://ryoths.github.io/Mon-Fluxe/ (sinon une fusion faite par un robot peut ne pas être publiée,
+# cas de la v1.1.0 le 2026-11-22). Relançable à la main : onglet Actions → Publication → Run workflow.
+name: Publication
+
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+
+jobs:
+  publier:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Demander à GitHub Pages de republier main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"
