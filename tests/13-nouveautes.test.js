@@ -94,3 +94,12 @@ test('journal : dates en français (« mercredi 18 novembre »), même si le té
   await p.click('#nav-log');
   assert.equal(await p.textContent('#log-list .carte-seance-date'), 'mercredi 18 novembre');
 });
+
+test('petit écran (iPhone SE) : barre de progression et bouton « Suivant » visibles sans faire défiler', async () => {
+  const p = await app.page({ viewport: { width: 320, height: 568 } });
+  await lancerSeance(p, ['Pectoraux', 'Bras']);
+  const barre = await p.$eval('#seance-progression', el => el.getBoundingClientRect().height);
+  assert.ok(barre >= 5, `barre écrasée (${barre}px)`);
+  const bas = await p.$eval('#workout-screen button:has-text("Suivant")', el => el.getBoundingClientRect().bottom);
+  assert.ok(bas <= 568, `bouton Suivant hors de l'écran (bas à ${bas}px)`);
+});

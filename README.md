@@ -4,7 +4,7 @@ Fluxe App génère des séances de musculation **au poids du corps** : tu choisi
 
 > Fluxe App est **distincte de Fluxe Suivi** (le carnet de musculation pour la salle, dépôt `RyoThs/Fluxe-Suivi`). Les deux applis sont publiées sur le même site (`ryoths.github.io`) mais ne partagent aucune donnée, et ne touchent jamais aux données de l'autre.
 
-Version actuelle : **1.0.0**
+Version actuelle : **1.1.0**
 
 ## Adresse
 
@@ -36,8 +36,7 @@ Il faut [Node.js](https://nodejs.org/) 22. L'appli elle-même n'a besoin d'aucun
 ```bash
 npm install          # installe les outils de test (une seule fois)
 npm test             # lance tous les tests automatiques (navigateur Chromium)
-npm run lint         # vérifie le code des tests, des outils et de sw.js
-npm run captures -- <dossier-hors-du-depot>   # captures avant/après et comparaison pixel
+npm run lint         # vérifie le code de l'appli (js/), des tests, des outils et de sw.js
 ```
 
 Les tests tournent aussi automatiquement sur GitHub à chaque proposition de modification (`.github/workflows/tests.yml`).
@@ -46,31 +45,37 @@ Organisation des fichiers :
 
 | Fichier | Rôle |
 | --- | --- |
-| `index.html` | l'appli (page + code JavaScript) |
-| `css/app.css` | toute l'apparence (thème clair et sombre) |
-| `fonts/` | polices Inter et Barlow Condensed (+ licences) |
+| `index.html` | la structure des écrans (aucun code JavaScript dedans) |
+| `js/` | le code, rangé par sujet : plan dans `js/README.md` |
+| `css/app.css` | toute l'apparence (thème clair seulement, identité Fluxe Suivi) |
+| `fonts/` | police Barlow Condensed (+ licence) |
 | `sw.js` | fonctionnement hors ligne (service worker) |
 | `manifest.json` | nom, icône et couleurs de l'appli installée |
 | `tests/` | tests automatiques |
-| `outils/captures.js` | captures d'écran avant/après |
+| `outils/captures.js` | ancien outil de comparaison avec la version Tailwind (v1.0.0, n'est plus à jour depuis le nouveau style) |
 | `docs/STOCKAGE.md` | toutes les données enregistrées sur le téléphone |
 | `docs/TEST-APPAREILS.md` | liste à cocher pour tester sur iPhone |
 
 ## Publier une nouvelle version
 
 1. Change le numéro de version **aux 3 endroits** (le même partout, un test le vérifie) :
-   - `index.html` : `<meta name="app-version" content="1.0.0">`
-   - `sw.js` : `const VERSION = '1.0.0';` (le nom du cache hors ligne en découle, et l'ancien est supprimé automatiquement)
-   - `package.json` : `"version": "1.0.0"`
+   - `index.html` : `<meta name="app-version" content="1.1.0">`
+   - `sw.js` : `const VERSION = '1.1.0';` (le nom du cache hors ligne en découle, et l'ancien est supprimé automatiquement)
+   - `package.json` : `"version": "1.1.0"`
+   Nouveau fichier dans `js/` : l'ajouter aussi à `index.html` (balise `<script>`) et à la liste `FICHIERS` de `sw.js` (un test le vérifie).
 2. Lance `npm test` et `npm run lint` : tout doit être vert.
 3. Publie sur la branche `main` (GitHub Pages met le site à jour en quelques minutes).
 4. Sur l'iPhone, ferme et rouvre l'appli, puis vérifie « Fluxe vX.Y.Z » en bas de la fenêtre d'aide (bouton **?** pendant une séance). Suis `docs/TEST-APPAREILS.md`.
 
 ⚠️ Ne renomme jamais les clés de stockage `fluxe_user_v1` et `fluxe_backup` (voir `docs/STOCKAGE.md`).
 
-## Licences des polices
+## Historique des versions
 
-- **Inter** — © The Inter Project Authors, licence SIL Open Font License 1.1 : `fonts/OFL-Inter.txt`
+- **1.1.0** — Nouveau style, identique à Fluxe Suivi (fond clair, dégradé turquoise → violet, cartes à ombre portée, barre du bas en pilule) ; logo inchangé. Code rangé en petits fichiers `js/`. Séance : barre de progression, « À suivre », bouton ✕ (la séance reste à reprendre). Journal : chiffres clés, semaine du lundi au dimanche, dates en français, cloison (« n'a pas pu s'afficher · Réessayer »). Corrections : tirage des exercices équitable, mode Express limité à 6, gras dans le guide.
+- **1.0.0** — Feuille de style écrite à la main, polices et hors ligne dans l'appli, export / import de la progression.
+
+## Licence de la police
+
 - **Barlow Condensed** — © The Barlow Project Authors, licence SIL Open Font License 1.1 : `fonts/OFL-Barlow-Condensed.txt`
 
-Fichiers tirés des paquets `@fontsource/inter` et `@fontsource/barlow-condensed` (version 5.3.0), alphabet latin uniquement.
+Fichiers tirés du paquet `@fontsource/barlow-condensed` (version 5.3.0), alphabet latin uniquement.

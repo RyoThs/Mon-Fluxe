@@ -308,6 +308,7 @@ body {
   overflow-y: auto;
 }
 
+.plein-ecran > * { flex-shrink: 0; }   /* rien ne s'écrase sur petit écran… */
 .seance-haut { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .bouton-quitter, .bouton-aide {
   width: 44px;
@@ -342,7 +343,7 @@ body {
 .seance-unite { font-family: var(--police-chiffres); font-size: 26px; font-weight: 700; color: var(--discret); text-transform: uppercase; }
 
 /* « À suivre » : les prochains exercices */
-.a-suivre { flex: 1; padding: 0 4px; }
+.a-suivre { flex: 1 1 auto; flex-shrink: 1; min-height: 0; overflow-y: auto; padding: 0 4px; }   /* …sauf « À suivre », qui défile si besoin */
 .a-suivre-titre { margin: 4px 0 8px; color: var(--discret); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .a-suivre ul { margin: 0; padding: 0; list-style: none; }
 .a-suivre li { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--trait); }
@@ -398,4 +399,12 @@ body {
 .cache { display: none !important; }
 
 @media (max-width: 360px) { .grille-muscles { grid-template-columns: repeat(2, 1fr); } }
+/* Petits écrans (iPhone SE) : carte d'exercice plus compacte pour garder « Suivant » visible */
+@media (max-height: 700px) {
+  .seance-centre { padding: 18px 16px; }
+  .seance-nom { font-size: 30px; }
+  .seance-nombre { font-size: 84px; }
+  .barre-progression { margin: 10px 2px 12px; }
+  .bouton-suivant { padding: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { button, .barre-xp-remplie, .barre-progression i { transition: none; } }
