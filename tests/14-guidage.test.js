@@ -2,7 +2,7 @@
    repos entre les exercices, échauffement et étirements, dessins, bouton « Plus facile ». */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { demarrer, donner, CLE_REPRISE } = require('./outils');
+const { demarrer, donner, lancerSeance, lireCode, CLE_REPRISE } = require('./outils');
 
 let app;
 before(async () => { app = await demarrer(); });
@@ -39,6 +39,82 @@ test('« À suivre » affiche « 30 s » pour un exercice tenu', async () => {
   await donner(p, reprise([ex('Crunch', 20), ex('Planche', 30, { s: 1 })]));
   await p.click('#resume-card button:has-text("Reprendre")');
   assert.equal(await p.textContent('#a-suivre li span'), '30 s');
+});
+
+// Ouvre l'app avec une horloge contrôlée par le test (on avance le temps sans attendre)
+async function pageAvecHorloge(donnees) {
+  const p = await app.page();
+  await p.clock.install();
+  await donner(p, donnees);
+  await p.click('#resume-card button:has-text("Reprendre")');
+  return p;
+}
+
+test('chrono : un exercice tenu a un bouton « Démarrer », le compte à rebours descend puis affiche « Terminé »', async () => {
+  const p = await pageAvecHorloge(reprise([ex('Planche', 30, { s: 1 }), ex('Crunch', 20)]));
+  assert.ok(await p.isVisible('#chrono-bouton'));
+  assert.equal(await p.textContent('#chrono-bouton'), 'Démarrer le chrono');
+  await p.click('#chrono-bouton');
+  await p.clock.runFor(10000);
+  assert.equal(await p.textContent('#ex-reps'), '20');
+  assert.equal(await p.textContent('#chrono-bouton'), 'Pause');
+  await p.click('#chrono-bouton'); // pause
+  await p.clock.runFor(5000);
+  assert.equal(await p.textContent('#ex-reps'), '20', 'en pause, le temps ne descend plus');
+  await p.click('#chrono-bouton'); // reprise
+  await p.clock.runFor(21000);
+  assert.equal(await p.textContent('#ex-reps'), '0');
+  assert.equal(await p.textContent('#chrono-bouton'), 'Terminé ✓');
+  assert.ok(await p.$eval('.seance-centre', el => el.classList.contains('chrono-fini')));
+  assert.deepEqual(p.erreurs, []);
+});
+
+test('chrono : pas de bouton pour un exercice à répétitions', async () => {
+  const p = await pageAvecHorloge(reprise([ex('Crunch', 20), ex('Planche', 30, { s: 1 })]));
+  assert.ok(!(await p.isVisible('#chrono-bouton')));
+  await p.click('#workout-screen button:has-text("Suivant")');
+  assert.ok(await p.isVisible('#chrono-bouton'));
+  assert.equal(await p.textContent('#ex-reps'), '30', 'le chrono repart du temps prévu');
+});
+
+test('chrono : aucun son (pas de bip), à la demande de Yoann', () => {
+  assert.doesNotMatch(lireCode(), /new Audio|AudioContext|createOscillator|\.play\(/);
+});
+
+test('repos : après « Suivant », un repos de 30 s s’affiche sans bloquer, et disparaît tout seul', async () => {
+  const p = await pageAvecHorloge(reprise([ex('Crunch', 20), ex('Squat Classique', 20), ex('Planche', 30, { s: 1 })]));
+  assert.ok(!(await p.isVisible('#repos')));
+  await p.click('#workout-screen button:has-text("Suivant")');
+  assert.ok(await p.isVisible('#repos'));
+  assert.match(await p.textContent('#repos-temps'), /^0:30$/);
+  await p.clock.runFor(10000);
+  assert.equal(await p.textContent('#repos-temps'), '0:20');
+  await p.click('#repos button:has-text("+15 s")');
+  assert.equal(await p.textContent('#repos-temps'), '0:35');
+  await p.clock.runFor(36000);
+  assert.ok(!(await p.isVisible('#repos')), 'le repos se termine tout seul');
+  assert.deepEqual(p.erreurs, []);
+});
+
+test('repos : « Passer » le ferme, et « Suivant » pendant le repos passe à l’exercice d’après', async () => {
+  const p = await pageAvecHorloge(reprise([ex('Crunch', 20), ex('Squat Classique', 20), ex('Planche', 30, { s: 1 })]));
+  await p.click('#workout-screen button:has-text("Suivant")');
+  await p.click('#repos button:has-text("Passer")');
+  assert.ok(!(await p.isVisible('#repos')));
+  await p.click('#workout-screen button:has-text("Suivant")');
+  assert.equal(await p.textContent('#step-counter-text'), 'Flux 3/3');
+  assert.ok(await p.isVisible('#repos'));
+  await p.click('#workout-screen button:has-text("Suivant")'); // pendant le repos : on avance quand même
+  assert.ok(await p.isVisible('#feedback-screen'));
+  assert.ok(!(await p.isVisible('#repos')));
+});
+
+test('repos : jamais après le dernier exercice (on arrive directement à la fin)', async () => {
+  const p = await app.page();
+  await lancerSeance(p, ['Pectoraux']);
+  for (let i = 0; i < 3; i++) await p.click('#workout-screen button:has-text("Suivant")');
+  assert.ok(await p.isVisible('#feedback-screen'));
+  assert.ok(!(await p.isVisible('#repos')));
 });
 
 module.exports = { reprise, ex, TENUS };

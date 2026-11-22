@@ -115,10 +115,18 @@
         </div>
         <div id="seance-progression" class="barre-progression"><i></i></div>
 
+        <div id="repos" class="repos cache" role="timer">
+            <div class="repos-texte"><span>Repos</span><b id="repos-temps">0:30</b></div>
+            <button data-act="reposPlus" class="repos-plus">+15 s</button>
+            <button data-act="reposPasser" class="repos-passer">Passer</button>
+            <div class="repos-barre"><i></i></div>
+        </div>
+
         <div class="carte seance-centre">
             <h2 id="ex-name" class="seance-nom">---</h2>
             <p id="ex-desc" class="seance-description">---</p>
             <div class="seance-repetitions"><span id="ex-reps" class="seance-nombre">0</span><span class="seance-unite">Reps</span></div>
+            <button data-act="chrono" id="chrono-bouton" class="bouton-chrono cache">Démarrer le chrono</button>
         </div>
 
         <div id="a-suivre" class="a-suivre"></div>
@@ -154,6 +162,7 @@
     <script src="js/exercices.js"></script>
     <script src="js/ecrans.js"></script>
     <script src="js/journal.js"></script>
+    <script src="js/chrono.js"></script>
     <script src="js/seance.js"></script>
     <script src="js/sauvegarde.js"></script>
     <script src="js/actions.js"></script>

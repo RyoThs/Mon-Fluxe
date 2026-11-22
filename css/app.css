@@ -342,6 +342,20 @@ body {
 }
 .seance-unite { font-family: var(--police-chiffres); font-size: 26px; font-weight: 700; color: var(--discret); text-transform: uppercase; }
 
+/* Chrono d'exercice (exercices tenus) : pas de son, seulement l'affichage */
+.bouton-chrono { margin-top: 14px; padding: 11px 20px; border-radius: 999px; background: var(--teinte); color: var(--accent); font-weight: 700; }
+.chrono-fini .bouton-chrono { background: var(--degrade); color: var(--sur-degrade); }
+
+/* Repos entre deux exercices : bandeau qui ne bloque rien */
+.repos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; padding: 12px 14px; border-radius: 20px; background: var(--releve); border: 1px solid var(--trait); box-shadow: var(--ombre-petite); }
+.repos-texte { flex: 1; display: flex; align-items: baseline; gap: 8px; }
+.repos-texte span { color: var(--discret); font-size: 14px; }
+.repos-texte b { font-family: var(--police-chiffres); font-size: 30px; font-weight: 700; line-height: 1; }
+.repos button { padding: 9px 12px; border-radius: 12px; font-size: 14px; font-weight: 700; background: var(--carte); border: 1px solid var(--trait); box-shadow: var(--ombre-petite); }
+.repos .repos-passer { background: var(--degrade); border: 0; color: var(--sur-degrade); }
+.repos-barre { flex-basis: 100%; height: 5px; border-radius: 999px; background: var(--trait); overflow: hidden; }
+.repos-barre i { display: block; height: 100%; width: 100%; background: var(--degrade); transition: width 1s linear; }
+
 /* « À suivre » : les prochains exercices */
 .a-suivre { flex: 1 1 auto; flex-shrink: 1; min-height: 0; overflow-y: auto; padding: 0 4px; }   /* …sauf « À suivre », qui défile si besoin */
 .a-suivre-titre { margin: 4px 0 8px; color: var(--discret); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }

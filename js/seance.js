@@ -68,6 +68,7 @@ function updateStep() {
     document.getElementById('ex-desc').innerText = ex.d;
     document.getElementById('ex-reps').innerText = ex.r;
     document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
+    preparerChrono(ex);
     document.getElementById('step-counter-text').innerText = `Flux ${currentStepIndex + 1}/${currentWorkout.length}`;
     document.querySelector('#seance-progression i').style.width = `${((currentStepIndex + 1) / currentWorkout.length) * 100}%`;
     afficherASuivre();
@@ -90,6 +91,8 @@ function afficherASuivre() {
 
 // « Quitter » : ferme la séance sans rien perdre (elle reste à reprendre depuis l'accueil)
 function quitterSeance() {
+    arreterRepos();
+    arreterChrono();
     saveProgress();
     document.getElementById('workout-screen').classList.add('cache');
     checkBackup();
@@ -100,7 +103,10 @@ function nextStep() {
         currentStepIndex++;
         saveProgress();
         updateStep();
+        demarrerRepos();
     } else {
+        arreterRepos();
+        arreterChrono();
         Storage.remove('fluxe_backup');
         document.getElementById('workout-screen').classList.add('cache');
         document.getElementById('feedback-screen').classList.remove('cache');
