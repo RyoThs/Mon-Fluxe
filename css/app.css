@@ -342,6 +342,16 @@ body {
 }
 .seance-unite { font-family: var(--police-chiffres); font-size: 26px; font-weight: 700; color: var(--discret); text-transform: uppercase; }
 
+/* Dessin de l'exercice : silhouette au trait (indigo), sol et support en gris */
+.dessin { display: block; width: 150px; margin: 0 auto 6px; padding: 6px 8px; border-radius: 18px; background: var(--releve); }
+.dessin svg { display: block; width: 100%; height: auto; }
+.dessin path, .dessin circle { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.dessin-corps { stroke: var(--accent); stroke-width: 4; }
+.dessin-tete { stroke: var(--accent); stroke-width: 3.5; fill: var(--carte) !important; }
+.dessin-sol { stroke: var(--trait); stroke-width: 2.5; }
+.dessin-support { stroke: var(--discret); stroke-width: 2.5; }
+@media (max-height: 700px) { .dessin { width: 110px; } }
+
 /* Étiquette « Échauffement » / « Étirement » au-dessus du nom */
 .etiquette-etape { display: inline-block; margin-bottom: 8px; padding: 4px 12px; border-radius: 999px; background: var(--teinte); color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .encadre-express + .encadre-express { margin-top: 12px; padding-top: 12px; }

@@ -70,6 +70,7 @@ function updateStep() {
     document.getElementById('ex-reps').innerText = ex.r;
     document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
     preparerChrono(ex);
+    afficherDessin(ex);
     const etape = document.getElementById('ex-etape');
     etape.textContent = ex.t === 'echauffement' ? 'Échauffement' : ex.t === 'etirement' ? 'Étirement' : '';
     etape.classList.toggle('cache', !ex.t);

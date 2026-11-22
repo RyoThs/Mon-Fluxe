@@ -147,4 +147,24 @@ test('échauffement : un exercice normal n’a pas d’étiquette', async () => 
   assert.ok(!(await p.isVisible('#ex-etape')));
 });
 
+test('dessins : chaque exercice, échauffement et étirement a son dessin', async () => {
+  const p = await app.page();
+  const sansDessin = await p.evaluate(() => { // eslint-disable-next-line no-undef
+    const tous = [...Object.values(exerciseLibrary).flatMap(g => Object.values(g).flat()), ...ECHAUFFEMENTS, ...ETIREMENTS];
+    return [...new Set(tous.map(e => e.n))].filter(n => !dessinPour(n)); // eslint-disable-line no-undef
+  });
+  assert.deepEqual(sansDessin, []);
+});
+
+test('dessins : affiché pendant la séance (décoratif), caché pour un exercice inconnu sans planter', async () => {
+  const p = await app.page();
+  await donner(p, reprise([ex('Squat Classique', 20), ex('Exercice venu d’une vieille version', 10)]));
+  await p.click('#resume-card button:has-text("Reprendre")');
+  assert.ok(await p.isVisible('#ex-dessin svg'));
+  assert.equal(await p.getAttribute('#ex-dessin svg', 'aria-hidden'), 'true');
+  await p.click('#workout-screen button:has-text("Suivant")');
+  assert.ok(!(await p.isVisible('#ex-dessin')));
+  assert.deepEqual(p.erreurs, []);
+});
+
 module.exports = { reprise, ex, TENUS };
