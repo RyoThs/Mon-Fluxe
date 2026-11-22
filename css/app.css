@@ -342,6 +342,10 @@ body {
 }
 .seance-unite { font-family: var(--police-chiffres); font-size: 26px; font-weight: 700; color: var(--discret); text-transform: uppercase; }
 
+/* Étiquette « Échauffement » / « Étirement » au-dessus du nom */
+.etiquette-etape { display: inline-block; margin-bottom: 8px; padding: 4px 12px; border-radius: 999px; background: var(--teinte); color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.encadre-express + .encadre-express { margin-top: 12px; padding-top: 12px; }
+
 /* Chrono d'exercice (exercices tenus) : pas de son, seulement l'affichage */
 .bouton-chrono { margin-top: 14px; padding: 11px 20px; border-radius: 999px; background: var(--teinte); color: var(--accent); font-weight: 700; }
 .chrono-fini .bouton-chrono { background: var(--degrade); color: var(--sur-degrade); }

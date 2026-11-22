@@ -22,6 +22,7 @@ const FICHIERS = [
   'js/exercices.js',
   'js/ecrans.js',
   'js/journal.js',
+  'js/echauffement.js',
   'js/chrono.js',
   'js/seance.js',
   'js/sauvegarde.js',

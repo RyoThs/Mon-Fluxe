@@ -67,6 +67,10 @@
                 <div><span class="encadre-express-titre">Mode Express</span><p class="encadre-express-texte">6 exercices max</p></div>
                 <button data-act="express" id="express-toggle" class="interrupteur" aria-label="Mode Express"><div class="interrupteur-rond"></div></button>
             </div>
+            <div class="encadre-express">
+                <div><span class="encadre-express-titre">Échauffement et étirements</span><p class="encadre-express-texte">2 mouvements avant, 2 après</p></div>
+                <button data-act="echauffement" id="echauffement-toggle" class="interrupteur" aria-label="Échauffement et étirements"><div class="interrupteur-rond"></div></button>
+            </div>
         </div>
 
         <button data-act="activer" class="bouton-principal bouton-activer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Activer le Fluxe</button>
@@ -123,6 +127,7 @@
         </div>
 
         <div class="carte seance-centre">
+            <span id="ex-etape" class="etiquette-etape cache"></span>
             <h2 id="ex-name" class="seance-nom">---</h2>
             <p id="ex-desc" class="seance-description">---</p>
             <div class="seance-repetitions"><span id="ex-reps" class="seance-nombre">0</span><span class="seance-unite">Reps</span></div>
@@ -162,6 +167,7 @@
     <script src="js/exercices.js"></script>
     <script src="js/ecrans.js"></script>
     <script src="js/journal.js"></script>
+    <script src="js/echauffement.js"></script>
     <script src="js/chrono.js"></script>
     <script src="js/seance.js"></script>
     <script src="js/sauvegarde.js"></script>

@@ -56,6 +56,7 @@ function generateWorkout() {
     currentWorkout = melanger(currentWorkout);
     // Mode Express : moitié de la séance (arrondi au supérieur), 6 exercices au maximum
     if (isExpress) currentWorkout = currentWorkout.slice(0, Math.min(Math.ceil(currentWorkout.length / 2), EXPRESS_MAX));
+    currentWorkout = ajouterEchauffement(currentWorkout);
     currentStepIndex = 0;
     saveProgress();
     updateStep();
@@ -69,6 +70,9 @@ function updateStep() {
     document.getElementById('ex-reps').innerText = ex.r;
     document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
     preparerChrono(ex);
+    const etape = document.getElementById('ex-etape');
+    etape.textContent = ex.t === 'echauffement' ? 'Échauffement' : ex.t === 'etirement' ? 'Étirement' : '';
+    etape.classList.toggle('cache', !ex.t);
     document.getElementById('step-counter-text').innerText = `Flux ${currentStepIndex + 1}/${currentWorkout.length}`;
     document.querySelector('#seance-progression i').style.width = `${((currentStepIndex + 1) / currentWorkout.length) * 100}%`;
     afficherASuivre();
@@ -110,15 +114,16 @@ function nextStep() {
         Storage.remove('fluxe_backup');
         document.getElementById('workout-screen').classList.add('cache');
         document.getElementById('feedback-screen').classList.remove('cache');
-        document.getElementById('xp-gain-text').innerText = `+ ${currentWorkout.length * 15} XP`;
+        document.getElementById('xp-gain-text').innerText = `+ ${vraisExercices(currentWorkout) * 15} XP`;
     }
 }
 
 function finishWithFeedback(mood) {
-    userData.xp += currentWorkout.length * 15;
+    const faits = vraisExercices(currentWorkout); // l'échauffement et les étirements ne comptent pas
+    userData.xp += faits * 15;
     // Passage de niveau : il faut « niveau × 100 » XP ; le surplus est gardé (plusieurs niveaux d'un coup possibles)
     while (userData.xp >= userData.lvl * 100) { userData.xp -= userData.lvl * 100; userData.lvl++; }
-    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: currentWorkout.length });
+    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: faits });
     userData.streak++;
     Storage.set('fluxe_user_v1', userData);
     document.getElementById('feedback-screen').classList.add('cache');

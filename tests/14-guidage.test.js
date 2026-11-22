@@ -2,7 +2,7 @@
    repos entre les exercices, échauffement et étirements, dessins, bouton « Plus facile ». */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { demarrer, donner, lancerSeance, lireCode, CLE_REPRISE } = require('./outils');
+const { demarrer, donner, lancerSeance, finirSeance, lireCle, lireCode, CLE_REPRISE, CLE_UTILISATEUR } = require('./outils');
 
 let app;
 before(async () => { app = await demarrer(); });
@@ -115,6 +115,36 @@ test('repos : jamais après le dernier exercice (on arrive directement à la fin
   for (let i = 0; i < 3; i++) await p.click('#workout-screen button:has-text("Suivant")');
   assert.ok(await p.isVisible('#feedback-screen'));
   assert.ok(!(await p.isVisible('#repos')));
+});
+
+test('échauffement et étirements : option sur l’accueil, 2 mouvements avant et 2 après, ils ne comptent pas en XP', async () => {
+  const p = await app.page();
+  await p.click('#echauffement-toggle');
+  await lancerSeance(p, ['Pectoraux']);
+  const types = await p.evaluate(() => currentWorkout.map(e => e.t || 'exercice')); // eslint-disable-line no-undef
+  assert.deepEqual(types, ['echauffement', 'echauffement', 'exercice', 'exercice', 'exercice', 'etirement', 'etirement']);
+  assert.equal(await p.textContent('#ex-etape'), 'Échauffement');
+  assert.ok(await p.isVisible('#ex-etape'));
+  const n = await finirSeance(p);
+  assert.equal(n, 7);
+  const u = await lireCle(p, CLE_UTILISATEUR);
+  assert.equal(u.xp, 45, '3 vrais exercices × 15 XP');
+  assert.equal(u.logs[0].count, 3);
+});
+
+test('échauffement : l’option est retenue d’une fois sur l’autre, et désactivée par défaut', async () => {
+  const p = await app.page();
+  assert.ok(!(await p.$eval('#echauffement-toggle', el => el.classList.contains('actif'))));
+  await p.click('#echauffement-toggle');
+  await p.reload();
+  assert.ok(await p.$eval('#echauffement-toggle', el => el.classList.contains('actif')));
+  assert.deepEqual(await lireCle(p, 'fluxe_reglages'), { echauffement: true });
+});
+
+test('échauffement : un exercice normal n’a pas d’étiquette', async () => {
+  const p = await app.page();
+  await lancerSeance(p, ['Dos']);
+  assert.ok(!(await p.isVisible('#ex-etape')));
 });
 
 module.exports = { reprise, ex, TENUS };

@@ -12,6 +12,7 @@ const gestes = {
     suivant: () => nextStep(),
     quitter: () => quitterSeance(),
     chrono: () => basculerChrono(),
+    echauffement: () => basculerEchauffement(),
     reposPlus: () => ajouterRepos(15),
     reposPasser: () => arreterRepos(),
     humeur: el => finishWithFeedback(el.dataset.humeur),
