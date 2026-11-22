@@ -68,6 +68,30 @@ function updateStep() {
     document.getElementById('ex-desc').innerText = ex.d;
     document.getElementById('ex-reps').innerText = ex.r;
     document.getElementById('step-counter-text').innerText = `Flux ${currentStepIndex + 1}/${currentWorkout.length}`;
+    document.querySelector('#seance-progression i').style.width = `${((currentStepIndex + 1) / currentWorkout.length) * 100}%`;
+    afficherASuivre();
+}
+
+// « À suivre » : les 3 prochains exercices (nom + répétitions), ou « Dernier exercice » à la fin
+function afficherASuivre() {
+    const zone = document.getElementById('a-suivre');
+    const suivants = currentWorkout.slice(currentStepIndex + 1, currentStepIndex + 4);
+    if (suivants.length === 0) { zone.replaceChildren(element('p', 'a-suivre-fin', 'Dernier exercice, à fond !')); return; }
+    const liste = element('ul');
+    liste.append(...suivants.map(ex => {
+        const li = element('li');
+        li.append(element('b', '', ex.n), element('span', '', `${ex.r}`));
+        return li;
+    }));
+    const reste = currentWorkout.length - currentStepIndex - 1 - suivants.length;
+    zone.replaceChildren(element('p', 'a-suivre-titre', 'À suivre'), liste, ...(reste > 0 ? [element('p', 'a-suivre-reste', `+ ${reste} autre${reste > 1 ? 's' : ''}`)] : []));
+}
+
+// « Quitter » : ferme la séance sans rien perdre (elle reste à reprendre depuis l'accueil)
+function quitterSeance() {
+    saveProgress();
+    document.getElementById('workout-screen').classList.add('cache');
+    checkBackup();
 }
 
 function nextStep() {

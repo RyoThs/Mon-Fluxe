@@ -10,6 +10,7 @@ const gestes = {
     activer: () => generateWorkout(),
     aide: () => showInfo(),
     suivant: () => nextStep(),
+    quitter: () => quitterSeance(),
     humeur: el => finishWithFeedback(el.dataset.humeur),
     fermerAide: () => closeInfo(),
     exporter: () => exporterProgression(),

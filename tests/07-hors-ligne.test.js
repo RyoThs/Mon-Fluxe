@@ -83,9 +83,9 @@ test('manifest.json : nom, adresses, affichage, couleurs et icône à sa vraie t
   assert.equal(m.start_url, './');
   assert.equal(m.scope, './');
   assert.equal(m.display, 'standalone');
-  assert.equal(m.theme_color, '#2D9B7C');
-  assert.match(lire('index.html'), /<meta name="theme-color" content="#2D9B7C">/);
-  assert.equal(m.background_color, '#FAF8F2');
+  assert.equal(m.theme_color, '#f3f5fb'); // v1.1.0 : style clair de Fluxe Suivi
+  assert.match(lire('index.html'), /<meta name="theme-color" content="#f3f5fb">/);
+  assert.equal(m.background_color, '#f3f5fb');
   assert.equal(m.icons.length, 1);
   const png = fs.readFileSync(path.join(RACINE, m.icons[0].src));
   const taille = `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}`; // largeur x hauteur lues dans l'en-tête PNG

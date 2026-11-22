@@ -11,4 +11,5 @@ function updateUI() {
     document.getElementById('user-lvl').innerText = userData.lvl;
     document.getElementById('streak-counter').innerText = `🔥 ${userData.streak} SESSIONS`;
     document.getElementById('xp-fill').style.width = `${(userData.xp / (userData.lvl * 100)) * 100}%`;
+    document.getElementById('xp-texte').innerText = `${userData.xp} / ${userData.lvl * 100} XP`;
 }
