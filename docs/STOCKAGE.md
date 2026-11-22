@@ -9,7 +9,8 @@ Fluxe App enregistre tout **sur le téléphone** (rien n'est envoyé sur Interne
 | Clé | Contenu | Quand elle est écrite |
 | --- | --- | --- |
 | `fluxe_user_v1` | La progression : `{ lvl, xp, streak, logs }` — niveau, XP, nombre de séances, journal (`logs` = liste de `{ date, mood, count }` : date ISO, humeur 😃/🔥/💀, nombre d'exercices) | À la fin de chaque séance (choix de l'humeur), et après un import accepté |
-| `fluxe_backup` | La séance en cours : `{ workout, index, lvl }` — exercices prévus, exercice en cours, niveau choisi | Au lancement d'une séance et à chaque « Suivant » ; **supprimée** à la fin de la séance |
+| `fluxe_backup` | La séance en cours : `{ workout, index, lvl }` — exercices prévus, exercice en cours, niveau choisi. Depuis la v1.2.0, un exercice peut porter en plus `s` (tenu en secondes), `m` et `niv` (groupe et niveau, pour « Plus facile »), `t` (`echauffement` ou `etirement`) ; une ancienne séance sans ces champs reste lisible | Au lancement d'une séance et à chaque « Suivant » ; **supprimée** à la fin de la séance |
+| `fluxe_reglages` | Les options : `{ echauffement: true/false }` (v1.2.0) | Seulement quand on change une option |
 | `fluxe_user_v1_illisible` | Copie du texte brut de `fluxe_user_v1` quand il était illisible ou abîmé | Une seule fois : une copie déjà présente n'est **jamais écrasée** |
 | `fluxe_user_v1_avant_import` | La progression **d'origine**, telle qu'elle était avant le tout premier import | Au premier import seulement, **jamais écrasée** ensuite |
 | `fluxe_user_v1_avant_dernier_import` | La progression telle qu'elle était juste avant l'import le plus récent | À chaque import (remplacée à chaque fois) |
@@ -22,7 +23,7 @@ Si une donnée est abîmée, l'appli ne plante pas : elle repart des valeurs par
 
 | Nom | Contenu |
 | --- | --- |
-| `fluxe-app-v` + version (ex. `fluxe-app-v1.0.0`) | Copie des fichiers de l'appli : `./`, `index.html`, `css/app.css`, les 4 polices de `fonts/`, `icon.png`, `manifest.json` |
+| `fluxe-app-v` + version (ex. `fluxe-app-v1.0.0`) | Copie des fichiers de l'appli : la liste exacte est `FICHIERS` dans `sw.js` (page, `css/`, `js/`, polices, icône, manifeste) |
 
 À chaque nouvelle version, `sw.js` supprime **uniquement** les anciens caches dont le nom commence par `fluxe-app-` (par exemple l'ancien `fluxe-app-v1`).
 
