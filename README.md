@@ -55,6 +55,7 @@ Organisation des fichiers :
 | `outils/captures.js` | ancien outil de comparaison avec la version Tailwind (v1.0.0, n'est plus à jour depuis le nouveau style) |
 | `docs/STOCKAGE.md` | toutes les données enregistrées sur le téléphone |
 | `docs/TEST-APPAREILS.md` | liste à cocher pour tester sur iPhone |
+| `docs/ILLUSTRATIONS.md` | cahier des charges pour faire dessiner les positions par un illustrateur (mannequin anatomique réaliste) |
 
 ## Publier une nouvelle version
 
