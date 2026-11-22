@@ -15,8 +15,8 @@ const FICHIERS = listeFichiersSW();
 test('la liste hors ligne est exactement celle prévue', () => {
   assert.deepEqual(FICHIERS, ['./', 'index.html', 'css/app.css',
     'js/outils.js', 'js/stockage.js', 'js/exercices.js', 'js/ecrans.js', 'js/journal.js', 'js/seance.js', 'js/sauvegarde.js', 'js/actions.js', 'js/main.js',
-    'fonts/inter-400.woff2', 'fonts/inter-800.woff2',
-    'fonts/inter-900.woff2', 'fonts/barlow-condensed-900-italic.woff2', 'icon.png', 'manifest.json']);
+    'fonts/barlow-condensed-500.woff2', 'fonts/barlow-condensed-600.woff2', 'fonts/barlow-condensed-700.woff2',
+    'fonts/barlow-condensed-800.woff2', 'fonts/barlow-condensed-900-italic.woff2', 'icon.png', 'manifest.json']);
 });
 
 test('chaque fichier de la liste existe', () => {
@@ -142,16 +142,16 @@ test('mode avion : après une 1re visite, l’app s’ouvre avec style et police
   await p.reload();
   await p.waitForSelector('#main-screen');
 
-  // Le style est là (fond crème, écrans cachés) et la police Barlow Condensed aussi
-  assert.equal(await p.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(250, 248, 242)');
+  // Le style est là (fond gris-bleu clair, écrans cachés) et la police Barlow Condensed aussi
+  assert.equal(await p.evaluate(() => getComputedStyle(document.body).backgroundColor), 'rgb(243, 245, 251)');
   assert.equal(await p.$eval('#workout-screen', el => getComputedStyle(el).display), 'none');
   const police = await p.evaluate(async () => {
     await document.fonts.load('italic 900 20px "Barlow Condensed"');
-    await document.fonts.load('900 16px Inter');
-    const face = [...document.fonts].find(f => f.family.replace(/"/g, '') === 'Barlow Condensed');
-    return { barlow: document.fonts.check('italic 900 20px "Barlow Condensed"'), inter: document.fonts.check('900 16px Inter'), statut: face && face.status };
+    await document.fonts.load('800 20px "Barlow Condensed"');
+    const face = [...document.fonts].find(f => f.family.replace(/"/g, '') === 'Barlow Condensed' && f.style === 'italic');
+    return { barlow: document.fonts.check('italic 900 20px "Barlow Condensed"'), barlow800: document.fonts.check('800 20px "Barlow Condensed"'), statut: face && face.status };
   });
-  assert.deepEqual(police, { barlow: true, inter: true, statut: 'loaded' });
+  assert.deepEqual(police, { barlow: true, barlow800: true, statut: 'loaded' });
 
   // Séance complète hors ligne : l'XP est enregistrée
   await lancerSeance(p, ['Jambes']);

@@ -34,7 +34,7 @@ function afficherListe() {
     document.getElementById('log-list').replaceChildren(...userData.logs.slice().reverse().map(l => {
         const carte = element('div', 'carte carte-seance');
         const textes = element('div');
-        textes.append(element('p', 'carte-seance-date', new Date(l.date).toLocaleDateString()), element('p', 'carte-seance-nombre', `${l.count} Exercices`));
+        textes.append(element('p', 'carte-seance-date', dateLisible(new Date(l.date))), element('p', 'carte-seance-nombre', `${l.count} Exercices`));
         carte.append(textes, element('span', 'carte-seance-humeur', l.mood));
         return carte;
     }));

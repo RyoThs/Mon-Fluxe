@@ -29,6 +29,13 @@ function texteAvecGras(texte) {
     });
 }
 
+// Date en toutes lettres et en français (« mercredi 18 novembre ») ; l'année est ajoutée si ce n'est pas l'année en cours
+function dateLisible(date) {
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    if (date.getFullYear() !== new Date().getFullYear()) options.year = 'numeric';
+    return date.toLocaleDateString('fr-FR', options);
+}
+
 // Lundi 0 h de la semaine en cours (heure du téléphone)
 function debutDeSemaine(date = new Date()) {
     const d = new Date(date);

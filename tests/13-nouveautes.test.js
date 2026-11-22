@@ -87,3 +87,10 @@ test('cloison : si le journal plante, seul le journal affiche un message, et « 
   assert.ok(!(await p.isVisible('#journal-panne')));
   assert.equal(await p.locator('#log-list .carte-seance').count(), 1);
 });
+
+test('journal : dates en français (« mercredi 18 novembre »), même si le téléphone est réglé en anglais', async () => {
+  const p = await app.page({ locale: 'en-US' });
+  await donner(p, { [CLE_UTILISATEUR]: { lvl: 1, xp: 0, streak: 1, logs: [{ date: new Date(2026, 10, 18, 10).toISOString(), mood: '🔥', count: 3 }] } });
+  await p.click('#nav-log');
+  assert.equal(await p.textContent('#log-list .carte-seance-date'), 'mercredi 18 novembre');
+});

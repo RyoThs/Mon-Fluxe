@@ -26,9 +26,10 @@ const FICHIERS = [
   'js/sauvegarde.js',
   'js/actions.js',
   'js/main.js',
-  'fonts/inter-400.woff2',
-  'fonts/inter-800.woff2',
-  'fonts/inter-900.woff2',
+  'fonts/barlow-condensed-500.woff2',
+  'fonts/barlow-condensed-600.woff2',
+  'fonts/barlow-condensed-700.woff2',
+  'fonts/barlow-condensed-800.woff2',
   'fonts/barlow-condensed-900-italic.woff2',
   'icon.png',
   'manifest.json'
