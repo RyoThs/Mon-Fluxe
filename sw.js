@@ -20,6 +20,7 @@ const FICHIERS = [
   'js/outils.js',
   'js/stockage.js',
   'js/exercices.js',
+  'js/motivation.js',
   'js/ecrans.js',
   'js/journal.js',
   'js/dessins.js',

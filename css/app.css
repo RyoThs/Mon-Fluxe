@@ -201,6 +201,7 @@ body {
 .carte-niveau-ligne { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .niveau { font-family: var(--police-chiffres); font-size: 26px; font-weight: 800; }
 .xp-texte { color: var(--discret); font-size: 14px; }
+.semaines { margin-top: 10px; color: var(--discret); font-size: 14px; font-weight: 600; }
 .barre-xp { height: 10px; border-radius: 999px; background: var(--releve); overflow: hidden; }
 .barre-xp-remplie { width: 0; height: 100%; border-radius: 999px; background: var(--degrade); transition: width 1s cubic-bezier(.4, 0, .2, 1); }
 
@@ -281,6 +282,13 @@ body {
 .carte-seance-date { font-weight: 700; }
 .carte-seance-nombre { color: var(--discret); font-size: 14px; }
 .carte-seance-humeur { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--releve); font-size: 24px; }
+
+/* Récompenses : grille, les gagnées en couleur, les autres en grisé */
+.recompenses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.recompense { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 16px; background: var(--releve); text-align: center; opacity: .45; filter: grayscale(1); }
+.recompense b { font-size: 12px; font-weight: 600; line-height: 1.2; }
+.recompense-icone { font-size: 26px; }
+.recompense.gagnee { opacity: 1; filter: none; background: var(--carte); border: 1px solid var(--trait); box-shadow: var(--ombre-petite); }
 
 /* Cloison : message quand le journal n'a pas pu s'afficher */
 .carte-panne { border-left: 4px solid #f59e0b; }
