@@ -2,14 +2,14 @@
    Fluxe Suivi vit à la même adresse (même origine) : ses données ne doivent pas être touchées. */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { demarrer, donner, lireCle, cles, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE } = require('./outils');
+const { lireCode, demarrer, donner, lireCle, cles, lancerSeance, finirSeance, CLE_UTILISATEUR, CLE_REPRISE } = require('./outils');
 
 let app;
 before(async () => { app = await demarrer(); });
 after(async () => { await app.fermer(); });
 
 test('le code utilise toujours les clés fluxe_user_v1 et fluxe_backup', () => {
-  const html = lire('index.html');
+  const html = lireCode(); // index.html + js/
   assert.equal(CLE_UTILISATEUR, 'fluxe_user_v1');
   assert.equal(CLE_REPRISE, 'fluxe_backup');
   assert.ok(html.includes("'fluxe_user_v1'"));

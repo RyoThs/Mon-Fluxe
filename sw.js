@@ -8,7 +8,7 @@
    par leur préfixe « fluxe-app- ». Il ne touche jamais aux caches des autres applications.
    (Les données de l'app sont dans le localStorage : ce fichier n'y touche jamais.) */
 
-const VERSION = '1.0.0'; // version de l'app : la même dans index.html (app-version) et package.json
+const VERSION = '1.1.0'; // version de l'app : la même dans index.html (app-version) et package.json
 const PREFIXE = 'fluxe-app-';
 const CACHE = PREFIXE + 'v' + VERSION; // ex. « fluxe-app-v1.0.0 » : nouveau cache à chaque version
 
@@ -17,9 +17,19 @@ const FICHIERS = [
   './',
   'index.html',
   'css/app.css',
-  'fonts/inter-400.woff2',
-  'fonts/inter-800.woff2',
-  'fonts/inter-900.woff2',
+  'js/outils.js',
+  'js/stockage.js',
+  'js/exercices.js',
+  'js/ecrans.js',
+  'js/journal.js',
+  'js/seance.js',
+  'js/sauvegarde.js',
+  'js/actions.js',
+  'js/main.js',
+  'fonts/barlow-condensed-500.woff2',
+  'fonts/barlow-condensed-600.woff2',
+  'fonts/barlow-condensed-700.woff2',
+  'fonts/barlow-condensed-800.woff2',
   'fonts/barlow-condensed-900-italic.woff2',
   'icon.png',
   'manifest.json'

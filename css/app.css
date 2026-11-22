@@ -1,548 +1,296 @@
 /* =====================================================================
-   FLUXE App : feuille de style écrite à la main (remplace Tailwind en ligne).
+   FLUXE App : feuille de style écrite à la main.
+   Depuis la v1.1.0, même identité que Fluxe Suivi : fond gris-bleu clair, cartes blanches
+   à ombre portée (profondeur vers la droite et le bas), dégradé turquoise → indigo → violet
+   en signature, chiffres et titres en Barlow Condensed, texte en police du téléphone.
+   Thème clair fixe : c'est le seul thème (jamais de thème sombre).
    Organisation :
-     1. Couleurs (variables) et thème sombre
-     2. Remise à zéro des styles du navigateur
-     3. Mise en page générale (page, écrans, barre du bas)
-     4. Écran d'accueil
-     5. Journal
-     6. Séance, fin de séance, fenêtre d'aide
-     7. Petits outils (cacher un élément)
-   Le thème sombre suit le réglage du téléphone (prefers-color-scheme).
+     0. Polices        1. Couleurs (variables)     2. Remise à zéro
+     3. Mise en page   4. Accueil                  5. Journal
+     6. Séance, fin de séance, fenêtre d'aide       7. Petits outils
    ===================================================================== */
 
 
-/* ---------- 0. Polices (fichiers dans fonts/, licence OFL : voir fonts/OFL-*.txt) ----------
-   Seules les variantes vraiment affichées par l'app sont fournies (alphabet latin) :
-   - Inter 400, 800 et 900. Le texte en « gras 700 » utilise le fichier 800 et l'italique
-     est dessiné par le navigateur : c'est exactement ce que faisait Google Fonts avant.
-   - Barlow Condensed 900 italique (titres et gros chiffres).
+/* ---------- 0. Polices (fichiers dans fonts/, licence OFL : fonts/OFL-Barlow-Condensed.txt) ----------
+   Barlow Condensed 500 à 800 : titres et chiffres (comme Fluxe Suivi).
+   Barlow Condensed 900 italique : le mot « FLUXE » (identité d'origine gardée).
    font-display: swap = le texte s'affiche tout de suite, la police arrive juste après. */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/inter-400.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('../fonts/inter-800.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url('../fonts/inter-900.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Barlow Condensed';
-  font-style: italic;
-  font-weight: 900;
-  font-display: swap;
-  src: url('../fonts/barlow-condensed-900-italic.woff2') format('woff2');
-}
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 500; font-display: swap; src: url('../fonts/barlow-condensed-500.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 600; font-display: swap; src: url('../fonts/barlow-condensed-600.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/barlow-condensed-700.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 800; font-display: swap; src: url('../fonts/barlow-condensed-800.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: italic; font-weight: 900; font-display: swap; src: url('../fonts/barlow-condensed-900-italic.woff2') format('woff2'); }
 
 
-/* ---------- 1. Couleurs ---------- */
+/* ---------- 1. Couleurs (les mêmes que Fluxe Suivi) ---------- */
 :root {
-  --fond: #FAF8F2;            /* fond de la page */
-  --fond-carte: #FFFFFF;      /* fond des cartes et de la fenêtre d'aide */
-  --texte: #1a1a1a;           /* texte principal */
-  --accent: #2D9B7C;          /* vert Fluxe (boutons, barres) */
-
-  /* Nuances de vert (« émeraude ») */
-  --vert-50: #ecfdf5;
-  --vert-100: #d1fae5;
-  --vert-500: #10b981;
-  --vert-600: #059669;
-  --vert-700: #047857;
-  --vert-800: #065f46;
-
-  /* Fonds teintés qui changent avec le thème */
-  --fond-reprise: var(--vert-50);   /* carte « En cours » */
-  --fond-doux: var(--vert-50);      /* encadré « Mode Express » */
-  --fond-badge: var(--vert-100);    /* pastille « 🔥 sessions » */
-
-  /* Ombres */
-  --ombre-carte: 0 10px 30px rgba(0, 0, 0, 0.04);
-  --ombre-moyenne: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --ombre-forte: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-
-  /* Polices */
-  --police-texte: 'Inter', sans-serif;
-  --police-titre: 'Barlow Condensed', sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fond: #121414;
-    --fond-carte: #1C1F1F;
-    --texte: #ffffff;
-    --accent: #42BFA0;
-    --fond-reprise: rgba(6, 78, 59, 0.3);
-    --fond-doux: rgba(2, 44, 34, 0.2);
-    --fond-badge: rgba(2, 44, 34, 0.2);
-  }
+  --fond: #f3f5fb;            /* fond de la page */
+  --carte: #fff;              /* fond des cartes */
+  --releve: #eef1fa;          /* zones en léger relief (champs, puces inactives) */
+  --texte: #0b1022;           /* texte principal */
+  --discret: #5b6482;         /* texte secondaire */
+  --trait: #dfe4f1;           /* bordures */
+  --accent: #4f46e5;          /* indigo (liens, contours) */
+  --sur-degrade: #06091a;     /* texte posé sur le dégradé */
+  --teinte: rgba(79, 70, 229, .1);
+  --degrade: linear-gradient(135deg, #5eead4, #818cf8 55%, #c084fc);
+  --degrade-texte: linear-gradient(135deg, #0d9488, #4f46e5 55%, #9333ea);
+  --ombre: 7px 9px 22px -8px rgba(11, 16, 34, .2), 2px 3px 6px -2px rgba(11, 16, 34, .07), inset 1px 1px 0 rgba(255, 255, 255, .9);
+  --ombre-petite: 3px 4px 9px -3px rgba(11, 16, 34, .16), inset 1px 1px 0 rgba(255, 255, 255, .9);
+  --ombre-bouton: 4px 8px 18px -6px rgba(79, 70, 229, .45);
+  --police-chiffres: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --police-texte: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  color-scheme: light;
 }
 
 
-/* ---------- 2. Remise à zéro ----------
-   Chaque navigateur ajoute ses propres marges et styles de boutons :
-   on les retire pour partir d'une base identique partout. */
-*,
-::before,
-::after {
-  box-sizing: border-box;     /* la largeur inclut les marges intérieures et la bordure */
-  border: 0 solid #e5e7eb;    /* pas de bordure par défaut */
-}
-
-html {
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-  tab-size: 4;
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  -webkit-tap-highlight-color: transparent;   /* pas de flash gris au toucher sur iPhone */
-}
-
-h1, h2, h3, p {
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-}
-
+/* ---------- 2. Remise à zéro ---------- */
+*, ::before, ::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+h1, h2, h3, p { margin: 0; }
 button {
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
+  font: inherit;
   color: inherit;
-  text-transform: none;
   margin: 0;
   padding: 0;
-  -webkit-appearance: button;
-  background-color: transparent;
-  background-image: none;
+  border: 0;
+  background: none;
   cursor: pointer;
+  transition: transform .12s;
 }
+button:active { transform: scale(.96); }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 
 /* ---------- 3. Mise en page générale ---------- */
 body {
-  max-width: 28rem;           /* largeur d'un téléphone, centrée sur grand écran */
+  max-width: 560px;
   min-height: 100vh;
   margin: 0 auto;
-  padding-bottom: 10rem;      /* place pour la barre du bas */
+  padding: env(safe-area-inset-top, 0px) 14px calc(110px + env(safe-area-inset-bottom, 0px));
   background-color: var(--fond);
   color: var(--texte);
   font-family: var(--police-texte);
-  line-height: inherit;
-  transition: 0.4s;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 /* Un « écran » = une page de l'app (accueil, journal) */
-.ecran {
-  padding: 1.5rem;
-  opacity: 1;
-  transition: 0.5s ease;
-}
-.ecran-cache { display: none; opacity: 0; }
+.ecran { padding: 18px 0 0; }
+.ecran-cache { display: none; }
 
-/* Barre de navigation fixée en bas */
+/* Carte blanche à ombre portée (la brique de base, comme Fluxe Suivi) */
+.carte {
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--ombre);
+}
+
+.titre-section {
+  margin: 4px 0 10px;
+  font-family: var(--police-chiffres);
+  font-size: 20px;
+  font-weight: 800;
+}
+.titre-section + * + .titre-section { margin-top: 18px; }
+
+/* Grand bouton en dégradé (Activer le Fluxe, Suivant, OK) */
+.bouton-principal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 999px;
+  background: var(--degrade);
+  color: var(--sur-degrade);
+  font-weight: 800;
+  font-size: 18px;
+  box-shadow: var(--ombre-bouton);
+}
+
+/* Bouton blanc secondaire (Exporter, Importer, Réessayer) */
+.bouton-secondaire {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 14px;
+  border-radius: 999px;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  color: var(--texte);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: var(--ombre-petite);
+}
+.bouton-secondaire:focus-visible,
+.bouton-secondaire:has(.champ-fichier:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+/* Le vrai champ « choisir un fichier » est invisible : on touche le bouton « Importer » */
+.champ-fichier { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Barre du bas : pilule flottante, l'onglet actif en dégradé */
 .barre-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  max-width: 28rem;
+  left: 14px;
+  right: 14px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  max-width: 532px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: #2D9B7C;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
-  box-shadow: 0 -10px 30px rgba(45, 155, 124, 0.2);
+  gap: 4px;
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  box-shadow: var(--ombre);
 }
 .bouton-nav {
+  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  font-size: 14px;
-  font-weight: 900;
-  color: #000;
-  opacity: 0.5;
-  transition: 0.3s;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 4px;
+  border-radius: 999px;
+  color: var(--discret);
+  font-weight: 600;
+  font-size: 15px;
 }
-.bouton-nav span { font-family: var(--police-titre); text-transform: uppercase; font-style: italic; }
-.bouton-nav.actif { opacity: 1; transform: scale(1.1); }
-.bouton-nav.actif span { border-bottom: 2px solid #000; }
-
-/* Carte blanche arrondie avec un liseré vert à gauche */
-.carte {
-  background: var(--fond-carte);
-  border-radius: 30px;
-  box-shadow: var(--ombre-carte);
-  border-left: 8px solid var(--accent);
-}
-
-/* Gros bouton principal vert (« Activer le Fluxe », « Suivant ») */
-.bouton-principal {
-  width: 100%;
-  background-color: var(--accent);
-  color: #000;
-  font-family: var(--police-titre);
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-}
+.bouton-nav.actif { background: var(--degrade); color: var(--sur-degrade); }
 
 
-/* ---------- 4. Écran d'accueil ---------- */
-.entete {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 0;
-}
+/* ---------- 4. Accueil ---------- */
+.entete { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 6px 4px 16px; }
+.marque { display: flex; align-items: center; gap: 10px; }
+.marque-icone { width: 44px; height: 44px; border-radius: 12px; box-shadow: var(--ombre-petite); }
+/* Le mot « FLUXE » : même police qu'avant (Barlow italique 900), maintenant en dégradé */
 .logo {
-  font-family: var(--police-titre);
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+  font-family: var(--police-chiffres);
+  font-size: 42px;
   font-weight: 900;
   font-style: italic;
-  text-transform: uppercase;
-  color: var(--vert-700);
-}
-.niveau {
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  opacity: 0.4;
+  line-height: 1;
+  letter-spacing: -.01em;
+  padding-right: 4px;
+  background: var(--degrade-texte);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .badge-serie {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  background-color: var(--fond-badge);
-  color: var(--vert-800);
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  box-shadow: var(--ombre-petite);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-/* Barre d'expérience (XP) */
-.barre-xp {
-  width: 100%;
-  height: 10px;
-  margin-bottom: 2rem;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.barre-xp-remplie {
-  width: 0%;
-  height: 100%;
-  background: var(--accent);
-  transition: 1s ease-out;
-}
+.carte-niveau-ligne { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.niveau { font-family: var(--police-chiffres); font-size: 26px; font-weight: 800; }
+.xp-texte { color: var(--discret); font-size: 14px; }
+.barre-xp { height: 10px; border-radius: 999px; background: var(--releve); overflow: hidden; }
+.barre-xp-remplie { width: 0; height: 100%; border-radius: 999px; background: var(--degrade); transition: width 1s cubic-bezier(.4, 0, .2, 1); }
 
-/* Carte « En cours / Reprendre » : liseré à droite au lieu de gauche */
+/* Carte « En cours » : liseré en dégradé à gauche */
 .carte-reprise {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  background: var(--fond-reprise);
-  border-radius: 30px;
-  box-shadow: var(--ombre-carte);
-  border-right: 8px solid var(--vert-500);
-}
-.carte-reprise-titre {
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-  color: var(--vert-700);
-}
-.carte-reprise-texte {
-  font-size: 8px;
-  font-weight: 700;
-  opacity: 0.5;
-}
-.bouton-reprendre {
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  background-color: var(--vert-600);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  box-shadow: var(--ombre-moyenne);
-}
-
-/* Encadré « Mode Express » */
-.encadre-express {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: var(--fond-doux);
-  border: 1px solid var(--vert-100);
-  border-radius: 1rem;
+  gap: 12px;
+  background: linear-gradient(var(--carte), var(--carte)) padding-box, linear-gradient(180deg, #5eead4, #818cf8 55%, #c084fc) border-box;
+  border-left: 5px solid transparent;
 }
-.encadre-express-titre {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-}
-.encadre-express-texte {
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  opacity: 0.5;
-}
+.carte-reprise-titre { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.carte-reprise-texte { font-family: var(--police-chiffres); font-size: 22px; font-weight: 700; }
+.bouton-reprendre { padding: 11px 18px; border-radius: 999px; background: var(--degrade); color: var(--sur-degrade); font-weight: 800; box-shadow: var(--ombre-bouton); }
 
-/* Interrupteur marche / arrêt */
-.interrupteur {
-  position: relative;
-  width: 44px;
-  height: 22px;
-  background: #ccc;
-  border-radius: 11px;
-  transition: 0.3s;
-}
-.interrupteur.actif { background: var(--accent); }
-.interrupteur-rond {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  background: white;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-.interrupteur.actif .interrupteur-rond { left: 24px; }
+/* Choix du niveau : interrupteur à 3 positions (comme les filtres de Fluxe Suivi) */
+.choix-niveau { display: flex; gap: 4px; padding: 4px; border-radius: 16px; background: var(--releve); border: 1px solid var(--trait); }
+.bouton-niveau { flex: 1; min-height: 42px; padding: 8px 4px; border-radius: 12px; color: var(--discret); font-weight: 700; font-size: 14px; }
+.bouton-niveau.actif { background: var(--degrade); color: var(--sur-degrade); box-shadow: var(--ombre-petite); }
 
-/* Choix du niveau (Débutant / Intermédiaire / Avancé) */
-.choix-niveau {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.bouton-niveau {
-  flex: 1 1 0%;
-  padding: 0.75rem 0;
-  border: 1px solid rgba(45, 155, 124, 0.2);
-  border-radius: 0.75rem;
-  color: var(--accent);
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  opacity: 0.5;
-  transition: 0.3s;
-}
-.bouton-niveau.actif {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-  opacity: 1;
-}
-
-/* Grille des groupes musculaires */
-.grille-muscles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-}
+/* Groupes musculaires : puces blanches, en dégradé une fois choisies */
+.grille-muscles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .puce-muscle {
-  padding: 1rem 0;
-  border: 1px solid rgba(45, 155, 124, 0.15);
-  border-radius: 1rem;
-  background: rgba(45, 155, 124, 0.05);
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-style: italic;
-  transition: 0.2s;
+  padding: 13px 4px;
+  border-radius: 999px;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: var(--ombre-petite);
 }
-.puce-muscle.actif {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-  font-weight: 900;
-}
+.puce-muscle.actif { background: var(--degrade); color: var(--sur-degrade); border-color: transparent; }
 
-.bouton-activer {
-  padding: 1.5rem 0;
-  border-radius: 30px;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  box-shadow: var(--ombre-forte);
-}
+.encadre-express { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--trait); }
+.encadre-express-titre { font-weight: 700; }
+.encadre-express-texte { color: var(--discret); font-size: 13px; }
+.interrupteur { position: relative; flex: none; width: 52px; height: 30px; border-radius: 999px; background: var(--releve); border: 1px solid var(--trait); transition: background .2s; }
+.interrupteur.actif { background: var(--degrade); border-color: transparent; }
+.interrupteur-rond { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 1px 2px 4px rgba(11, 16, 34, .25); transition: left .2s; }
+.interrupteur.actif .interrupteur-rond { left: 25px; }
+
+.bouton-activer { padding: 20px; font-size: 20px; margin-top: 4px; }
 
 
 /* ---------- 5. Journal ---------- */
 .titre-journal {
-  margin-bottom: 1.5rem;
-  font-family: var(--police-titre);
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--vert-700);
-}
-.carte-activite {
-  padding: 1.25rem;
-  margin-bottom: 2rem;
-  border-left-color: rgba(16, 185, 129, 0.3);
-}
-.carte-activite-entete {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 1rem;
-}
-.carte-activite-titre {
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-  color: var(--vert-600);
-}
-.carte-activite-total {
-  font-size: 10px;
-  font-weight: 700;
-  opacity: 0.5;
-}
-
-/* Graphique : 7 barres, une par jour */
-.graphique {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  height: 80px;
-  gap: 8px;
-  padding: 0 5px;
-}
-.barre-graphique {
-  width: 100%;
-  min-height: 4px;
-  background: var(--accent);
-  border-radius: 6px 6px 2px 2px;
-  transition: height 0.6s ease;
-}
-.jours-semaine {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  opacity: 0.3;
-}
-
-/* Liste des séances passées (cartes ajoutées par le JavaScript) */
-.carte-seance {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-}
-.liste-seances > .carte-seance + .carte-seance {
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-.carte-seance-date {
-  font-size: 10px;
-  font-weight: 900;
-  opacity: 0.4;
-}
-.carte-seance-nombre {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.carte-seance-humeur {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-
-/* Encadré « Ma progression » : export / import (en bas du journal) */
-.encadre-sauvegarde {
-  margin-top: 2rem;
-  padding: 1rem;
-  background-color: var(--fond-doux);
-  border: 1px solid var(--vert-100);
-  border-radius: 1rem;
-}
-.encadre-sauvegarde-titre {
-  display: block;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-style: italic;
-}
-.encadre-sauvegarde-texte {
-  margin-bottom: 0.75rem;
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  opacity: 0.5;
-}
-.sauvegarde-boutons {
-  display: flex;
-  gap: 0.5rem;
-}
-/* Bouton discret (contour vert), utilisé pour Exporter / Importer */
-.bouton-secondaire {
-  position: relative;
-  flex: 1 1 0%;
-  display: block;
-  padding: 0.75rem 0;
-  border: 1px solid rgba(45, 155, 124, 0.2);
-  border-radius: 0.75rem;
-  color: var(--accent);
-  font-size: 9px;
+  margin: 10px 4px 4px;
+  width: fit-content;
+  font-family: var(--police-chiffres);
+  font-size: 46px;
   font-weight: 800;
-  text-align: center;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s;
+  line-height: 1.05;
+  background: var(--degrade-texte);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.bouton-secondaire:active { background: var(--accent); color: #000; }
-/* Contour visible quand on navigue au clavier */
-.bouton-secondaire:focus-visible,
-.bouton-secondaire:has(.champ-fichier:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* Le vrai champ « choisir un fichier » est invisible : on touche le bouton « Importer » */
-.champ-fichier {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
+.sous-titre { margin: 0 4px 16px; color: var(--discret); font-size: 15px; }
+
+/* Bandeau de chiffres (Séances / Exercices / XP gagnés) */
+.chiffres { display: flex; margin-bottom: 14px; background: var(--carte); border: 1px solid var(--trait); border-radius: 20px; box-shadow: var(--ombre); }
+.chiffres > div { flex: 1; padding: 12px 8px; text-align: center; }
+.chiffres > div + div { border-left: 1px solid var(--trait); }
+.chiffres b { display: block; font-family: var(--police-chiffres); font-size: 32px; font-weight: 700; line-height: 1; }
+.chiffres span { font-size: 12px; color: var(--discret); }
+
+.carte-activite-entete { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+.carte-activite-titre { font-size: 17px; font-weight: 700; }
+.carte-activite-total { color: var(--discret); font-size: 13px; }
+.graphique { display: flex; align-items: flex-end; gap: 8px; height: 130px; }
+.barre-graphique { flex: 1; min-height: 4px; border-radius: 8px 8px 4px 4px; background: var(--degrade); }
+.jours-semaine { display: flex; gap: 8px; margin-top: 6px; }
+.jours-semaine span { flex: 1; text-align: center; font-size: 11px; color: var(--discret); }
+
+.titre-liste { margin: 20px 4px 10px; font-size: 24px; }
+.carte-seance { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; margin-bottom: 10px; border-radius: 20px; }
+.carte-seance-date { font-weight: 700; }
+.carte-seance-nombre { color: var(--discret); font-size: 14px; }
+.carte-seance-humeur { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--releve); font-size: 24px; }
+
+/* Cloison : message quand le journal n'a pas pu s'afficher */
+.carte-panne { border-left: 4px solid #f59e0b; }
+.carte-panne p { margin-bottom: 12px; font-weight: 600; }
+.carte-panne .bouton-secondaire { width: 100%; }
+
+.encadre-sauvegarde { margin-top: 20px; }
+.encadre-sauvegarde-titre { display: block; font-family: var(--police-chiffres); font-size: 20px; font-weight: 800; }
+.encadre-sauvegarde-texte { margin: 2px 0 14px; color: var(--discret); font-size: 14px; }
+.sauvegarde-boutons { display: flex; gap: 10px; }
 
 
 /* ---------- 6. Séance, fin de séance, fenêtre d'aide ---------- */
@@ -550,118 +298,78 @@ body {
 .plein-ecran {
   position: fixed;
   inset: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  background-color: var(--fond);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: var(--fond);
+  overflow-y: auto;
 }
 
-.ecran-seance { z-index: 1000; padding: 1.5rem; }
-.seance-centre {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.plein-ecran > * { flex-shrink: 0; }   /* rien ne s'écrase sur petit écran… */
+.seance-haut { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.bouton-quitter, .bouton-aide {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 14px;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  box-shadow: var(--ombre-petite);
+  font-size: 18px;
+  font-weight: 800;
 }
-.seance-ligne-titre {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-.seance-nom {
-  font-family: var(--police-titre);
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-}
-.bouton-aide {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  background-color: var(--vert-500);
-  color: #000;
-  font-weight: 900;
-}
-.seance-description {
-  margin-bottom: 1.5rem;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--vert-600);
-  opacity: 0.4;
-}
-.seance-repetitions {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
+.bouton-aide { background: var(--teinte); color: var(--accent); border-color: transparent; }
+.seance-compteur { font-family: var(--police-chiffres); font-size: 22px; font-weight: 700; color: var(--discret); }
+.barre-progression { height: 6px; margin: 14px 2px 18px; border-radius: 999px; background: var(--trait); overflow: hidden; }
+.barre-progression i { display: block; width: 0; height: 100%; border-radius: 999px; background: var(--degrade); transition: width .4s ease; }
+
+.seance-centre { padding: 28px 20px; text-align: center; }
+.seance-nom { font-family: var(--police-chiffres); font-size: 38px; font-weight: 800; line-height: 1.05; }
+.seance-description { display: inline-block; margin: 12px 0 6px; padding: 5px 12px; border-radius: 999px; background: var(--releve); color: var(--discret); font-size: 14px; }
+.seance-repetitions { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-top: 8px; }
 .seance-nombre {
-  font-family: var(--police-titre);
-  font-size: 6rem;
+  font-family: var(--police-chiffres);
+  font-size: 120px;
+  font-weight: 800;
   line-height: 1;
-  font-weight: 900;
-  color: var(--vert-600);
+  background: var(--degrade-texte);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.seance-unite {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  opacity: 0.2;
-}
-.seance-compteur {
-  margin-top: 2rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--vert-600);
-  opacity: 0.3;
-}
-.bouton-suivant {
-  padding: 2rem 0;
-  margin-bottom: 2.5rem;
-  border-radius: 35px;
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
+.seance-unite { font-family: var(--police-chiffres); font-size: 26px; font-weight: 700; color: var(--discret); text-transform: uppercase; }
 
-/* Fin de séance : choix de l'humeur */
-.ecran-fin {
-  z-index: 2000;
-  padding: 2.5rem;
-  justify-content: center;
-  text-align: center;
-}
+/* « À suivre » : les prochains exercices */
+.a-suivre { flex: 1 1 auto; flex-shrink: 1; min-height: 0; overflow-y: auto; padding: 0 4px; }   /* …sauf « À suivre », qui défile si besoin */
+.a-suivre-titre { margin: 4px 0 8px; color: var(--discret); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.a-suivre ul { margin: 0; padding: 0; list-style: none; }
+.a-suivre li { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-top: 1px solid var(--trait); }
+.a-suivre li:first-child { border-top: 0; }
+.a-suivre li b { font-weight: 600; }
+.a-suivre li span { font-family: var(--police-chiffres); font-size: 20px; font-weight: 700; color: var(--discret); }
+.a-suivre-reste { margin-top: 4px; color: var(--discret); font-size: 13px; }
+.a-suivre-fin { margin-top: 8px; text-align: center; font-weight: 700; color: var(--accent); }
+.bouton-suivant { padding: 20px; font-size: 20px; margin-top: 14px; }
+
+/* Fin de séance */
+.ecran-fin { z-index: 2000; align-items: center; justify-content: center; text-align: center; }
 .fin-titre {
-  font-family: var(--police-titre);
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-}
-.choix-humeur {
-  display: flex;
-  justify-content: space-around;
-  margin: 3rem 0;
-}
-.bouton-humeur {
-  font-size: 3rem;
+  font-family: var(--police-chiffres);
+  font-size: 52px;
+  font-weight: 800;
   line-height: 1;
-  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--degrade-texte);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.bouton-humeur:hover { transform: scale(1.25); }
-.gain-xp {
-  font-family: var(--police-titre);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 900;
-  font-style: italic;
-  color: var(--vert-600);
-}
+.fin-question { margin: 10px 0 26px; color: var(--discret); }
+.choix-humeur { display: flex; gap: 14px; margin-bottom: 26px; }
+.bouton-humeur { width: 84px; height: 84px; border-radius: 24px; background: var(--carte); border: 1px solid var(--trait); box-shadow: var(--ombre); font-size: 40px; }
+.gain-xp { padding: 8px 18px; border-radius: 999px; background: var(--degrade); color: var(--sur-degrade); font-family: var(--police-chiffres); font-size: 24px; font-weight: 800; }
 
 /* Fenêtre d'aide (bouton « ? ») */
 .fond-fenetre {
@@ -671,61 +379,32 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  background: rgba(11, 16, 34, .35);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
-.fenetre {
-  position: relative;
-  width: 100%;
-  max-width: 24rem;
-  padding: 2rem;
-  border-radius: 40px;
-  background-color: var(--fond-carte);
-}
-.fenetre-titre {
-  margin-bottom: 1rem;
-  font-family: var(--police-titre);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-  color: var(--vert-600);
-}
-.fenetre-texte {
-  margin-bottom: 2rem;
-  font-size: 0.875rem;
-  line-height: 1.625;
-  opacity: 0.7;
-}
-.bouton-ok {
-  width: 100%;
-  padding: 1.25rem 0;
-  border-radius: 1rem;
-  background-color: var(--vert-500);
-  color: #000;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-
-/* Version de l'app, discrète, dans la marge du bas de la fenêtre d'aide */
-.version-app {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.625rem;
-  font-size: 9px;
-  font-weight: 700;
-  text-align: center;
-  opacity: 0.35;
-}
+.fenetre { position: relative; width: 100%; max-width: 420px; padding: 24px 22px 34px; border-radius: 24px; background: var(--carte); box-shadow: var(--ombre); }
+.fenetre-titre { margin-bottom: 12px; font-family: var(--police-chiffres); font-size: 28px; font-weight: 800; }
+.fenetre-texte { margin-bottom: 20px; font-size: 15px; line-height: 1.5; color: var(--discret); }
+.fenetre-texte strong { color: var(--texte); }
+.ligne-aide + .ligne-aide { margin-top: 8px; }
+.bouton-ok { padding: 15px; font-size: 17px; }
+/* Version de l'app, discrète, en bas de la fenêtre d'aide */
+.version-app { position: absolute; left: 0; right: 0; bottom: 10px; font-size: 10px; font-weight: 700; text-align: center; color: var(--discret); opacity: .6; }
 
 
 /* ---------- 7. Petits outils ---------- */
 /* Cache un élément (utilisé par le JavaScript pour ouvrir/fermer les écrans) */
 .cache { display: none !important; }
+
+@media (max-width: 360px) { .grille-muscles { grid-template-columns: repeat(2, 1fr); } }
+/* Petits écrans (iPhone SE) : carte d'exercice plus compacte pour garder « Suivant » visible */
+@media (max-height: 700px) {
+  .seance-centre { padding: 18px 16px; }
+  .seance-nom { font-size: 30px; }
+  .seance-nombre { font-size: 84px; }
+  .barre-progression { margin: 10px 2px 12px; }
+  .bouton-suivant { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { button, .barre-xp-remplie, .barre-progression i { transition: none; } }

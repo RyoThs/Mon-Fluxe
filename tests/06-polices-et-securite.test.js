@@ -42,10 +42,11 @@ test('ouverture + séance complète + journal : aucune requête extérieure, auc
   assert.deepEqual(p.erreurs, []);
 });
 
-test('les polices Barlow Condensed (italique 900) et Inter viennent de fonts/', async () => {
+test('les polices Barlow Condensed (500 à 800, et italique 900 pour le mot FLUXE) viennent de fonts/', async () => {
+  // v1.1.0 : comme Fluxe Suivi, texte courant en police du téléphone (plus d'Inter), chiffres et titres en Barlow Condensed
   const p = await app.page();
   const r = await p.evaluate(async () => {
-    const formes = ['italic 900 20px "Barlow Condensed"', '400 16px Inter', '800 16px Inter', '900 16px Inter'];
+    const formes = ['italic 900 20px "Barlow Condensed"', '500 20px "Barlow Condensed"', '600 20px "Barlow Condensed"', '700 20px "Barlow Condensed"', '800 20px "Barlow Condensed"'];
     await Promise.all(formes.map(f => document.fonts.load(f)));
     await document.fonts.ready;
     return {
@@ -53,8 +54,8 @@ test('les polices Barlow Condensed (italique 900) et Inter viennent de fonts/', 
       chargees: [...document.fonts].filter(f => f.status === 'loaded').map(f => `${f.family.replace(/"/g, '')} ${f.weight} ${f.style}`).sort(),
     };
   });
-  assert.deepEqual(r.check, [true, true, true, true]);
-  assert.deepEqual(r.chargees, ['Barlow Condensed 900 italic', 'Inter 400 normal', 'Inter 800 normal', 'Inter 900 normal']);
+  assert.deepEqual(r.check, [true, true, true, true, true]);
+  assert.deepEqual(r.chargees, ['Barlow Condensed 500 normal', 'Barlow Condensed 600 normal', 'Barlow Condensed 700 normal', 'Barlow Condensed 800 normal', 'Barlow Condensed 900 italic']);
   assert.deepEqual(p.exterieurs, []);
   assert.deepEqual(p.erreurs, []);
 });
@@ -66,5 +67,6 @@ test('chaque fichier de police utilisé existe, aucun fichier inutile, licences 
   assert.deepEqual(utilises, presents);
   for (const f of presents) assert.ok(fs.statSync(path.join(RACINE, 'fonts', f)).size > 10000, f);
   assert.match(css, /font-display: swap/);
-  for (const l of ['OFL-Inter.txt', 'OFL-Barlow-Condensed.txt']) assert.match(lire(`fonts/${l}`), /SIL Open Font License/);
+  assert.match(lire('fonts/OFL-Barlow-Condensed.txt'), /SIL Open Font License/);
+  assert.ok(!fs.existsSync(path.join(RACINE, 'fonts', 'OFL-Inter.txt')), 'Inter n’est plus utilisée');
 });

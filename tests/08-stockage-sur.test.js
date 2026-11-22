@@ -2,7 +2,7 @@
    et ne sont jamais perdues sans laisser de copie. */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { demarrer, donner, donnerBrut, lireBrut, lireCle, lancerSeance, finirSeance, cache, lire, CLE_UTILISATEUR, CLE_REPRISE } = require('./outils');
+const { lireCode, demarrer, donner, donnerBrut, lireBrut, lireCle, lancerSeance, finirSeance, cache, CLE_UTILISATEUR, CLE_REPRISE } = require('./outils');
 
 let app;
 before(async () => { app = await demarrer(); });
@@ -117,6 +117,6 @@ test('champ au mauvais type : remplacé, les bonnes lignes du journal gardées, 
 });
 
 test('faute corrigée : « hanches » (et plus « fanches »)', () => {
-  assert.ok(lire('index.html').includes('mains derrière les hanches'));
-  assert.ok(!lire('index.html').includes('fanches'));
+  assert.ok(lireCode().includes('mains derrière les hanches'));
+  assert.ok(!lireCode().includes('fanches'));
 });

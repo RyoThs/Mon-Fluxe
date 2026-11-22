@@ -20,6 +20,11 @@ const JOUR = 864e5;
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 
 function lire(f) { return fs.readFileSync(path.join(RACINE, f), 'utf8'); }
+/* Tout le code de l'app : index.html + chaque fichier de js/ (le code y est rangé depuis la v1.1.0) */
+function lireCode() {
+  const js = fs.existsSync(path.join(RACINE, 'js')) ? fs.readdirSync(path.join(RACINE, 'js')).filter(f => f.endsWith('.js')).sort() : [];
+  return [lire('index.html'), ...js.map(f => lire(`js/${f}`))].join('\n');
+}
 
 /* Liste FICHIERS de sw.js (les fichiers gardés hors ligne).
    Les commentaires sont retirés avant de lire les noms entre apostrophes. */
@@ -144,4 +149,4 @@ async function finirSeance(p, humeur = '🔥') {
   return total;
 }
 
-module.exports = { attendre, demarrer, serveur, listeFichiersSW, donner, donnerBrut, lireBrut, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
+module.exports = { lireCode, attendre, demarrer, serveur, listeFichiersSW, donner, donnerBrut, lireBrut, lireCle, cles, cache, lancerSeance, finirSeance, lire, CLE_UTILISATEUR, CLE_REPRISE, JOUR, RACINE };
