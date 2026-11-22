@@ -17,6 +17,7 @@ const FICHIERS = [
   './',
   'index.html',
   'css/app.css',
+  'js/outils.js',
   'js/stockage.js',
   'js/exercices.js',
   'js/ecrans.js',

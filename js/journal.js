@@ -1,13 +1,5 @@
 /* Écran Journal : liste des séances et graphique d'activité. */
 
-// Crée un élément avec textContent : un texte venant d'un fichier importé ne peut jamais être pris pour du code
-function element(balise, classe, texte) {
-    const el = document.createElement(balise);
-    if (classe) el.className = classe;
-    if (texte !== undefined) el.textContent = texte;
-    return el;
-}
-
 function renderLogbook() {
     const logList = document.getElementById('log-list');
     const chartContainer = document.getElementById('activity-chart');
@@ -21,19 +13,15 @@ function renderLogbook() {
         return carte;
     }));
 
-    // 2. Graphique (7 derniers jours), index 0 = lundi
+    // 2. Graphique de la semaine en cours, du lundi (index 0) au dimanche (index 6)
     const stats = new Array(7).fill(0);
-    const today = new Date();
+    const lundi = debutDeSemaine();
     let totalEx = 0;
     userData.logs.forEach(log => {
         const logDate = new Date(log.date);
-        const diffDays = Math.ceil(Math.abs(today - logDate) / (1000 * 60 * 60 * 24));
-        if (diffDays <= 7) {
-            let dayIdx = logDate.getDay() - 1;
-            if (dayIdx === -1) dayIdx = 6;
-            stats[dayIdx] += log.count;
-            totalEx += log.count;
-        }
+        if (logDate < lundi) return; // semaine précédente (ou plus ancienne) : pas dans ce graphique
+        stats[(logDate.getDay() + 6) % 7] += log.count;
+        totalEx += log.count;
     });
     const maxEx = Math.max(...stats, 10); // Minimum 10 pour l'échelle
     document.getElementById('total-week-ex').innerText = `${totalEx} exos cette semaine`;

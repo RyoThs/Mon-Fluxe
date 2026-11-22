@@ -2,6 +2,7 @@
    fin de séance (XP, niveau, journal) et reprise d'une séance interrompue. */
 let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, levelKey = 'intermediate', isExpress = false;
 let userData = chargerProgression();
+const EXPRESS_MAX = 6; // annoncé sur l'accueil : « 6 exercices max »
 
 // Garde la séance en cours (pour le bouton « Reprendre » si l'app est fermée)
 function saveProgress() {
@@ -49,16 +50,12 @@ function generateWorkout() {
     currentWorkout = [];
     // Pour chaque muscle sélectionné, on pioche 3 exercices
     selectedMuscles.forEach(m => {
-        const picked = [...exerciseLibrary[m][levelKey]].sort(() => 0.5 - Math.random()).slice(0, 3);
-        currentWorkout.push(...picked);
+        currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3));
     });
-    // Mode Express : on réduit la séance de moitié (arrondi au supérieur)
-    if (isExpress) {
-        const expressCount = Math.ceil(currentWorkout.length / 2);
-        currentWorkout = currentWorkout.sort(() => 0.5 - Math.random()).slice(0, expressCount);
-    }
-    // Mélange final pour ne pas faire tous les exercices du même muscle à la suite
-    currentWorkout = currentWorkout.sort(() => 0.5 - Math.random());
+    // Mélange pour ne pas faire tous les exercices du même muscle à la suite
+    currentWorkout = melanger(currentWorkout);
+    // Mode Express : moitié de la séance (arrondi au supérieur), 6 exercices au maximum
+    if (isExpress) currentWorkout = currentWorkout.slice(0, Math.min(Math.ceil(currentWorkout.length / 2), EXPRESS_MAX));
     currentStepIndex = 0;
     saveProgress();
     updateStep();
@@ -101,7 +98,7 @@ function finishWithFeedback(mood) {
 function showInfo() {
     const ex = currentWorkout[currentStepIndex];
     document.getElementById('modal-title').innerText = ex.n;
-    document.getElementById('modal-text').innerHTML = ex.h.replace(/\n/g, '<br>');
+    document.getElementById('modal-text').replaceChildren(...texteAvecGras(ex.h));
     document.getElementById('info-modal').classList.remove('cache');
 }
 
