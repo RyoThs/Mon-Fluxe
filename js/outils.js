@@ -36,6 +36,16 @@ function dateLisible(date) {
     return date.toLocaleDateString('fr-FR', options);
 }
 
+// Petit message en bas de l'écran (comme Fluxe Suivi), qui disparaît tout seul au bout de 2,5 s
+let minuteurMessage = null;
+function afficherMessage(texte) {
+    const zone = document.getElementById('message');
+    zone.textContent = texte;
+    zone.classList.add('visible');
+    clearTimeout(minuteurMessage);
+    minuteurMessage = setTimeout(() => zone.classList.remove('visible'), 2500);
+}
+
 // Lundi 0 h de la semaine en cours (heure du téléphone)
 function debutDeSemaine(date = new Date()) {
     const d = new Date(date);

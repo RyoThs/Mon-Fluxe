@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <meta name="app-version" content="1.1.0">
     <title>FLUXE - Fitness App</title>
     <link rel="apple-touch-icon" href="icon.png">
@@ -146,6 +146,8 @@
             <p id="version-app" class="version-app">Fluxe</p>
         </div>
     </div>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
 
     <script src="js/outils.js"></script>
     <script src="js/stockage.js"></script>

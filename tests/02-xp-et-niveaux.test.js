@@ -1,6 +1,7 @@
 /* Points d'expérience (XP) et niveaux : comportement actuel de l'app.
    - chaque exercice terminé rapporte 15 XP,
-   - quand l'XP atteint « niveau × 100 », on passe au niveau suivant et l'XP repart à 0. */
+   - quand l'XP atteint « niveau × 100 », on passe au niveau suivant et le surplus est gardé (depuis la v1.2.0,
+     accord de Yoann le 2026-11-22 ; avant, l'XP repartait à 0). */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { demarrer, donner, lireCle, lancerSeance, finirSeance, CLE_UTILISATEUR, cache } = require('./outils');
@@ -48,14 +49,14 @@ test('mode Express : moitié des exercices (arrondi au-dessus), XP en conséquen
   assert.equal((await lireCle(p, CLE_UTILISATEUR)).xp, 75);
 });
 
-test('montée de niveau quand l\'XP dépasse niveau × 100 : XP remise à 0', async () => {
+test('montée de niveau quand l\'XP dépasse niveau × 100 : le surplus d\'XP est gardé', async () => {
   const p = await app.page();
   await donner(p, { [CLE_UTILISATEUR]: profil({ xp: 60, streak: 4 }) });
   await lancerSeance(p);
   await finirSeance(p); // 60 + 45 = 105 >= 100
   const u = await lireCle(p, CLE_UTILISATEUR);
   assert.equal(u.lvl, 2);
-  assert.equal(u.xp, 0); // le surplus (5 XP) est perdu : comportement actuel
+  assert.equal(u.xp, 5); // 105 - 100 : le surplus est gardé
   assert.equal(u.streak, 5);
   assert.equal(await p.textContent('#user-lvl'), '2');
 });
@@ -69,6 +70,15 @@ test('montée de niveau aussi quand l\'XP tombe pile sur niveau × 100', async (
   assert.deepEqual([u.lvl, u.xp], [2, 0]);
 });
 
+test('une très grosse séance peut faire monter de plusieurs niveaux d’un coup', async () => {
+  const p = await app.page();
+  await donner(p, { [CLE_UTILISATEUR]: profil({ xp: 95 }) });
+  await lancerSeance(p, ['Pectoraux', 'Dos', 'Jambes', 'Abdos', 'Épaules', 'Bras']); // 18 exercices = 270 XP
+  await finirSeance(p); // 95 + 270 = 365 → niveau 2 (−100) = 265 → niveau 3 (−200) = 65
+  const u = await lireCle(p, CLE_UTILISATEUR);
+  assert.deepEqual([u.lvl, u.xp], [3, 65]);
+});
+
 test('au niveau 2, il faut 200 XP : pas de montée à 195', async () => {
   const p = await app.page();
   await donner(p, { [CLE_UTILISATEUR]: profil({ lvl: 2, xp: 150 }) });
@@ -79,9 +89,11 @@ test('au niveau 2, il faut 200 XP : pas de montée à 195', async () => {
   assert.equal(await p.getAttribute('#xp-fill', 'style'), 'width: 97.5%;');
 });
 
-test('sans groupe musculaire choisi, un message prévient et rien ne démarre', async () => {
+test('sans groupe musculaire choisi, un message doux prévient (pas de fenêtre) et rien ne démarre', async () => {
   const p = await app.page();
   await p.click('#main-screen button:has-text("Activer le Fluxe")');
-  assert.deepEqual(p.messages, ['Choisis au moins un muscle !']);
+  assert.deepEqual(p.messages, [], 'plus de fenêtre grise à fermer (v1.2.0)');
+  assert.ok(await p.isVisible('#message'));
+  assert.equal(await p.textContent('#message'), 'Choisis au moins un groupe musculaire');
   assert.ok(await cache(p, '#workout-screen'));
 });

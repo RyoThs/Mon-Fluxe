@@ -395,6 +395,29 @@ body {
 
 
 /* ---------- 7. Petits outils ---------- */
+/* Petit message en bas de l'écran (au-dessus de la barre du bas) */
+.message {
+  position: fixed;
+  left: 50%;
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  z-index: 4000;
+  width: max-content;
+  max-width: 90%;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--texte);
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+  transition: opacity .2s, transform .2s, visibility .2s;
+}
+.message.visible { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); transition: opacity .2s, transform .2s; }   /* visible tout de suite, s'efface en douceur */
+
 /* Cache un élément (utilisé par le JavaScript pour ouvrir/fermer les écrans) */
 .cache { display: none !important; }
 

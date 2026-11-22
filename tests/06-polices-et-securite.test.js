@@ -24,7 +24,10 @@ test('la politique de sécurité (CSP) est présente, en tête de page, avec les
   const csp = (html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/) || [])[1];
   assert.ok(csp, 'balise CSP absente');
   assert.ok(html.indexOf('Content-Security-Policy') < html.indexOf('<link'), 'la CSP doit précéder les feuilles de style');
-  for (const regle of ["default-src 'self'", "script-src 'self' 'unsafe-inline'", "style-src 'self' 'unsafe-inline'", "font-src 'self'", "img-src 'self'", "connect-src 'self'", "object-src 'none'"]) {
+  // v1.2.0 : plus aucun code dans la page, donc le code « en ligne » est interdit (seuls les fichiers js/ de l'app tournent)
+  assert.match(csp, /script-src 'self';/);
+  assert.ok(!/script-src[^;]*unsafe-inline/.test(csp), "script-src ne doit plus autoriser 'unsafe-inline'");
+  for (const regle of ["default-src 'self'", "style-src 'self' 'unsafe-inline'", "font-src 'self'", "img-src 'self'", "connect-src 'self'", "object-src 'none'"]) {
     assert.ok(csp.includes(regle), regle);
   }
 });

@@ -1,5 +1,5 @@
 /* Bibliothèque des exercices au poids du corps : 6 groupes × 3 niveaux × 5 exercices.
-   Chaque exercice : n = nom, r = répétitions (ou secondes), d = description courte,
+   Chaque exercice : n = nom, r = répétitions (ou secondes si s:1 = exercice tenu), d = description courte,
    h = guide détaillé (affiché par le bouton « ? » ; **texte** = en gras). */
 const exerciseLibrary = {
     'Pectoraux': {
@@ -37,7 +37,7 @@ const exerciseLibrary = {
             {n:'Nageur', r:40, d:'Endurance dorsale', h:'• **Placement** : Ventre au sol.\n• **Mouvement** : Battements alternés rapides bras/jambes comme si vous nagiez.\n• **Focus** : Ne touchez plus le sol durant tout l\'exercice.'},
             {n:'Tirage Porte', r:15, d:'Traction horizontale', h:'• **Placement** : Saisissez les cadres d\'une porte ouverte.\n• **Mouvement** : Laissez-vous partir en arrière bras tendus, puis tirez pour ramener la poitrine entre les mains.\n• **Focus** : Serrez les omoplates en fin de tirage.'},
             {n:'Pompes Australiennes', r:12, d:'Sous table', h:'• **Placement** : Sous une table solide, saisissez le bord.\n• **Mouvement** : Tirez votre buste vers le haut de la table. Corps bien droit.\n• **Sécurité** : Vérifiez la stabilité de la table !'},
-            {n:'Superman Iso', r:30, d:'Gainage dorsal', h:'• **Mouvement** : Maintenez la position haute du Superman sans bouger.\n• **Respiration** : Continuez de respirer calmement malgré la contraction.'},
+            {n:'Superman Iso', r:30, s:1, d:'Gainage dorsal', h:'• **Mouvement** : Maintenez la position haute du Superman sans bouger.\n• **Respiration** : Continuez de respirer calmement malgré la contraction.'},
             {n:'Good Morning', r:20, d:'Chaîne postérieure', h:'• **Placement** : Debout, mains derrière la tête.\n• **Mouvement** : Penchez le buste en avant en gardant le dos plat et les jambes presque tendues.\n• **Focus** : Vous devez sentir l\'étirement derrière les cuisses.'}
         ],
         advanced: [
@@ -53,7 +53,7 @@ const exerciseLibrary = {
             {n:'Squat Classique', r:20, d:'Bases', h:'• **Placement** : Pieds largeur d\'épaules.\n• **Mouvement** : Descendez les fesses en arrière comme pour vous asseoir.\n• **Focus** : Gardez le dos droit et les talons cloués au sol.'},
             {n:'Glute Bridge', r:20, d:'Fessiers', h:'• **Placement** : Sur le dos, genoux pliés.\n• **Mouvement** : Levez le bassin vers le plafond.\n• **Focus** : Contractez volontairement les fessiers en haut du mouvement.'},
             {n:'Fentes Arrière', r:12, d:'Équilibre', h:'• **Mouvement** : Faites un grand pas en arrière et descendez le genou arrière vers le sol.\n• **Focus** : Le genou avant ne doit pas dépasser la pointe du pied.'},
-            {n:'Chaise Murale', r:30, d:'Isométrie', h:'• **Placement** : Dos contre un mur, jambes pliées à 90°.\n• **Mouvement** : Ne bougez plus.\n• **Focus** : Pressez les talons dans le sol.'},
+            {n:'Chaise Murale', r:30, s:1, d:'Isométrie', h:'• **Placement** : Dos contre un mur, jambes pliées à 90°.\n• **Mouvement** : Ne bougez plus.\n• **Focus** : Pressez les talons dans le sol.'},
             {n:'Montée Mollets', r:25, d:'Cheville', h:'• **Mouvement** : Montez sur la pointe des pieds le plus haut possible.\n• **Focus** : Redescendez lentement pour contrôler le mouvement.'}
         ],
         intermediate: [
@@ -73,7 +73,7 @@ const exerciseLibrary = {
     },
     'Abdos': {
         beginner: [
-            {n:'Planche', r:30, d:'Gainage', h:'• **Placement** : Appui sur les coudes et orteils.\n• **Mouvement** : Contractez abdos et fessiers pour former une ligne droite.\n• **Erreur** : Ne laissez pas le bassin tomber vers le sol.'},
+            {n:'Planche', r:30, s:1, d:'Gainage', h:'• **Placement** : Appui sur les coudes et orteils.\n• **Mouvement** : Contractez abdos et fessiers pour former une ligne droite.\n• **Erreur** : Ne laissez pas le bassin tomber vers le sol.'},
             {n:'Crunch', r:20, d:'Haut des abdos', h:'• **Placement** : Sur le dos, mains aux tempes.\n• **Mouvement** : Enroulez le buste pour décoller les omoplates.\n• **Focus** : Regardez le plafond, ne tirez pas sur la nuque.'},
             {n:'Dead Bug', r:16, d:'Dos protégé', h:'• **Mouvement** : Sur le dos, descendez bras droit et jambe gauche sans que le bas du dos ne décolle du sol.\n• **Focus** : Contrôle et lenteur.'},
             {n:'Toucher Chevilles', r:30, d:'Obliques', h:'• **Mouvement** : Jambes pliées, alternez pour toucher votre talon gauche puis droit avec vos mains.\n• **Focus** : Gardez les épaules décollées.'},
@@ -82,12 +82,12 @@ const exerciseLibrary = {
         intermediate: [
             {n:'V-Ups', r:15, d:'Complet', h:'• **Mouvement** : Levez simultanément buste et jambes pour former un "V" et toucher vos pieds.\n• **Focus** : Redescendez en contrôlant, ne tombez pas au sol.'},
             {n:'Russian Twists', r:30, d:'Rotation', h:'• **Placement** : Assis, pieds décollés.\n• **Mouvement** : Touchez le sol à gauche puis à droite avec vos deux mains jointes.\n• **Focus** : Suivez vos mains du regard.'},
-            {n:'Planche Latérale', r:30, d:'Taille', h:'• **Placement** : Sur un seul coude, de profil.\n• **Mouvement** : Alignez tête, hanches et pieds. Tenez la position.'},
+            {n:'Planche Latérale', r:30, s:1, d:'Taille', h:'• **Placement** : Sur un seul coude, de profil.\n• **Mouvement** : Alignez tête, hanches et pieds. Tenez la position.'},
             {n:'Flutter Kicks', r:40, d:'Bas des abdos', h:'• **Placement** : Mains sous les fesses pour protéger le dos.\n• **Mouvement** : Petits battements de jambes rapides près du sol.'},
             {n:'Rotation Planche', r:20, d:'Mobilité', h:'• **Mouvement** : En planche coudes, pivotez le bassin pour toucher le sol avec la hanche gauche, puis droite.'}
         ],
         advanced: [
-            {n:'L-Sit', r:20, d:'Statique', h:'• **Placement** : Mains au sol au niveau des hanches.\n• **Mouvement** : Poussez pour décoller fesses et pieds du sol, jambes tendues devant.\n• **Astuce** : Utilisez des livres sous vos mains pour gagner de la hauteur.'},
+            {n:'L-Sit', r:20, s:1, d:'Statique', h:'• **Placement** : Mains au sol au niveau des hanches.\n• **Mouvement** : Poussez pour décoller fesses et pieds du sol, jambes tendues devant.\n• **Astuce** : Utilisez des livres sous vos mains pour gagner de la hauteur.'},
             {n:'Hollow Rock', r:30, d:'Banane dynamique', h:'• **Mouvement** : Dos plaqué, bras et jambes tendus, basculez comme un balancier.\n• **Focus** : Si le dos décolle, pliez un peu les jambes.'},
             {n:'Essuie-glaces', r:12, d:'Obliques force', h:'• **Placement** : Sur le dos, jambes tendues vers le ciel à 90°.\n• **Mouvement** : Descendez les jambes vers la gauche, puis la droite sans toucher le sol.'},
             {n:'Dragon Flag', r:8, d:'Levier', h:'• **Placement** : Allongé, agrippez un support solide derrière votre tête.\n• **Mouvement** : Levez tout le corps en chandelle et redescendez d\'un bloc sans casser l\'alignement.'},
@@ -96,7 +96,7 @@ const exerciseLibrary = {
     },
     'Épaules': {
         beginner: [
-            {n:'Cercles Bras', r:45, d:'Endurance', h:'• **Mouvement** : Bras tendus sur les côtés, décrivez de tout petits cercles rapides.\n• **Focus** : Gardez les épaules basses (ne les montez pas aux oreilles).'},
+            {n:'Cercles Bras', r:45, s:1, d:'Endurance', h:'• **Mouvement** : Bras tendus sur les côtés, décrivez de tout petits cercles rapides.\n• **Focus** : Gardez les épaules basses (ne les montez pas aux oreilles).'},
             {n:'I-Y-T Mouvement', r:15, d:'Posture', h:'• **Mouvement** : Formez un I (bras en haut), un Y (diagonale) et un T (côtés) avec vos bras.\n• **Focus** : Serrez fort les omoplates sur le T.'},
             {n:'Tap Épaules', r:20, d:'Stabilité', h:'• **Mouvement** : En position de planche mains, touchez votre épaule opposée.\n• **Focus** : Le bassin ne doit absolument pas bouger.'},
             {n:'Pompes Hautes', r:12, d:'Deltoïdes', h:'• **Placement** : Mains très loin devant vous en position de pompe.\n• **Mouvement** : Descente courte axée sur les épaules.'},
@@ -104,16 +104,16 @@ const exerciseLibrary = {
         ],
         intermediate: [
             {n:'Pike Pushups', r:10, d:'Force verticale', h:'• **Placement** : Position de pompe, mais avancez les pieds pour avoir les fesses très hautes (V inversé).\n• **Mouvement** : Amenez le sommet du crâne devant vos mains au sol.'},
-            {n:'Maintien Pike', r:30, d:'Isométrie', h:'• **Mouvement** : Tenez la position basse du Pike Pushup, tête juste au-dessus du sol.\n• **Focus** : Poussez activement dans le sol.'},
+            {n:'Maintien Pike', r:30, s:1, d:'Isométrie', h:'• **Mouvement** : Tenez la position basse du Pike Pushup, tête juste au-dessus du sol.\n• **Focus** : Poussez activement dans le sol.'},
             {n:'Dips Épaules', r:15, d:'Scapula', h:'• **Placement** : Position de planche mains.\n• **Mouvement** : Laissez votre buste descendre entre vos épaules (bras tendus), puis remontez en arrondissant le haut du dos.'},
             {n:'Planche Lean', r:20, d:'Force avant', h:'• **Mouvement** : En planche mains, basculez le poids du corps le plus possible vers l\'avant sur les pointes de pieds.\n• **Focus** : Énorme tension sur l\'avant de l\'épaule.'},
             {n:'Pike Walk', r:8, d:'Marche ours', h:'• **Mouvement** : Gardez bras et jambes tendus, fesses hautes, et avancez en déplaçant main/pied opposés.'}
         ],
         advanced: [
             {n:'HSPU au Mur', r:5, d:'Handstand Pushup', h:'• **Placement** : Équilibre contre le mur, dos au mur.\n• **Mouvement** : Descendez la tête au sol et repoussez.\n• **Focus** : Gardez les coudes légèrement vers l\'intérieur.'},
-            {n:'Handstand Hold', r:30, d:'Équilibre', h:'• **Mouvement** : Tenez l\'équilibre sur les mains contre le mur.\n• **Focus** : Repoussez activement le sol, ne vous "écrasez" pas dans vos épaules.'},
+            {n:'Handstand Hold', r:30, s:1, d:'Équilibre', h:'• **Mouvement** : Tenez l\'équilibre sur les mains contre le mur.\n• **Focus** : Repoussez activement le sol, ne vous "écrasez" pas dans vos épaules.'},
             {n:'Pike Pushups Elevé', r:10, d:'V Inversé +', h:'• **Placement** : Pieds sur une chaise, mains au sol proche de la chaise.\n• **Mouvement** : Descente verticale du buste.'},
-            {n:'90 Degree Hold', r:10, d:'Statique', h:'• **Mouvement** : En bas d\'une pompe, basculez vers l\'avant et essayez de tenir le corps parallèle au sol.'},
+            {n:'90 Degree Hold', r:10, s:1, d:'Statique', h:'• **Mouvement** : En bas d\'une pompe, basculez vers l\'avant et essayez de tenir le corps parallèle au sol.'},
             {n:'Marche Mains', r:5, d:'Agilité', h:'• **Mouvement** : Essayez de marcher sur les mains sur 1 ou 2 mètres (ou contre un mur).'}
         ]
     },

@@ -46,7 +46,7 @@ function toggleExpress() {
 }
 
 function generateWorkout() {
-    if (selectedMuscles.length === 0) return alert("Choisis au moins un muscle !");
+    if (selectedMuscles.length === 0) return afficherMessage('Choisis au moins un groupe musculaire');
     currentWorkout = [];
     // Pour chaque muscle sélectionné, on pioche 3 exercices
     selectedMuscles.forEach(m => {
@@ -67,6 +67,7 @@ function updateStep() {
     document.getElementById('ex-name').innerText = ex.n;
     document.getElementById('ex-desc').innerText = ex.d;
     document.getElementById('ex-reps').innerText = ex.r;
+    document.querySelector('.seance-unite').innerText = ex.s ? 'Secondes' : 'Reps';
     document.getElementById('step-counter-text').innerText = `Flux ${currentStepIndex + 1}/${currentWorkout.length}`;
     document.querySelector('#seance-progression i').style.width = `${((currentStepIndex + 1) / currentWorkout.length) * 100}%`;
     afficherASuivre();
@@ -80,7 +81,7 @@ function afficherASuivre() {
     const liste = element('ul');
     liste.append(...suivants.map(ex => {
         const li = element('li');
-        li.append(element('b', '', ex.n), element('span', '', `${ex.r}`));
+        li.append(element('b', '', ex.n), element('span', '', ex.s ? `${ex.r} s` : `${ex.r}`));
         return li;
     }));
     const reste = currentWorkout.length - currentStepIndex - 1 - suivants.length;
@@ -109,7 +110,8 @@ function nextStep() {
 
 function finishWithFeedback(mood) {
     userData.xp += currentWorkout.length * 15;
-    if (userData.xp >= userData.lvl * 100) { userData.xp = 0; userData.lvl++; }
+    // Passage de niveau : il faut « niveau × 100 » XP ; le surplus est gardé (plusieurs niveaux d'un coup possibles)
+    while (userData.xp >= userData.lvl * 100) { userData.xp -= userData.lvl * 100; userData.lvl++; }
     userData.logs.push({ date: new Date().toISOString(), mood: mood, count: currentWorkout.length });
     userData.streak++;
     Storage.set('fluxe_user_v1', userData);
