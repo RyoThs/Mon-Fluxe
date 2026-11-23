@@ -4,7 +4,7 @@ Fluxe App génère des séances de musculation **au poids du corps** : tu choisi
 
 > Fluxe App est **distincte de Fluxe Suivi** (le carnet de musculation pour la salle, dépôt `RyoThs/Fluxe-Suivi`). Les deux applis sont publiées sur le même site (`ryoths.github.io`) mais ne partagent aucune donnée, et ne touchent jamais aux données de l'autre.
 
-Version actuelle : **1.7.0**
+Version actuelle : **1.8.0**
 
 ## Adresse
 
@@ -71,6 +71,8 @@ Organisation des fichiers :
 ⚠️ Ne renomme jamais les clés de stockage `fluxe_user_v1` et `fluxe_backup` (voir `docs/STOCKAGE.md`).
 
 ## Historique des versions
+
+- **1.8.0** — Silhouettes animées : chaque exercice montre son mouvement en boucle (départ → arrivée), immobile si le téléphone demande de réduire les animations. Positions des guides plus précises (distances, largeur des mains et des pieds, hauteurs).
 
 - **1.7.0** — Guides « ? » réécrits pour être plus directs : 3 lignes (Position, Mouvement, Attention), tutoiement, phrases courtes, pour les 150 mouvements.
 

@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.7.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.8.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.7.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.8.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -77,3 +77,9 @@ Si un point ne va pas : noter l'écran et faire une capture d'écran.
 ## 10. Nouveautés v1.7.0
 
 - [ ] Bouton **?** pendant une séance : 3 lignes **Position / Mouvement / Attention**, en « tu », faciles à lire d'un coup d'œil.
+
+## 11. Nouveautés v1.8.0
+
+- [ ] Pendant une séance, la silhouette **bouge** : elle montre le mouvement en boucle (ex. la pompe descend et remonte).
+- [ ] Réglages iPhone → Accessibilité → Mouvement → **Réduire les animations** activé : la silhouette reste immobile.
+- [ ] Bouton **?** : la ligne Position donne des repères précis (ex. pompes au mur : « Debout à 1 m du mur, mains … plus larges que les épaules »).
