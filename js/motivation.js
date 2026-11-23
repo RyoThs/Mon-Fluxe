@@ -64,3 +64,26 @@ function afficherRecompenses() {
     document.getElementById('recompenses').replaceChildren(...cases);
     document.getElementById('recompenses-titre').textContent = `Récompenses · ${cases.filter(c => c.classList.contains('gagnee')).length}/${RECOMPENSES.length}`;
 }
+
+/* Progression automatique : propose de monter après 3 séances 😃 de suite au même niveau,
+   ou de descendre après 2 séances 💀 de suite. Seulement une proposition (rien ne change sans toucher). */
+const NOM_NIVEAU = { beginner: 'Débutant', intermediate: 'Intermédiaire', advanced: 'Avancé' };
+function niveauPropose(logs, niveauActuel) {
+    const derniers = n => logs.slice(-n);
+    const memes = (liste, humeur) => liste.length > 0 && liste.every(l => l.niveau === niveauActuel && l.mood === humeur);
+    const i = NIVEAUX.indexOf(niveauActuel);
+    if (logs.length >= 3 && memes(derniers(3), '😃') && i < 2) return { niveau: NIVEAUX[i + 1], texte: `Prêt pour ${NOM_NIVEAU[NIVEAUX[i + 1]]} ? Tes 3 dernières séances étaient faciles.` };
+    if (logs.length >= 2 && memes(derniers(2), '💀') && i > 0) return { niveau: NIVEAUX[i - 1], texte: `Un peu dur ? Essaie ${NOM_NIVEAU[NIVEAUX[i - 1]]} quelques séances.` };
+    return null;
+}
+
+function afficherSuggestion() {
+    const zone = document.getElementById('suggestion');
+    const p = niveauPropose(userData.logs, levelKey);
+    zone.classList.toggle('cache', !p);
+    if (!p) return;
+    const bouton = element('button', 'bouton-reprendre', `Passer à ${NOM_NIVEAU[p.niveau]}`);
+    bouton.dataset.act = 'niveau';
+    bouton.dataset.niveau = p.niveau;
+    zone.replaceChildren(element('p', 'suggestion-texte', p.texte), bouton);
+}

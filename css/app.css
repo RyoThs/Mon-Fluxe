@@ -216,6 +216,7 @@ body {
 }
 .carte-reprise-titre { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .carte-reprise-texte { font-family: var(--police-chiffres); font-size: 22px; font-weight: 700; }
+.suggestion-texte { font-weight: 600; font-size: 15px; }
 .bouton-reprendre { padding: 11px 18px; border-radius: 999px; background: var(--degrade); color: var(--sur-degrade); font-weight: 800; box-shadow: var(--ombre-bouton); }
 
 /* Choix du niveau : interrupteur à 3 positions (comme les filtres de Fluxe Suivi) */

@@ -1,6 +1,8 @@
 /* Séance : choix (niveau, groupes, mode Express), génération, passage d'un exercice à l'autre,
    fin de séance (XP, niveau, journal) et reprise d'une séance interrompue. */
-let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, levelKey = 'intermediate', isExpress = false;
+let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, isExpress = false;
+// Niveau choisi : celui de la dernière fois (fluxe_reglages), sinon Intermédiaire
+let levelKey = NIVEAUX.includes(lireReglages().niveau) ? lireReglages().niveau : 'intermediate';
 let userData = chargerProgression();
 const EXPRESS_MAX = 6; // annoncé sur l'accueil : « 6 exercices max »
 
@@ -34,10 +36,17 @@ function toggleMuscle(m, btn) {
     }
 }
 
-function setLevel(key, btn) {
+function setLevel(key) {
+    if (!NIVEAUX.includes(key)) return;
     levelKey = key;
-    document.querySelectorAll('.bouton-niveau').forEach(b => b.classList.remove('actif'));
-    btn.classList.add('actif');
+    ecrireReglage('niveau', key);
+    afficherNiveau();
+}
+
+// Allume le bouton du niveau choisi et met à jour la proposition de changer de niveau
+function afficherNiveau() {
+    document.querySelectorAll('.bouton-niveau').forEach(b => b.classList.toggle('actif', b.dataset.niveau === levelKey));
+    afficherSuggestion();
 }
 
 function toggleExpress() {
@@ -145,11 +154,12 @@ function finishWithFeedback(mood) {
     userData.xp += faits * 15;
     // Passage de niveau : il faut « niveau × 100 » XP ; le surplus est gardé (plusieurs niveaux d'un coup possibles)
     while (userData.xp >= userData.lvl * 100) { userData.xp -= userData.lvl * 100; userData.lvl++; }
-    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: faits });
+    userData.logs.push({ date: new Date().toISOString(), mood: mood, count: faits, niveau: levelKey });
     userData.streak++;
     Storage.set('fluxe_user_v1', userData);
     document.getElementById('feedback-screen').classList.add('cache');
     updateUI();
+    afficherSuggestion();
     showScreen('main-screen');
 }
 

@@ -5,6 +5,7 @@ document.getElementById('version-app').textContent = `Fluxe v${document.querySel
 
 updateUI();
 afficherOptionEchauffement();
+afficherNiveau();
 checkBackup();
 
 // Hors ligne : enregistre le service worker (sw.js), qui garde une copie de l'app
