@@ -22,6 +22,8 @@ const gestes = {
     humeur: el => finishWithFeedback(el.dataset.humeur),
     fermerAide: () => closeInfo(),
     exporter: () => exporterProgression(),
+    rappelJour: el => basculerJourRappel(el),
+    rappelAjouter: () => ajouterRappel(),
 };
 
 // Gestes déclenchés quand un champ change (et non au toucher)

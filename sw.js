@@ -29,6 +29,7 @@ const FICHIERS = [
   'js/seance.js',
   'js/programme.js',
   'js/sauvegarde.js',
+  'js/rappels.js',
   'js/actions.js',
   'js/main.js',
   'fonts/barlow-condensed-500.woff2',
