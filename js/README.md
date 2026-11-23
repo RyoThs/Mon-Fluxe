@@ -5,6 +5,7 @@ Depuis la v1.1.0, le code est rangé en petits fichiers, chargés **dans cet ord
 
 | Fichier | Rôle |
 |---|---|
+| `zoom.js` | Écran fixe : pincement et double toucher sans zoom (chargé en premier) |
 | `outils.js` | Petites fonctions communes : mélange équitable, création d'éléments sûrs, gras du guide, dates en français, petit message, début de semaine |
 | `stockage.js` | Lecture sûre du téléphone et vérification des données (clés `fluxe_user_v1` et `fluxe_backup` : **ne jamais renommer**) |
 | `exercices.js` | Les 144 exercices (6 groupes × 3 niveaux × 8) |

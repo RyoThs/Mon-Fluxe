@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.5.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.6.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.5.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.6.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -66,3 +66,10 @@ Si un point ne va pas : noter l'écran et faire une capture d'écran.
 
 - [ ] Lancer plusieurs séances : de nouveaux exercices apparaissent (ex. « Pompes Hindoues », « Bear Crawl », « Hollow Hold »), chacun avec son dessin et son guide **?**.
 - [ ] Les exercices tenus (« Planche Haute », « Ours Tenu »…) affichent « Secondes » et le chrono.
+
+## 9. Nouveautés v1.6.0
+
+- [ ] Pincer l'écran à deux doigts (accueil, journal, séance) : rien ne zoome.
+- [ ] Toucher deux fois vite un bouton ou un texte : pas de zoom.
+- [ ] Le défilement à un doigt marche toujours (journal).
+- [ ] Taper l'heure d'un rappel : la page ne grossit pas.
