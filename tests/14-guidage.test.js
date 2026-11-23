@@ -9,7 +9,10 @@ before(async () => { app = await demarrer(); });
 after(async () => { await app.fermer(); });
 
 // Les exercices qu'on TIENT (en secondes) et non qu'on répète
-const TENUS = ['Chaise Murale', 'Planche', 'Superman Iso', 'Planche Latérale', 'L-Sit', 'Maintien Pike', 'Handstand Hold', '90 Degree Hold', 'Cercles Bras'];
+const TENUS = ['Chaise Murale', 'Planche', 'Superman Iso', 'Planche Latérale', 'L-Sit', 'Maintien Pike', 'Handstand Hold', '90 Degree Hold', 'Cercles Bras',
+  // v1.5.0 : nouveaux exercices tenus
+  'Planche Haute', 'Planche Inversée', 'Arch Hold Bras Tendus', 'Planche Inversée 1 Jambe', 'Pont Fessier Tenu', 'Planche Genoux', 'Hollow Hold',
+  'Planche RKC', 'V-Sit Tenu', 'Ours Tenu', 'Planche Lean Tenu', 'Curl Main Contre Main', 'Curl Sous la Cuisse'];
 
 // Une séance enregistrée (comme si l'app avait été fermée), pour choisir l'exercice affiché
 const reprise = (exercices, index = 0) => ({ [CLE_REPRISE]: { workout: exercices, index, lvl: 'beginner' } });

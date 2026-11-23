@@ -7,7 +7,7 @@ Depuis la v1.1.0, le code est rangé en petits fichiers, chargés **dans cet ord
 |---|---|
 | `outils.js` | Petites fonctions communes : mélange équitable, création d'éléments sûrs, gras du guide, dates en français, petit message, début de semaine |
 | `stockage.js` | Lecture sûre du téléphone et vérification des données (clés `fluxe_user_v1` et `fluxe_backup` : **ne jamais renommer**) |
-| `exercices.js` | Les 90 exercices (6 groupes × 3 niveaux × 5) |
+| `exercices.js` | Les 144 exercices (6 groupes × 3 niveaux × 8) |
 | `dessins.js` | Dessins au trait des mouvements (une silhouette par famille d'exercices) |
 | `echauffement.js` | Échauffement et étirements (option retenue dans `fluxe_reglages`) |
 | `chrono.js` | Chrono des exercices tenus et repos entre les exercices (**aucun son**) |
