@@ -11,14 +11,16 @@ test('tirage équitable : chaque exercice d’un groupe a autant de chances d’
   // Avant : mélange par sort(() => 0.5 - Math.random()), très déséquilibré (un exercice sortait 3 fois moins qu'un autre)
   const p = await app.page();
   await p.click('#main-screen button:text-is("Pectoraux")');
-  const compte = await p.evaluate(() => {
+  const { compte, taille } = await p.evaluate(() => {
     const c = {};
     for (let i = 0; i < 4000; i++) { generateWorkout(); currentWorkout.forEach(e => { c[e.n] = (c[e.n] || 0) + 1; }); } // eslint-disable-line no-undef
-    return c;
+    return { compte: c, taille: exerciseLibrary['Pectoraux'].intermediate.length }; // eslint-disable-line no-undef
   });
-  // 3 exercices tirés parmi 5 : chacun attendu 4000 × 3/5 = 2400 fois (marge large : ± 400)
-  assert.equal(Object.keys(compte).length, 5);
-  for (const [nom, n] of Object.entries(compte)) assert.ok(n > 2000 && n < 2800, `${nom} tiré ${n} fois sur 4000`);
+  // 3 exercices tirés parmi « taille » (5 jusqu'à la v1.4.0, 8 depuis la v1.5.0) :
+  // chacun attendu 4000 × 3/taille fois (marge large : ± 1/6 de l'attendu)
+  const attendu = 4000 * 3 / taille;
+  assert.equal(Object.keys(compte).length, taille);
+  for (const [nom, n] of Object.entries(compte)) assert.ok(n > attendu * 5 / 6 && n < attendu * 7 / 6, `${nom} tiré ${n} fois sur 4000 (attendu ≈ ${attendu})`);
 });
 
 test('mode Express : jamais plus de 6 exercices (comme annoncé), même avec les 6 groupes', async () => {

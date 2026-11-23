@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.4.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.5.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.4.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.5.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -61,3 +61,8 @@ Si un point ne va pas : noter l'écran et faire une capture d'écran.
 
 - [ ] Journal → **Rappels** : choisir des jours et une heure → **Ajouter à mon calendrier** → le menu Partager s'ouvre → **Calendrier** (ou ouvrir le fichier) → l'événement « Séance Fluxe » revient chaque semaine avec une alerte.
 - [ ] Au niveau 5 (ou après 20 séances) : carte **Prêt pour la salle ?** → **Découvrir** ouvre Fluxe Suivi.
+
+## 8. Nouveautés v1.5.0
+
+- [ ] Lancer plusieurs séances : de nouveaux exercices apparaissent (ex. « Pompes Hindoues », « Bear Crawl », « Hollow Hold »), chacun avec son dessin et son guide **?**.
+- [ ] Les exercices tenus (« Planche Haute », « Ours Tenu »…) affichent « Secondes » et le chrono.
