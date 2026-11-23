@@ -11,9 +11,15 @@ function dateDuJour() {
 async function exporterProgression() {
     const contenu = JSON.stringify({ app: 'fluxe-app', format: 1, exporte_le: new Date().toISOString(), data: { fluxe_user_v1: champsUtiles(userData) } }, null, 1);
     const nom = `fluxe-progression-${dateDuJour()}.json`;
-    const fichier = new File([contenu], nom, { type: 'application/json' });
+    await partagerFichier(contenu, nom, 'application/json', 'Progression Fluxe');
+}
+
+/* Partage un fichier : sur iPhone, menu de partage (Fichiers, AirDrop, Calendrier…) ;
+   sinon, téléchargement classique. */
+async function partagerFichier(contenu, nom, type, titre) {
+    const fichier = new File([contenu], nom, { type });
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [fichier] })) {
-        try { await navigator.share({ files: [fichier], title: 'Progression Fluxe' }); return; }
+        try { await navigator.share({ files: [fichier], title: titre }); return; }
         catch (e) { if (e && e.name === 'AbortError') return; } // partage annulé : rien à faire ; autre souci : téléchargement
     }
     const lien = document.createElement('a');

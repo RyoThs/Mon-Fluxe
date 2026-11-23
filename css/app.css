@@ -298,6 +298,16 @@ body {
 .recompense-icone { font-size: 26px; }
 .recompense.gagnee { opacity: 1; filter: none; background: var(--carte); border: 1px solid var(--trait); box-shadow: var(--ombre-petite); }
 
+/* Rappels : jours en puces, heure, bouton */
+.rappel-jours { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.rappel-jours button { padding: 10px 0; border-radius: 12px; background: var(--releve); border: 1px solid var(--trait); font-size: 13px; font-weight: 600; color: var(--discret); }
+.rappel-jours button.actif { background: var(--degrade); color: var(--sur-degrade); border-color: transparent; }
+.rappel-ligne { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.rappel-ligne label { color: var(--discret); font-size: 14px; }
+.rappel-ligne input { font: inherit; font-size: 16px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--trait); background: var(--releve); color: var(--texte); }
+.passerelle a { text-decoration: none; text-align: center; margin-top: 10px; }
+.rappel-ligne .bouton-secondaire { flex: 1 1 100%; }
+
 /* Cloison : message quand le journal n'a pas pu s'afficher */
 .carte-panne { border-left: 4px solid #f59e0b; }
 .carte-panne p { margin-bottom: 12px; font-weight: 600; }

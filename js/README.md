@@ -16,7 +16,8 @@ Depuis la v1.1.0, le code est rangé en petits fichiers, chargés **dans cet ord
 | `journal.js` | Écran Journal : chiffres, graphique de la semaine, liste ; cloison si l'affichage plante |
 | `seance.js` | Séance : choix, génération, exercice suivant, « À suivre », Plus facile, Quitter, fin (XP, niveau), reprise, guide « ? » |
 | `programme.js` | Programme « Débuter en 4 semaines » (clé `fluxe_programme`) |
-| `sauvegarde.js` | Export / import de la progression (fichier JSON) |
+| `sauvegarde.js` | Export / import de la progression (fichier JSON), partage d'un fichier |
+| `rappels.js` | Rappels (fichier calendrier .ics) et passerelle vers Fluxe Suivi |
 | `actions.js` | Aiguillage : chaque bouton porte un `data-act`, ce fichier dit quoi faire |
 | `main.js` | Démarrage (chargé en dernier) : version, en-tête, carte « Reprendre », hors ligne |
 

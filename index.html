@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
-    <meta name="app-version" content="1.3.0">
+    <meta name="app-version" content="1.4.0">
     <title>FLUXE - Fitness App</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -105,8 +105,25 @@
                 <h3 id="recompenses-titre" class="carte-activite-titre">Récompenses</h3>
                 <div id="recompenses" class="recompenses"></div>
             </div>
+            <div id="passerelle" class="carte carte-reprise suggestion passerelle cache">
+                <div><span class="carte-reprise-titre">Fluxe Suivi</span><p class="suggestion-texte">Prêt pour la salle&nbsp;? Fluxe Suivi t'accompagne avec les machines.</p></div>
+                <a href="../Fluxe-Suivi/" class="bouton-reprendre">Découvrir</a>
+            </div>
             <h2 class="titre-section titre-liste">Séances</h2>
             <div id="log-list" class="liste-seances"></div>
+        </div>
+
+        <div class="carte">
+            <span class="encadre-sauvegarde-titre">Rappels</span>
+            <p class="encadre-sauvegarde-texte">Ton calendrier te rappelle tes séances (aucun compte, rien n'est envoyé)</p>
+            <div id="rappel-jours" class="rappel-jours">
+                <button data-act="rappelJour" data-jour="MO">Lun</button><button data-act="rappelJour" data-jour="TU">Mar</button><button data-act="rappelJour" data-jour="WE">Mer</button><button data-act="rappelJour" data-jour="TH">Jeu</button><button data-act="rappelJour" data-jour="FR">Ven</button><button data-act="rappelJour" data-jour="SA">Sam</button><button data-act="rappelJour" data-jour="SU">Dim</button>
+            </div>
+            <div class="rappel-ligne">
+                <label for="rappel-heure">Heure</label>
+                <input type="time" id="rappel-heure" value="18:00">
+                <button data-act="rappelAjouter" id="rappel-ajouter" class="bouton-secondaire">Ajouter à mon calendrier</button>
+            </div>
         </div>
 
         <div class="carte encadre-sauvegarde">
@@ -185,6 +202,7 @@
     <script src="js/seance.js"></script>
     <script src="js/programme.js"></script>
     <script src="js/sauvegarde.js"></script>
+    <script src="js/rappels.js"></script>
     <script src="js/actions.js"></script>
     <script src="js/main.js"></script>
 </body>
