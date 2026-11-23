@@ -371,6 +371,8 @@ body {
 /* Dessin de l'exercice : silhouette au trait (indigo), sol et support en gris */
 .dessin { display: block; width: 150px; margin: 0 auto 6px; padding: 6px 8px; border-radius: 18px; background: var(--releve); }
 .dessin svg { display: block; width: 100%; height: auto; }
+.dessin video { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--releve); }
+.dessin:has(video) { width: 240px; padding: 0; overflow: hidden; }
 .dessin path, .dessin circle { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .dessin-corps { stroke: var(--accent); stroke-width: 4; }
 .dessin-tete { stroke: var(--accent); stroke-width: 3.5; fill: var(--carte) !important; }

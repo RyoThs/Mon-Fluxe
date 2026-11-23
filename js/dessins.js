@@ -78,6 +78,17 @@ function dessinPour(nom) {
 
 function afficherDessin(ex) {
     const zone = document.getElementById('ex-dessin');
+    const fichier = videoPour(ex.n);
+    if (fichier) {
+        // vidéo réaliste ; si elle ne se charge pas, la silhouette animée prend sa place
+        zone.replaceChildren(creerVideo(fichier, () => afficherSilhouette(zone, ex)));
+        zone.classList.remove('cache');
+        return;
+    }
+    afficherSilhouette(zone, ex);
+}
+
+function afficherSilhouette(zone, ex) {
     const svg = dessinPour(ex.n);
     zone.replaceChildren(...(svg ? [svg] : []));
     zone.classList.toggle('cache', !svg);

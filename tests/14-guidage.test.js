@@ -161,7 +161,7 @@ test('dessins : chaque exercice, échauffement et étirement a son dessin', asyn
 
 test('dessins : affiché pendant la séance (décoratif), caché pour un exercice inconnu sans planter', async () => {
   const p = await app.page();
-  await donner(p, reprise([ex('Squat Classique', 20), ex('Exercice venu d’une vieille version', 10)]));
+  await donner(p, reprise([ex('Glute Bridge', 20), ex('Exercice venu d’une vieille version', 10)])); // exercice sans vidéo (v1.9.0)
   await p.click('#resume-card button:has-text("Reprendre")');
   assert.ok(await p.isVisible('#ex-dessin svg'));
   assert.equal(await p.getAttribute('#ex-dessin svg', 'aria-hidden'), 'true');
