@@ -11,11 +11,13 @@ const Storage = {
 const profilParDefaut = () => ({ lvl: 1, xp: 0, logs: [], streak: 0 });
 // Nombre entier entre min et max (les bornes écartent seulement les valeurs absurdes, ex. 1e300)
 const estEntier = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
-// Une ligne du journal : { date (texte de date), mood (humeur), count (nombre d'exercices) }
+const NIVEAUX = ['beginner', 'intermediate', 'advanced'];
+// Une ligne du journal : { date (texte de date), mood (humeur), count (nombre d'exercices), niveau (facultatif, depuis la v1.3.0) }
 const estSeanceValide = l => !!l && typeof l === 'object' && !Array.isArray(l)
     && typeof l.date === 'string' && l.date.length <= 64 && !Number.isNaN(Date.parse(l.date))
     && typeof l.mood === 'string' && l.mood.length > 0 && l.mood.length <= 16
-    && estEntier(l.count, 0, 1000);
+    && estEntier(l.count, 0, 1000)
+    && (l.niveau === undefined || NIVEAUX.includes(l.niveau));
 // Règle de chaque champ de la progression. Pas de règle « xp < niveau × 100 » :
 // on refuse seulement l'absurde, pour qu'un export fait par l'app soit toujours réimportable.
 const reglesProfil = {
@@ -29,7 +31,7 @@ const TAILLE_MAX_IMPORT = 1024 * 1024; // 1 Mo
 // Ne garde que les champs utilisés par l'app (progression et chaque séance du journal)
 const champsUtiles = p => ({
     lvl: p.lvl, xp: p.xp, streak: p.streak,
-    logs: p.logs.map(l => ({ date: l.date, mood: l.mood, count: l.count }))
+    logs: p.logs.map(l => ({ date: l.date, mood: l.mood, count: l.count, ...(l.niveau ? { niveau: l.niveau } : {}) }))
 });
 const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v);
 // Vérification stricte (fichier importé) : tous les champs présents et du bon type
@@ -70,3 +72,7 @@ function lireSauvegardeSeance() {
         && ['beginner', 'intermediate', 'advanced'].includes(b.lvl);
     return valide ? b : null;
 }
+
+// Réglages de l'appli (clé fluxe_reglages) : écrits seulement quand on change une option
+const lireReglages = () => { const r = Storage.get('fluxe_reglages', {}); return estObjet(r) ? r : {}; };
+const ecrireReglage = (cle, valeur) => Storage.set('fluxe_reglages', { ...lireReglages(), [cle]: valeur });

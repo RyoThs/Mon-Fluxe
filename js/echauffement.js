@@ -13,9 +13,6 @@ const ETIREMENTS = [
     { n: 'Étirement des ischios', r: 30, s: 1, d: 'Arrière des cuisses', h: '• **Placement** : Assis, une jambe tendue devant vous.\n• **Mouvement** : Penchez-vous vers le pied, dos droit, sans forcer. Changez de jambe à mi-temps.' },
 ];
 
-// Réglages de l'appli (clé fluxe_reglages) : écrits seulement quand on change une option
-const lireReglages = () => { const r = Storage.get('fluxe_reglages', {}); return estObjet(r) ? r : {}; };
-const ecrireReglage = (cle, valeur) => Storage.set('fluxe_reglages', { ...lireReglages(), [cle]: valeur });
 let avecEchauffement = lireReglages().echauffement === true;
 
 function basculerEchauffement() {

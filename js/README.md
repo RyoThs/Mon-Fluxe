@@ -11,9 +11,11 @@ Depuis la v1.1.0, le code est rangé en petits fichiers, chargés **dans cet ord
 | `dessins.js` | Dessins au trait des mouvements (une silhouette par famille d'exercices) |
 | `echauffement.js` | Échauffement et étirements (option retenue dans `fluxe_reglages`) |
 | `chrono.js` | Chrono des exercices tenus et repos entre les exercices (**aucun son**) |
+| `motivation.js` | Semaines d'affilée, 15 récompenses, proposition de changer de niveau |
 | `ecrans.js` | Passage Accueil ↔ Journal, en-tête (niveau, séances, barre d'XP) |
 | `journal.js` | Écran Journal : chiffres, graphique de la semaine, liste ; cloison si l'affichage plante |
 | `seance.js` | Séance : choix, génération, exercice suivant, « À suivre », Plus facile, Quitter, fin (XP, niveau), reprise, guide « ? » |
+| `programme.js` | Programme « Débuter en 4 semaines » (clé `fluxe_programme`) |
 | `sauvegarde.js` | Export / import de la progression (fichier JSON) |
 | `actions.js` | Aiguillage : chaque bouton porte un `data-act`, ce fichier dit quoi faire |
 | `main.js` | Démarrage (chargé en dernier) : version, en-tête, carte « Reprendre », hors ligne |

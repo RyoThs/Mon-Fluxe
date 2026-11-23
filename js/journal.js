@@ -19,6 +19,7 @@ function afficherJournal() {
     afficherChiffres();
     afficherListe();
     afficherSemaine();
+    afficherRecompenses();
 }
 
 // Bandeau : nombre de séances, d'exercices, et XP gagnés (15 XP par exercice)

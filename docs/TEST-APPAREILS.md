@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.2.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.3.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.2.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.3.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -46,5 +46,13 @@ Même si l'iPhone est en mode sombre, l'appli reste claire (comme Fluxe Suivi) :
 - [ ] Niveau Intermédiaire ou Avancé : **Trop dur ? Plus facile** remplace l'exercice (message en bas).
 - [ ] Sans groupe choisi, « Activer le Fluxe » affiche un petit message en bas (plus de fenêtre grise).
 - [ ] iPhone SE ou petit écran : le bouton **Suivant** est toujours visible.
+
+## 6. Nouveautés v1.3.0
+
+- [ ] Carte Niveau : « 🔥 N semaines d'affilée » (ou « Fais une séance cette semaine… »).
+- [ ] Journal : carte **Récompenses · X/15**, les gagnées en couleur, les autres en grisé ; aucune fenêtre ne s'ouvre toute seule.
+- [ ] Le niveau choisi (Débutant / Intermédiaire / Avancé) est retenu après fermeture de l'appli.
+- [ ] Après 3 séances 😃 au même niveau : carte « Prêt pour … ? » avec un bouton qui change le niveau.
+- [ ] Programme : **Commencer** → « Séance 1/12 » → **Lancer** → finir la séance → « Séance 2/12 ». Une séance libre ne fait pas avancer le programme. **Arrêter** le retire.
 
 Si un point ne va pas : noter l'écran et faire une capture d'écran.

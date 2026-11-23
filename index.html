@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
-    <meta name="app-version" content="1.2.0">
+    <meta name="app-version" content="1.3.0">
     <title>FLUXE - Fitness App</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -38,12 +38,17 @@
                 <span id="xp-texte" class="xp-texte">0 / 100 XP</span>
             </div>
             <div class="barre-xp"><div id="xp-fill" class="barre-xp-remplie"></div></div>
+            <p id="semaines" class="semaines"></p>
         </div>
 
         <div id="resume-card" class="carte carte-reprise cache">
             <div><span class="carte-reprise-titre">En cours</span><p class="carte-reprise-texte">Reprendre le flux ?</p></div>
             <button data-act="reprendre" class="bouton-reprendre">Reprendre</button>
         </div>
+
+        <div id="suggestion" class="carte carte-reprise suggestion cache"></div>
+
+        <div id="programme" class="carte programme"></div>
 
         <div class="carte">
             <h2 class="titre-section">Ton niveau</h2>
@@ -95,6 +100,10 @@
                 <div class="jours-semaine">
                     <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
                 </div>
+            </div>
+            <div class="carte">
+                <h3 id="recompenses-titre" class="carte-activite-titre">Récompenses</h3>
+                <div id="recompenses" class="recompenses"></div>
             </div>
             <h2 class="titre-section titre-liste">Séances</h2>
             <div id="log-list" class="liste-seances"></div>
@@ -167,12 +176,14 @@
     <script src="js/outils.js"></script>
     <script src="js/stockage.js"></script>
     <script src="js/exercices.js"></script>
+    <script src="js/motivation.js"></script>
     <script src="js/ecrans.js"></script>
     <script src="js/journal.js"></script>
     <script src="js/dessins.js"></script>
     <script src="js/echauffement.js"></script>
     <script src="js/chrono.js"></script>
     <script src="js/seance.js"></script>
+    <script src="js/programme.js"></script>
     <script src="js/sauvegarde.js"></script>
     <script src="js/actions.js"></script>
     <script src="js/main.js"></script>
