@@ -8,9 +8,10 @@ Fluxe App enregistre tout **sur le téléphone** (rien n'est envoyé sur Interne
 
 | Clé | Contenu | Quand elle est écrite |
 | --- | --- | --- |
-| `fluxe_user_v1` | La progression : `{ lvl, xp, streak, logs }` — niveau, XP, nombre de séances, journal (`logs` = liste de `{ date, mood, count }` : date ISO, humeur 😃/🔥/💀, nombre d'exercices) | À la fin de chaque séance (choix de l'humeur), et après un import accepté |
+| `fluxe_user_v1` | La progression : `{ lvl, xp, streak, logs }` — niveau, XP, nombre de séances, journal (`logs` = liste de `{ date, mood, count, niveau }` : date ISO, humeur 😃/🔥/💀, nombre d'exercices, niveau de la séance — `niveau` existe depuis la v1.3.0 ; une ancienne séance sans niveau reste valable) | À la fin de chaque séance (choix de l'humeur), et après un import accepté |
 | `fluxe_backup` | La séance en cours : `{ workout, index, lvl }` — exercices prévus, exercice en cours, niveau choisi. Depuis la v1.2.0, un exercice peut porter en plus `s` (tenu en secondes), `m` et `niv` (groupe et niveau, pour « Plus facile »), `t` (`echauffement` ou `etirement`) ; une ancienne séance sans ces champs reste lisible | Au lancement d'une séance et à chaque « Suivant » ; **supprimée** à la fin de la séance |
-| `fluxe_reglages` | Les options : `{ echauffement: true/false }` (v1.2.0) | Seulement quand on change une option |
+| `fluxe_reglages` | Les options : `{ echauffement: true/false, niveau }` (échauffement v1.2.0, niveau choisi v1.3.0) | Seulement quand on change une option |
+| `fluxe_programme` | Le programme en cours : `{ id: 'debuter4', faites }` (nombre de séances du programme terminées, 0 à 12) — v1.3.0. `fluxe_backup` porte alors `prog: true` pour qu'une séance reprise compte aussi | Quand on commence le programme, puis à chaque séance du programme terminée ; supprimée par « Arrêter » |
 | `fluxe_user_v1_illisible` | Copie du texte brut de `fluxe_user_v1` quand il était illisible ou abîmé | Une seule fois : une copie déjà présente n'est **jamais écrasée** |
 | `fluxe_user_v1_avant_import` | La progression **d'origine**, telle qu'elle était avant le tout premier import | Au premier import seulement, **jamais écrasée** ensuite |
 | `fluxe_user_v1_avant_dernier_import` | La progression telle qu'elle était juste avant l'import le plus récent | À chaque import (remplacée à chaque fois) |

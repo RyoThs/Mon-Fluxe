@@ -1,6 +1,6 @@
 /* Séance : choix (niveau, groupes, mode Express), génération, passage d'un exercice à l'autre,
    fin de séance (XP, niveau, journal) et reprise d'une séance interrompue. */
-let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, isExpress = false;
+let selectedMuscles = [], currentWorkout = [], currentStepIndex = 0, isExpress = false, seanceDuProgramme = false;
 // Niveau choisi : celui de la dernière fois (fluxe_reglages), sinon Intermédiaire
 let levelKey = NIVEAUX.includes(lireReglages().niveau) ? lireReglages().niveau : 'intermediate';
 let userData = chargerProgression();
@@ -8,7 +8,7 @@ const EXPRESS_MAX = 6; // annoncé sur l'accueil : « 6 exercices max »
 
 // Garde la séance en cours (pour le bouton « Reprendre » si l'app est fermée)
 function saveProgress() {
-    Storage.set('fluxe_backup', { workout: currentWorkout, index: currentStepIndex, lvl: levelKey });
+    Storage.set('fluxe_backup', { workout: currentWorkout, index: currentStepIndex, lvl: levelKey, ...(seanceDuProgramme ? { prog: true } : {}) });
 }
 
 function checkBackup() {
@@ -21,6 +21,7 @@ function resumeWorkout() {
     currentWorkout = backup.workout;
     currentStepIndex = backup.index;
     levelKey = backup.lvl;
+    seanceDuProgramme = backup.prog === true;
     document.getElementById('resume-card').classList.add('cache');
     document.getElementById('workout-screen').classList.remove('cache');
     updateStep();
@@ -54,18 +55,19 @@ function toggleExpress() {
     document.getElementById('express-toggle').classList.toggle('actif');
 }
 
-function generateWorkout() {
-    if (selectedMuscles.length === 0) return afficherMessage('Choisis au moins un groupe musculaire');
+// Crée la séance : 3 exercices par groupe (groupes choisis sur l'accueil, ou imposés par le programme)
+function generateWorkout(groupes = selectedMuscles, { programme = false } = {}) {
+    if (groupes.length === 0) return afficherMessage('Choisis au moins un groupe musculaire');
+    seanceDuProgramme = programme;
     currentWorkout = [];
-    // Pour chaque muscle sélectionné, on pioche 3 exercices
-    selectedMuscles.forEach(m => {
+    groupes.forEach(m => {
         // m = groupe et niv = niveau : servent au bouton « Plus facile »
         currentWorkout.push(...melanger(exerciseLibrary[m][levelKey]).slice(0, 3).map(e => ({ ...e, m, niv: levelKey })));
     });
     // Mélange pour ne pas faire tous les exercices du même muscle à la suite
     currentWorkout = melanger(currentWorkout);
     // Mode Express : moitié de la séance (arrondi au supérieur), 6 exercices au maximum
-    if (isExpress) currentWorkout = currentWorkout.slice(0, Math.min(Math.ceil(currentWorkout.length / 2), EXPRESS_MAX));
+    if (isExpress && !programme) currentWorkout = currentWorkout.slice(0, Math.min(Math.ceil(currentWorkout.length / 2), EXPRESS_MAX));
     currentWorkout = ajouterEchauffement(currentWorkout);
     currentStepIndex = 0;
     saveProgress();
@@ -159,6 +161,7 @@ function finishWithFeedback(mood) {
     Storage.set('fluxe_user_v1', userData);
     document.getElementById('feedback-screen').classList.add('cache');
     updateUI();
+    if (seanceDuProgramme) { seanceDuProgramme = false; avancerProgramme(); }
     afficherSuggestion();
     showScreen('main-screen');
 }

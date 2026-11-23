@@ -216,7 +216,14 @@ body {
 }
 .carte-reprise-titre { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .carte-reprise-texte { font-family: var(--police-chiffres); font-size: 22px; font-weight: 700; }
+.programme-nom { margin: 2px 0; font-family: var(--police-chiffres); font-size: 22px; font-weight: 700; }
+.programme-texte { margin-bottom: 10px; color: var(--discret); font-size: 14px; }
+.programme .barre-xp { margin: 10px 0 12px; }
+.programme-boutons { display: flex; gap: 10px; }
+.programme-boutons > * { flex: 1; }
+.suggestion { flex-direction: column; align-items: stretch; }
 .suggestion-texte { font-weight: 600; font-size: 15px; }
+.bouton-reprendre { white-space: nowrap; }
 .bouton-reprendre { padding: 11px 18px; border-radius: 999px; background: var(--degrade); color: var(--sur-degrade); font-weight: 800; box-shadow: var(--ombre-bouton); }
 
 /* Choix du niveau : interrupteur à 3 positions (comme les filtres de Fluxe Suivi) */
