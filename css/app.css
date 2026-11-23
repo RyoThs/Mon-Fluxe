@@ -46,7 +46,7 @@
 
 /* ---------- 2. Remise à zéro ---------- */
 *, ::before, ::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }   /* pas de zoom au double toucher */
 h1, h2, h3, p { margin: 0; }
 button {
   font: inherit;
