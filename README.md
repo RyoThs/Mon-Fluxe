@@ -4,7 +4,7 @@ Fluxe App génère des séances de musculation **au poids du corps** : tu choisi
 
 > Fluxe App est **distincte de Fluxe Suivi** (le carnet de musculation pour la salle, dépôt `RyoThs/Fluxe-Suivi`). Les deux applis sont publiées sur le même site (`ryoths.github.io`) mais ne partagent aucune donnée, et ne touchent jamais aux données de l'autre.
 
-Version actuelle : **1.3.0**
+Version actuelle : **1.4.0**
 
 ## Adresse
 
@@ -71,6 +71,8 @@ Organisation des fichiers :
 ⚠️ Ne renomme jamais les clés de stockage `fluxe_user_v1` et `fluxe_backup` (voir `docs/STOCKAGE.md`).
 
 ## Historique des versions
+
+- **1.4.0** — Rappels de séance : jours + heure → fichier calendrier `fluxe-rappels.ics` (le calendrier du téléphone fait le rappel ; aucun serveur, aucun compte). Passerelle vers Fluxe Suivi au niveau 5 ou après 20 séances.
 
 - **1.3.0** — Donner envie de revenir : semaines d'affilée (carte Niveau), 15 récompenses dans le Journal (sans fenêtre automatique), progression automatique (niveau retenu, proposition de monter après 3 séances 😃 ou de descendre après 2 séances 💀), programme « Débuter en 4 semaines » (12 séances guidées). Cahier des charges des illustrations (`docs/ILLUSTRATIONS.md`).
 

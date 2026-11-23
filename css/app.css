@@ -305,7 +305,8 @@ body {
 .rappel-ligne { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
 .rappel-ligne label { color: var(--discret); font-size: 14px; }
 .rappel-ligne input { font: inherit; font-size: 16px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--trait); background: var(--releve); color: var(--texte); }
-.passerelle a { text-decoration: none; }
+.passerelle a { text-decoration: none; text-align: center; margin-top: 10px; }
+.rappel-ligne .bouton-secondaire { flex: 1 1 100%; }
 
 /* Cloison : message quand le journal n'a pas pu s'afficher */
 .carte-panne { border-left: 4px solid #f59e0b; }
