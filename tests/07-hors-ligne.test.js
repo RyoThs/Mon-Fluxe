@@ -16,9 +16,11 @@ const CACHE_ACTUEL = 'fluxe-app-v' + (lire('sw.js').match(/const VERSION = '([^'
 
 test('la liste hors ligne est exactement celle prévue', () => {
   assert.deepEqual(FICHIERS, ['./', 'index.html', 'css/app.css',
-    'js/zoom.js', 'js/outils.js', 'js/stockage.js', 'js/exercices.js', 'js/motivation.js', 'js/ecrans.js', 'js/journal.js', 'js/dessins.js', 'js/echauffement.js', 'js/chrono.js', 'js/seance.js', 'js/programme.js', 'js/sauvegarde.js', 'js/rappels.js', 'js/actions.js', 'js/main.js',
+    'js/zoom.js', 'js/outils.js', 'js/stockage.js', 'js/exercices.js', 'js/motivation.js', 'js/ecrans.js', 'js/journal.js', 'js/videos.js', 'js/dessins.js', 'js/echauffement.js', 'js/chrono.js', 'js/seance.js', 'js/programme.js', 'js/sauvegarde.js', 'js/rappels.js', 'js/actions.js', 'js/main.js',
     'fonts/barlow-condensed-500.woff2', 'fonts/barlow-condensed-600.woff2', 'fonts/barlow-condensed-700.woff2',
-    'fonts/barlow-condensed-800.woff2', 'fonts/barlow-condensed-900-italic.woff2', 'icon.png', 'manifest.json']);
+    'fonts/barlow-condensed-800.woff2', 'fonts/barlow-condensed-900-italic.woff2',
+    'videos/pompes.webm', 'videos/pompes.mp4', 'videos/squat.webm', 'videos/squat.mp4', 'videos/gainage.webm', 'videos/gainage.mp4',
+    'videos/fente.webm', 'videos/fente.mp4', 'videos/saut.webm', 'videos/saut.mp4', 'icon.png', 'manifest.json']);
 });
 
 test('chaque fichier de la liste existe', () => {

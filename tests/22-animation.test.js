@@ -19,7 +19,7 @@ test('chaque famille de dessin a une position de départ et une d’arrivée de 
 
 test('pendant la séance, la silhouette bouge en boucle (corps et tête animés)', async () => {
   const p = await app.page();
-  await donner(p, reprise('Pompes Classiques'));
+  await donner(p, reprise('Pompes Genoux')); // exercice sans vidéo (v1.9.0)
   await p.click('#resume-card button:has-text("Reprendre")');
   const anim = await p.$$eval('#ex-dessin animate', els => els.map(a => [a.parentElement.tagName, a.getAttribute('attributeName'), a.getAttribute('repeatCount')]));
   assert.deepEqual(anim, [['path', 'd', 'indefinite'], ['circle', 'cx', 'indefinite'], ['circle', 'cy', 'indefinite']]);
@@ -32,7 +32,7 @@ test('pendant la séance, la silhouette bouge en boucle (corps et tête animés)
 
 test('réglage « réduire les animations » du téléphone : la silhouette reste immobile', async () => {
   const p = await app.page({ reducedMotion: 'reduce' });
-  await donner(p, reprise('Squat Classique'));
+  await donner(p, reprise('Superman')); // exercice sans vidéo (v1.9.0)
   await p.click('#resume-card button:has-text("Reprendre")');
   assert.ok(await p.isVisible('#ex-dessin svg'));
   assert.equal(await p.locator('#ex-dessin animate').count(), 0);

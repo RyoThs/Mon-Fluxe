@@ -8,7 +8,7 @@
    par leur préfixe « fluxe-app- ». Il ne touche jamais aux caches des autres applications.
    (Les données de l'app sont dans le localStorage : ce fichier n'y touche jamais.) */
 
-const VERSION = '1.8.0'; // version de l'app : la même dans index.html (app-version) et package.json
+const VERSION = '1.9.0'; // version de l'app : la même dans index.html (app-version) et package.json
 const PREFIXE = 'fluxe-app-';
 const CACHE = PREFIXE + 'v' + VERSION; // ex. « fluxe-app-v1.0.0 » : nouveau cache à chaque version
 
@@ -24,6 +24,7 @@ const FICHIERS = [
   'js/motivation.js',
   'js/ecrans.js',
   'js/journal.js',
+  'js/videos.js',
   'js/dessins.js',
   'js/echauffement.js',
   'js/chrono.js',
@@ -38,6 +39,9 @@ const FICHIERS = [
   'fonts/barlow-condensed-700.woff2',
   'fonts/barlow-condensed-800.woff2',
   'fonts/barlow-condensed-900-italic.woff2',
+  'videos/pompes.webm', 'videos/pompes.mp4', 'videos/squat.webm', 'videos/squat.mp4',
+  'videos/gainage.webm', 'videos/gainage.mp4', 'videos/fente.webm', 'videos/fente.mp4',
+  'videos/saut.webm', 'videos/saut.mp4',
   'icon.png',
   'manifest.json'
 ];
@@ -100,11 +104,26 @@ async function repondre(requete, reseau) {
   return Response.error();
 }
 
+/* Vidéo demandée par morceaux (en-tête Range, c'est ce que fait l'iPhone) : on découpe la copie complète
+   gardée hors ligne et on répond « 206 contenu partiel ». Sans copie, on laisse faire le réseau. */
+async function repondreMorceau(requete) {
+  const copie = await chercherDansMonCache(new URL(requete.url).pathname.replace(/^.*?\/videos\//, 'videos/'));
+  if (!copie) return fetch(requete);
+  const octets = await copie.arrayBuffer();
+  const [, debut, fin] = /bytes=(\d*)-(\d*)/.exec(requete.headers.get('Range')) || [];
+  const d = debut ? Number(debut) : Math.max(0, octets.byteLength - Number(fin || 0));
+  const f = fin && debut ? Math.min(Number(fin), octets.byteLength - 1) : octets.byteLength - 1;
+  return new Response(octets.slice(d, f + 1), { status: 206, headers: {
+    'Content-Type': copie.headers.get('Content-Type') || 'video/mp4',
+    'Content-Range': `bytes ${d}-${f}/${octets.byteLength}`, 'Content-Length': String(f - d + 1), 'Accept-Ranges': 'bytes' } });
+}
+
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   // Seuls les fichiers de l'app elle-même sont gérés (aucun site extérieur).
   if (url.origin !== location.origin) return;
+  if (e.request.headers.has('Range')) { e.respondWith(repondreMorceau(e.request)); return; }
 
   const reseau = fetch(sansVieilleCopie(e.request));
   // La réponse du réseau met toujours le cache à jour, même si elle arrive après le délai.

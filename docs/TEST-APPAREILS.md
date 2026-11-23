@@ -1,11 +1,11 @@
-# Test sur iPhone — liste à cocher (Fluxe App v1.8.0)
+# Test sur iPhone — liste à cocher (Fluxe App v1.9.0)
 
 À faire après chaque nouvelle version, sur l'iPhone, avec l'appli installée sur l'écran d'accueil.
 
 ## 1. Mise à jour
 
 - [ ] Fermer complètement l'appli (balayer vers le haut), puis la rouvrir.
-- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.8.0 »**. (Sinon : fermer/rouvrir encore une fois.)
+- [ ] Lancer une séance, toucher le bouton **?** : en bas de la fenêtre d'aide, on lit **« Fluxe v1.9.0 »**. (Sinon : fermer/rouvrir encore une fois.)
 - [ ] La progression d'avant est toujours là : même **niveau**, même nombre de **sessions** (🔥), journal intact.
 
 ## 2. Hors ligne
@@ -83,3 +83,9 @@ Si un point ne va pas : noter l'écran et faire une capture d'écran.
 - [ ] Pendant une séance, la silhouette **bouge** : elle montre le mouvement en boucle (ex. la pompe descend et remonte).
 - [ ] Réglages iPhone → Accessibilité → Mouvement → **Réduire les animations** activé : la silhouette reste immobile.
 - [ ] Bouton **?** : la ligne Position donne des repères précis (ex. pompes au mur : « Debout à 1 m du mur, mains … plus larges que les épaules »).
+
+## 12. Nouveautés v1.9.0
+
+- [ ] Lancer une séance Pectoraux (Intermédiaire) ou Jambes (Débutant) : pour « Pompes Classiques », « Squat Classique »… un **homme 3D réaliste** fait le mouvement en boucle, sans son.
+- [ ] **Mode avion** après une première séance : les vidéos se lancent toujours.
+- [ ] Les exercices sans vidéo gardent leur silhouette animée.

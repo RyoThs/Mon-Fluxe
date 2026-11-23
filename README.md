@@ -4,7 +4,7 @@ Fluxe App génère des séances de musculation **au poids du corps** : tu choisi
 
 > Fluxe App est **distincte de Fluxe Suivi** (le carnet de musculation pour la salle, dépôt `RyoThs/Fluxe-Suivi`). Les deux applis sont publiées sur le même site (`ryoths.github.io`) mais ne partagent aucune donnée, et ne touchent jamais aux données de l'autre.
 
-Version actuelle : **1.8.0**
+Version actuelle : **1.9.0**
 
 ## Adresse
 
@@ -49,6 +49,7 @@ Organisation des fichiers :
 | `js/` | le code, rangé par sujet : plan dans `js/README.md` |
 | `css/app.css` | toute l'apparence (thème clair seulement, identité Fluxe Suivi) |
 | `fonts/` | police Barlow Condensed (+ licence) |
+| `videos/` | micro-vidéos réalistes des exercices (MP4 + WebM) et leurs crédits |
 | `sw.js` | fonctionnement hors ligne (service worker) |
 | `manifest.json` | nom, icône et couleurs de l'appli installée |
 | `tests/` | tests automatiques |
@@ -71,6 +72,8 @@ Organisation des fichiers :
 ⚠️ Ne renomme jamais les clés de stockage `fluxe_user_v1` et `fluxe_backup` (voir `docs/STOCKAGE.md`).
 
 ## Historique des versions
+
+- **1.9.0** — Micro-vidéos réalistes : un homme 3D (mouvements captés sur de vraies personnes) montre 11 exercices (pompes classiques, tempo, coudes serrés ; squat classique, pause, 1 et demi ; planche, planche RKC ; fentes avant, marchées ; squat jumps). Vidéos de 22 à 67 Ko, gardées hors ligne (lecture par morceaux sur iPhone). Les autres exercices gardent leur silhouette animée. Crédits : `videos/CREDITS.md`.
 
 - **1.8.0** — Silhouettes animées : chaque exercice montre son mouvement en boucle (départ → arrivée), immobile si le téléphone demande de réduire les animations. Positions des guides plus précises (distances, largeur des mains et des pieds, hauteurs).
 
